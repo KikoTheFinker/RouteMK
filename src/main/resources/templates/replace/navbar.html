@@ -19,9 +19,10 @@
             </ul>
         </div>
         <div>
-            <a class="btn btn-small redoutline" style="background-color: #f8f8f8" href="/login">
-                <img src="/images/key.png" alt="Key Logo" width="24" height="24" class="me-2">
-                <span>Login</span>
+            <a class="btn btn-small redoutline" style="background-color: #f8f8f8" th:href="@{${principal == 'anonymousUser'} ? '/login' : '/logout'}">
+                <img th:src="${principal == 'anonymousUser'} ? '/images/key.png' : '/images/lock.png'"
+                     alt="Login Logo" width="24" height="24" class="me-2" style="position: relative; left:5px;">
+                <span th:text="${principal == 'anonymousUser'} ? 'Login' : 'Logout'">Login</span>
             </a>
             <a class="btn btn-small redoutline" style="background-color: #f8f8f8" href="/register">
                 <img style="position:relative; left:3px; bottom:1px"
