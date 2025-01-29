@@ -2,26 +2,25 @@ package mk.route.routemk.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 @Entity
-@Table(name="student")
+@Table(name = "student")
 public class Student {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="student_id")
+    @Column(name = "student_id")
     private Integer studentId;
 
-    @Column(name="university")
+    @Column(name = "university")
     private String university;
 
-    @Column(name="index_number")
+    @Column(name = "index_number")
     private String indexNumber;
 
     @OneToOne
-    @JoinColumn(name="account_id", referencedColumnName = "account_id")
+    @JoinColumn(name = "account_id", referencedColumnName = "account_id")
     private Account account;
 
     // todo: maybe need a list of drivers

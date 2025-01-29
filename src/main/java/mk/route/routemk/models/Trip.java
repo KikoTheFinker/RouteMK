@@ -10,33 +10,33 @@ import java.util.Collection;
 @Data
 @Entity
 @NoArgsConstructor
-@Table(name="trip")
+@Table(name = "trip")
 public class Trip {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="trip_id")
+    @Column(name = "trip_id")
     private int tripId;
 
     @ManyToOne
-    @JoinColumn(name="transport_organizer_id", referencedColumnName = "transport_organizer_id")
+    @JoinColumn(name = "transport_organizer_id", referencedColumnName = "transport_organizer_id")
     private TransportOrganizer tranOrg;
 
     @ManyToOne
-    @JoinColumn(name="route_id", referencedColumnName = "route_id")
+    @JoinColumn(name = "route_id", referencedColumnName = "route_id")
     private Route route;
 
-    @Column(name="free_seats")
+    @Column(name = "free_seats")
     private int freeSeats;
 
-    @Column(name="date")
+    @Column(name = "date")
     private LocalDate date;
 
     @ManyToMany
     @JoinTable(
-            name="trip_stops",
-            joinColumns = @JoinColumn(name="trip_id"),
-            inverseJoinColumns = @JoinColumn(name="location_id")
+            name = "trip_stops",
+            joinColumns = @JoinColumn(name = "trip_id"),
+            inverseJoinColumns = @JoinColumn(name = "location_id")
     )
     private Collection<Location> stops;
 
@@ -52,6 +52,4 @@ public class Trip {
         this.stops = stops;
     }
 
-    public Trip() {
-    }
 }

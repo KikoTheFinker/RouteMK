@@ -2,32 +2,45 @@ package mk.route.routemk.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import mk.route.routemk.utils.RoleResolver;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
 
 @Data
 @Entity
-@Table(name="account")
-public class Account {
+@Table(name = "account")
+public class Account implements UserDetails {
 
     @Id
-    @Column(name="account_id")
+    @Column(name = "account_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer account_id;
 
-    @OneToOne(mappedBy = "account")
-    private TransportOrganizer transportOrganizer;
-
-    @Column(name="email")
+    @Column(name = "email")
     protected String email;
 
-    @Column(name="name")
+    @Column(name = "name")
     protected String name;
 
-    @Column(name="surname")
+    @Column(name = "surname")
     protected String surname;
 
-    @Column(name="password")
+    @Column(name = "password")
     protected String password;
+
+    @OneToOne(mappedBy = "account", fetch = FetchType.LAZY)
+    private Admin admin;
+
+    @OneToOne(mappedBy = "account", fetch = FetchType.LAZY)
+    private Student student;
+
+    @OneToOne(mappedBy = "account", fetch = FetchType.LAZY)
+    private Driver driver;
+
+    @OneToOne(mappedBy = "account", fetch = FetchType.LAZY)
+    private TransportOrganizer transportOrganizer;
 
     public Account(String email, String name, String surname, String password) {
         this.email = email;
@@ -38,4 +51,56 @@ public class Account {
 
     public Account() {
     }
+
+    public Admin getAdmin() {
+        return admin;
+    }
+
+    public Student getStudent() {
+        return student;
+    }
+
+    public Driver getDriver() {
+        return driver;
+    }
+
+    public TransportOrganizer getTransportOrganizer() {
+        return transportOrganizer;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return RoleResolver.resolveRoles(this);
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
 }

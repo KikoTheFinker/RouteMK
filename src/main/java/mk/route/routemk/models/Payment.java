@@ -7,25 +7,25 @@ import java.time.LocalDate;
 
 @Data
 @Entity
-@Table(name="payment")
+@Table(name = "payment")
 public class Payment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="payment_id")
+    @Column(name = "payment_id")
     private Integer paymentId;
 
     @ManyToOne
     @JoinColumn(name = "account_id", referencedColumnName = "account_id")
     private Account account;
 
-    @Column(name="date")
+    @Column(name = "date")
     private LocalDate paymentDate;
 
-    @Column(name="total_price")
+    @Column(name = "total_price")
     private Double totalPrice;
 
-    @Column(name="n_tickets")
+    @Column(name = "n_tickets")
     private Integer numTickets;
 
     public Payment(Account account, LocalDate paymentDate, Double totalPrice, Integer numTickets) {

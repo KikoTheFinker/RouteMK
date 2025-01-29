@@ -2,11 +2,10 @@ package mk.route.routemk.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 @Entity
-@Table(name="admin")
+@Table(name = "admin")
 public class Admin {
 
     @Id

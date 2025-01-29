@@ -5,12 +5,12 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name="location")
+@Table(name = "location")
 public class Location {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="location_id")
+    @Column(name = "location_id")
     private Integer id;
 
     @Column(name = "latitude")
@@ -19,7 +19,7 @@ public class Location {
     @Column(name = "longitude")
     private Double longitude;
 
-    @Column(name="name")
+    @Column(name = "name")
     private String name;
 
     public Location(Double latitude, Double longitude, String name) {

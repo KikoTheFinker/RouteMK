@@ -2,7 +2,6 @@ package mk.route.routemk.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -36,16 +35,16 @@ public class Ticket {
     @JoinColumn(name = "payment_id", referencedColumnName = "payment_id")
     private Payment paymentId;
 
-    @Column(name="date_purchased")
+    @Column(name = "date_purchased")
     private LocalDate datePurchased;
 
-    @Column(name="time_purchased")
+    @Column(name = "time_purchased")
     private LocalTime timePurchased;
 
-    @Column(name="price")
+    @Column(name = "price")
     private Double price;
 
-    @Column(name="seat")
+    @Column(name = "seat")
     private String seat;
 
     public Ticket(Trip trip,

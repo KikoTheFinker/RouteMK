@@ -33,3 +33,6 @@ build/
 .vscode/
 /src/main/resources/application-db.properties
 /src/main/resources/application.properties
+/out/
+/application-db.properties
+/application.properties

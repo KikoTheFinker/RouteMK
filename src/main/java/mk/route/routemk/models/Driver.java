@@ -2,11 +2,10 @@ package mk.route.routemk.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 @Entity
-@Table(name="driver")
+@Table(name = "driver")
 public class Driver {
 
     @Id
@@ -18,7 +17,7 @@ public class Driver {
     @JoinColumn(name = "transport_organizer_id", referencedColumnName = "transport_organizer_id")
     private TransportOrganizer tranOrg;
 
-    @Column(name="years_experience")
+    @Column(name = "years_experience")
     private int yearsExperience;
 
     @OneToOne
