@@ -1,0 +1,61 @@
+@import "imports.css";
+
+body {
+    overflow-x: hidden;
+    height:100vh;
+}
+
+.login-container {
+    font-family: "Golos Text", "Helvetica", sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 75vh;
+}
+
+.login-box {
+    background: #eeeeee;
+    padding: 30px;
+    border-radius: 12px;
+    border: 1px solid #B4B4B4FF;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    width: 350px;
+    text-align: center;
+    backdrop-filter: blur(8px);
+}
+
+.login-box h2 {
+    margin-bottom: 20px;
+    font-weight: bold;
+    color: #333;
+}
+
+.login-box .form-control {
+    border-radius: 8px;
+}
+
+.login-box button {
+    border-radius: 8px;
+}
+
+.login-box p a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+}
+
+.login-box p a:hover {
+    color: #000;
+}
+
+#loginbut {
+    color: white;
+    background-color: #d02b2b;
+    transition: background-color 0.15s ease-in-out;
+}
+
+#loginbut:hover {
+    background-color: #b21c1c;
+
+}

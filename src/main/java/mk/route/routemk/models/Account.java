@@ -30,16 +30,20 @@ public class Account implements UserDetails {
     @Column(name = "password")
     protected String password;
 
-    @OneToOne(mappedBy = "account", fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name = "account_id", referencedColumnName = "account_id")
     private Admin admin;
 
-    @OneToOne(mappedBy = "account", fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name = "account_id", referencedColumnName = "account_id")
     private Student student;
 
-    @OneToOne(mappedBy = "account", fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name = "account_id", referencedColumnName = "account_id")
     private Driver driver;
 
-    @OneToOne(mappedBy = "account", fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name = "account_id", referencedColumnName = "account_id")
     private TransportOrganizer transportOrganizer;
 
     public Account(String email, String name, String surname, String password) {

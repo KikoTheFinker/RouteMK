@@ -19,8 +19,7 @@ public class Student {
     @Column(name = "index_number")
     private String indexNumber;
 
-    @OneToOne
-    @JoinColumn(name = "account_id", referencedColumnName = "account_id")
+    @OneToOne(mappedBy = "student")
     private Account account;
 
     // todo: maybe need a list of drivers

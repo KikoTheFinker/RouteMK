@@ -1,5 +1,6 @@
 package mk.route.routemk.config;
 
+import mk.route.routemk.exceptions.EntityNotFoundException;
 import mk.route.routemk.services.interfaces.AccountService;
 import mk.route.routemk.specifications.AccountSpecifications;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -34,15 +35,20 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         String password = authentication.getCredentials().toString();
 
         if (username.isEmpty() || password.isEmpty()) {
-            throw new BadCredentialsException("Invalid username or password");
+            throw new BadCredentialsException("Please fill out all fields.");
         }
-        UserDetails userDetails = accountService.findOneByPredicate(AccountSpecifications.hasEmail(username));
 
-        //Password must be BCRYPT encoded in DATABASE!!
-        if (!passwordEncoder.matches(password, userDetails.getPassword())) {
-            throw new BadCredentialsException("Invalid username or password");
+        try {
+            UserDetails userDetails = accountService.findOneByPredicate(AccountSpecifications.hasEmail(username));
+
+            //Password must be BCRYPT encoded in DATABASE!!
+            if (!passwordEncoder.matches(password, userDetails.getPassword())) {
+                throw new BadCredentialsException("Invalid username or password");
+            }
+            return new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities());
+        } catch (EntityNotFoundException exc) {
+            throw new BadCredentialsException(exc.getMessage());
         }
-        return new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities());
     }
 
     @Override

@@ -13,8 +13,7 @@ public class Admin {
     @Column(name = "admin_id")
     private Integer adminId;
 
-    @OneToOne
-    @JoinColumn(name = "account_id", referencedColumnName = "account_id")
+    @OneToOne(mappedBy = "admin")
     private Account account;
 
     public Admin(Account account) {

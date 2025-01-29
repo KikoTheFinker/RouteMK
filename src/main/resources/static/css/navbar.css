@@ -1,0 +1,57 @@
+@import "imports.css";
+
+body {
+    margin:0;
+}
+header {
+    font-family: "Golos Text", "Helvetica", sans-serif !important;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 60px !important;
+    height:40px;
+}
+
+.logo {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+}
+
+.logo span {
+    color: red;
+}
+
+#mainbar {
+    background-color: #eeeeee !important;
+    border-bottom: 1px solid #b4b4b4 !important;
+}
+
+.nav-links {
+    display: flex;
+    gap: 20px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #333;
+    font-size: 14px;
+}
+
+.nav-links a:hover {
+    color: #555;
+}
+
+.redoutline {
+    border: 1px solid #ff5353;
+    border-radius: 10px;
+    padding: 2px 4px;
+    transition: all 0.3s ease-in-out;
+    margin-right: 5px;
+}
+
+.redoutline:hover {
+    border: 1px solid #c20000;
+    border-radius: 12px;
+    padding: 2px 4px;
+}

@@ -1,0 +1,23 @@
+<head>
+    <link rel="stylesheet" href="/css/login.css">
+</head>
+<div class="login-container">
+    <div class="login-box">
+        <h3 class="text-center fw-bold">Sign in to Route<span style="color:#ff1616">MK</span></h3>
+        <form th:action="@{/login}" th:method="POST">
+            <p th:if="${param.error}" class="alert alert-danger">
+                Invalid credentials provided.
+            </p>
+            <div class="mb-3 text-start">
+                <label for="email" class="form-label">Email</label>
+                <input type="text" name="username" class="form-control" id="email" placeholder="name@domain.tld">
+            </div>
+            <div class="mb-3 text-start">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" name="password" class="form-control" id="password" placeholder="Your password...">
+            </div>
+            <button type="submit" id="loginbut" class="btn w-100">Login</button>
+            <p class="text-center mt-3"><a href="/register">Dont have an account? Register</a></p>
+        </form>
+    </div>
+</div>

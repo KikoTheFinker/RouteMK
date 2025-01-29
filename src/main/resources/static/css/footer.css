@@ -1,0 +1,21 @@
+@import "imports.css";
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.footer-link img {
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    opacity: 0.8;
+}
+
+.footer-link img:hover {
+    transform: scale(1.1);
+    opacity: 1;
+}
+.footer {
+    margin-top: auto;
+}

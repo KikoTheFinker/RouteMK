@@ -1,25 +1,27 @@
 package mk.route.routemk.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractAuthenticationFilterConfigurer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
-import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 
+@Slf4j
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
-    private final CustomAuthenticationProvider authProvider;
 
-    public SecurityConfig(CustomAuthenticationProvider authProvider) {
+    private final AuthenticationProvider authProvider;
+
+    public SecurityConfig(AuthenticationProvider authProvider) {
         this.authProvider = authProvider;
     }
 
@@ -27,16 +29,34 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
-                .authorizeHttpRequests(authorizeRequests ->
-                        authorizeRequests
-                                .requestMatchers("/**").permitAll()
-                                .anyRequest().authenticated()
+                .headers(
+                        headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
                 )
-                .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
-                .logout(LogoutConfigurer::permitAll);
+                .authorizeHttpRequests(
+                        authorizeRequests ->
+                                authorizeRequests
+                                        .requestMatchers("/", "/home", "/login", "/css/**", "/js/**", "/images/**", "/register").permitAll()
+                                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                                        .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
+                                        .anyRequest().authenticated()
+                )
+                .formLogin( login ->
+                        login.loginPage("/login")
+                                .permitAll()
+                                .defaultSuccessUrl("/")
+                                .failureUrl("/login?error")
+                )
+                .logout(
+                        logout ->
+                                logout.permitAll()
+                                        .logoutSuccessUrl("/")
+                                        .deleteCookies("JSESSIONID")
+                                        .invalidateHttpSession(true)
+                                        .clearAuthentication(true)
+                );
 
         return http.build();
+
     }
 
     @Bean

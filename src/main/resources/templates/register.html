@@ -1,0 +1,34 @@
+<head>
+    <title>Register</title>
+    <link rel="stylesheet" href="/css/login.css">
+</head>
+<div class="login-container" style="margin: 20px;">
+    <div class="login-box" style="width: 450px;">
+        <h3 class="text-center fw-bold">Create an Account on Route<span style="color:#ff1616">MK</span></h3>
+        <form method="POST" th:action="@{/register}">
+            <p th:if="${errorMessage}" th:text="${errorMessage}" class="alert alert-danger"></p>
+            <div class="mb-3 text-start">
+                <label for="name" class="form-label">First Name</label>
+                <input type="text" class="form-control" name="name" id="name" placeholder="Your Name...">
+            </div>
+            <div class="mb-3 text-start">
+                <label for="surname" class="form-label">Surname</label>
+                <input type="text" class="form-control" name="surname" id="surname" placeholder="Your Surname...">
+            </div>
+            <div class="mb-3 text-start">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" name="email" id="email" placeholder="name@domain.tld">
+            </div>
+            <div class="mb-3 text-start">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" name="password" id="password" placeholder="Create a password...">
+            </div>
+            <div class="mb-3 text-start">
+                <label for="confirm-password" class="form-label">Confirm Password</label>
+                <input type="password" class="form-control" name="confirmPassword" id="confirm-password" placeholder="Re-enter your password...">
+            </div>
+            <button type="submit" id="loginbut" class="btn w-100">Register</button>
+            <p class="text-center mt-3"><a href="/login">Already have an account? Login</a></p>
+        </form>
+    </div>
+</div>
