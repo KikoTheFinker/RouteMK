@@ -6,19 +6,15 @@ import mk.route.routemk.services.interfaces.GenericService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
 public class GenericServiceImpl<T, ID> implements GenericService<T, ID> {
 
-    private final GenericRepository<T, ID> genericRepository;
-    private final Class<T> entityType;
+    protected final GenericRepository<T, ID> genericRepository;
 
-    public GenericServiceImpl(GenericRepository<T, ID> genericRepository, Class<T> entityType) {
+    public GenericServiceImpl(GenericRepository<T, ID> genericRepository) {
         this.genericRepository = genericRepository;
-        this.entityType = entityType;
     }
 
     @Override
@@ -33,18 +29,18 @@ public class GenericServiceImpl<T, ID> implements GenericService<T, ID> {
 
     @Override
     public T findById(ID id) {
-        return genericRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(entityType.getSimpleName(), id));
+        return genericRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Entity not found", id));
     }
-
 
     @Override
     public List<T> findAll() {
         return genericRepository.findAll();
     }
 
+
     @Override
     public T findOneByPredicate(Specification<T> filter) {
-        return genericRepository.findOne(filter).orElseThrow(() -> new EntityNotFoundException(entityType.getSimpleName(), filter));
+        return genericRepository.findOne(filter).orElseThrow(() -> new EntityNotFoundException("Entity not found", filter));
     }
 
     @Override

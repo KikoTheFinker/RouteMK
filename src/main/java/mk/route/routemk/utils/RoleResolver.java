@@ -24,10 +24,7 @@ public class RoleResolver {
         if (account.getTransportOrganizer() != null) {
             authorities.add(new SimpleGrantedAuthority("ROLE_TRANSPORT_ORGANIZER"));
         }
-
-        if (authorities.isEmpty()) {
-            authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-        }
+        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 
         return authorities;
     }
