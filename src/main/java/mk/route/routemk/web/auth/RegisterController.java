@@ -1,4 +1,4 @@
-package mk.route.routemk.web;
+package mk.route.routemk.web.auth;
 
 import mk.route.routemk.services.interfaces.AccountService;
 import org.springframework.security.core.Authentication;

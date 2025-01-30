@@ -1,4 +1,4 @@
-package mk.route.routemk.web;
+package mk.route.routemk.web.auth;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
