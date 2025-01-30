@@ -25,6 +25,7 @@ header {
 #mainbar {
     background-color: #eeeeee !important;
     border-bottom: 1px solid #b4b4b4 !important;
+    box-shadow: 0 0 3px rgba(33, 33, 33, 0.45);
 }
 
 .nav-links {

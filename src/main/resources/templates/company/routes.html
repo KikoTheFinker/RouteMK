@@ -16,30 +16,37 @@
             <h1 class="title">Select a Route</h1>
         </div>
 
-        <!-- Filters -->
-        <div class="filter-container">
-            <div class="select-wrapper">
-                <label for="from-filter" class="filter-label">From:</label>
-                <select id="from-filter">
-                    <option value="">Filter by From</option>
-                    <option value="New York">New York</option>
-                    <option value="Chicago">Chicago</option>
-                    <option value="San Francisco">San Francisco</option>
-                    <option value="Miami">Miami</option>
-                    <option value="Boston">Boston</option>
-                </select>
+        <!-- Filters Container Wrapper -->
+        <div class="filter-container-wrapper center text-center">
+            <div class="filter-heading">
+                <img src="/images/filter.png" alt="Filter Icon">
+                <span>Filter</span>
             </div>
+            <!-- Filters -->
+            <div class="filter-container">
+                <div class="select-wrapper">
+                    <label for="from-filter" class="filter-label">From/Departure:</label>
+                    <select id="from-filter">
+                        <option value="" style="color:#dedede">Departure Location</option>
+                        <option value="New York">New York</option>
+                        <option value="Chicago">Chicago</option>
+                        <option value="San Francisco">San Francisco</option>
+                        <option value="Miami">Miami</option>
+                        <option value="Boston">Boston</option>
+                    </select>
+                </div>
 
-            <div class="select-wrapper">
-                <label for="to-filter" class="filter-label">To:</label>
-                <select id="to-filter">
-                    <option value="">Filter by To</option>
-                    <option value="Los Angeles">Los Angeles</option>
-                    <option value="Houston">Houston</option>
-                    <option value="Seattle">Seattle</option>
-                    <option value="Orlando">Orlando</option>
-                    <option value="Washington D.C.">Washington D.C.</option>
-                </select>
+                <div class="select-wrapper">
+                    <label for="to-filter" class="filter-label">To/Arrival:</label>
+                    <select id="to-filter">
+                        <option value="" style="color:#dedede">Arrival Location</option>
+                        <option value="Los Angeles">Los Angeles</option>
+                        <option value="Houston">Houston</option>
+                        <option value="Seattle">Seattle</option>
+                        <option value="Orlando">Orlando</option>
+                        <option value="Washington D.C.">Washington D.C.</option>
+                    </select>
+                </div>
             </div>
         </div>
 
@@ -49,9 +56,12 @@
                 <table class="routes-table">
                     <thead>
                     <tr>
-                        <th>From</th>
-                        <th>To</th>
-                        <th>Action</th>
+                        <th>Departure</th>
+                        <th>Arrival</th>
+                        <th>
+                            <img src="/images/cog.png" alt="A cute cog" width='24' height='24'/>
+                            Manage
+                        </th>
                     </tr>
                     </thead>
                     <tbody id="routes-list">
@@ -95,6 +105,103 @@
                             <a href="delete-route.html?routeId=5" class="btn-redoutline">Delete</a>
                         </td>
                     </tr>
+                    <tr>
+                        <td>Boston</td>
+                        <td>Washington D.C.</td>
+                        <td class="action-column">
+                            <a href="add-trip.html?routeId=5" class="btn-redoutline">View Trips</a>
+                            <a href="delete-route.html?routeId=5" class="btn-redoutline">Delete</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Boston</td>
+                        <td>Washington D.C.</td>
+                        <td class="action-column">
+                            <a href="add-trip.html?routeId=5" class="btn-redoutline">View Trips</a>
+                            <a href="delete-route.html?routeId=5" class="btn-redoutline">Delete</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Boston</td>
+                        <td>Washington D.C.</td>
+                        <td class="action-column">
+                            <a href="add-trip.html?routeId=5" class="btn-redoutline">View Trips</a>
+                            <a href="delete-route.html?routeId=5" class="btn-redoutline">Delete</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Boston</td>
+                        <td>Washington D.C.</td>
+                        <td class="action-column">
+                            <a href="add-trip.html?routeId=5" class="btn-redoutline">View Trips</a>
+                            <a href="delete-route.html?routeId=5" class="btn-redoutline">Delete</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Boston</td>
+                        <td>Washington D.C.</td>
+                        <td class="action-column">
+                            <a href="add-trip.html?routeId=5" class="btn-redoutline">View Trips</a>
+                            <a href="delete-route.html?routeId=5" class="btn-redoutline">Delete</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Boston</td>
+                        <td>Washington D.C.</td>
+                        <td class="action-column">
+                            <a href="add-trip.html?routeId=5" class="btn-redoutline">View Trips</a>
+                            <a href="delete-route.html?routeId=5" class="btn-redoutline">Delete</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Boston</td>
+                        <td>Washington D.C.</td>
+                        <td class="action-column">
+                            <a href="add-trip.html?routeId=5" class="btn-redoutline">View Trips</a>
+                            <a href="delete-route.html?routeId=5" class="btn-redoutline">Delete</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Boston</td>
+                        <td>Washington D.C.</td>
+                        <td class="action-column">
+                            <a href="add-trip.html?routeId=5" class="btn-redoutline">View Trips</a>
+                            <a href="delete-route.html?routeId=5" class="btn-redoutline">Delete</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Boston</td>
+                        <td>Washington D.C.</td>
+                        <td class="action-column">
+                            <a href="add-trip.html?routeId=5" class="btn-redoutline">View Trips</a>
+                            <a href="delete-route.html?routeId=5" class="btn-redoutline">Delete</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Boston</td>
+                        <td>Washington D.C.</td>
+                        <td class="action-column">
+                            <a href="add-trip.html?routeId=5" class="btn-redoutline">View Trips</a>
+                            <a href="delete-route.html?routeId=5" class="btn-redoutline">Delete</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Boston</td>
+                        <td>Washington D.C.</td>
+                        <td class="action-column">
+                            <a href="add-trip.html?routeId=5" class="btn-redoutline">View Trips</a>
+                            <a href="delete-route.html?routeId=5" class="btn-redoutline">Delete</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Boston</td>
+                        <td>Washington D.C.</td>
+                        <td class="action-column">
+                            <a href="add-trip.html?routeId=5" class="btn-redoutline">View Trips</a>
+                            <a href="delete-route.html?routeId=5" class="btn-redoutline">Delete</a>
+                        </td>
+                    </tr>
+                    <!-- Add more rows as needed -->
                     </tbody>
                 </table>
             </div>

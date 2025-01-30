@@ -6,8 +6,8 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    background: #f8f8f8;
-    font-family: 'Golos Text', sans-serif;
+    background: #eeeeee;
+    font-family: 'Golos Text', 'Helvetica', sans-serif;
 }
 
 /* Main Content */
@@ -30,30 +30,51 @@ body {
     font-size: 1.8rem;
     font-weight: bold;
     text-transform: uppercase;
-    color: #d02b2b;
-    text-align: center;
+    color: #333;
     margin-bottom: 1rem;
-    position: relative;
 }
 
 .title::after {
     content: '';
     position: absolute;
-    bottom: -6px;
+    bottom: -3px;
     left: 50%;
     transform: translateX(-50%);
     width: 50%;
     height: 3px;
-    background: #b21c1c;
+    background: #b4b4b4;
     border-radius: 2px;
 }
 
-/* Filters */
+/* Filters Container */
+.filter-container-wrapper {
+    background: #f5f5f5;
+    border: 1px solid #b4b4b4;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    margin-bottom: 1.5rem;
+}
+
+.filter-heading {
+    display: flex;
+    align-items: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.filter-heading img {
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+}
+
 .filter-container {
     display: flex;
     justify-content: space-between;
     gap: 1rem;
-    margin-bottom: 1.5rem;
 }
 
 .select-wrapper {
@@ -74,7 +95,7 @@ select {
     padding: 8px;
     font-size: 14px;
     border: 1px solid #b4b4b4;
-    border-radius: 6px;
+    border-radius: 8px;
     background: #fff;
     outline: none;
     transition: 0.2s;
@@ -91,20 +112,18 @@ select:hover {
 
 .routes-table-wrapper {
     background: white;
-    padding: 1rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    min-height: 350px; /* Fixed Height */
-    max-height: 450px;
-    overflow-y: auto;
-    overflow-x: hidden;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    border: 1px solid #b4b4b4;
+    padding: 0;
+    overflow: hidden;
 }
 
 /* Table Styling */
 .routes-table {
     width: 100%;
-    border-collapse: collapse;
-    table-layout: fixed; /* Prevents Width Change */
+    border-collapse: separate;
+    border-spacing: 0;
 }
 
 .routes-table th, .routes-table td {
@@ -115,11 +134,28 @@ select:hover {
     border-bottom: 1px solid #e0e0e0;
 }
 
+.routes-table th:first-child {
+    border-top-left-radius: 12px; /* Add border radius to top left */
+}
+
+.routes-table th:last-child {
+    border-top-right-radius: 12px; /* Add border radius to top right */
+}
+
 .routes-table th {
     background: #d02b2b;
     color: white;
     text-transform: uppercase;
     font-weight: bold;
+}
+
+.routes-table th:first-child,
+.routes-table td:first-child {
+    border-left: none;
+}
+
+.routes-table td:not(:first-child) {
+    border-left: 1px solid #e0e0e0;
 }
 
 .routes-table tr:nth-child(even) {
@@ -128,6 +164,25 @@ select:hover {
 
 .routes-table tr:hover {
     background: rgba(208, 43, 43, 0.1);
+}
+
+.routes-table-wrapper {
+    padding: 0;
+}
+
+/* Adding scrollable table body */
+.routes-table tbody {
+    display: block;
+    max-height: 500px; /* Adjust as necessary to show 15 rows */
+    overflow-y: auto;
+    width: 100%;
+}
+
+.routes-table thead,
+.routes-table tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
 }
 
 /* Centering Action Buttons */
@@ -139,20 +194,38 @@ select:hover {
 }
 
 /* Buttons */
+.btn-standard {
+    border: 1px solid #262626;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #262626;
+    background: none;
+    text-decoration: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-standard:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 3px 5px rgba(28, 28, 28, 0.3);
+}
+
 .btn-redoutline {
     border: 1px solid #d02b2b;
     padding: 6px 12px;
-    border-radius: 6px;
+    border-radius: 8px;
     font-size: 13px;
     font-weight: 600;
     color: #d02b2b;
     background: none;
+    text-decoration: none;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .btn-redoutline:hover {
-    transform: translateY(-3px); /* Makes Button Jump */
-    box-shadow: 0 5px 10px rgba(208, 43, 43, 0.3);
+    transform: translateY(-3px);
+    box-shadow: 0 3px 5px rgba(208, 43, 43, 0.3);
 }
 
 /* Responsive Design */
@@ -181,10 +254,10 @@ select:hover {
         padding: 0.8rem;
     }
 
-    .routes-table th,
     .routes-table td {
         font-size: 0.9rem;
-        padding: 8px;
+        padding: 5px;
+        border: 1px solid gray;
     }
 
     .action-column {
@@ -193,19 +266,23 @@ select:hover {
     }
 }
 
-/* Scrollbar */
+/* Custom Scrollbar */
 .routes-table-wrapper::-webkit-scrollbar {
     width: 6px;
 }
 
 .routes-table-wrapper::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: #f8f8f8; /* Lighter background to match site theme */
+    border-radius: 10px; /* Rounded scrollbar track */
 }
 
 .routes-table-wrapper::-webkit-scrollbar-thumb {
-    background: #d02b2b;
+    background: #d02b2b; /* Primary theme color */
+    border-radius: 10px; /* Rounded scrollbar thumb */
+    border: 2px solid #f8f8f8; /* Adds padding around the scrollbar thumb */
 }
 
 .routes-table-wrapper::-webkit-scrollbar-thumb:hover {
-    background: #b21c1c;
+    background: #b21c1c; /* Darker shade for hover effect */
+    border: 2px solid #f8f8f8; /* Keeps padding around the scrollbar thumb */
 }
