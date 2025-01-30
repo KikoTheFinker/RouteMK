@@ -1,0 +1,211 @@
+@import "../imports.css";
+
+/* General Layout */
+body {
+    overflow-x: hidden;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: #f8f8f8;
+    font-family: 'Golos Text', sans-serif;
+}
+
+/* Main Content */
+#main {
+    flex: 1;
+    width: 90%;
+    max-width: 1000px;
+    margin: 2rem auto;
+    padding: 1.5rem;
+}
+
+/* Title */
+.title-container {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+.title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #d02b2b;
+    text-align: center;
+    margin-bottom: 1rem;
+    position: relative;
+}
+
+.title::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50%;
+    height: 3px;
+    background: #b21c1c;
+    border-radius: 2px;
+}
+
+/* Filters */
+.filter-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.select-wrapper {
+    flex: 1;
+    max-width: 48%;
+}
+
+.filter-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+select {
+    width: 100%;
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #b4b4b4;
+    border-radius: 6px;
+    background: #fff;
+    outline: none;
+    transition: 0.2s;
+}
+
+select:hover {
+    border-color: #d02b2b;
+}
+
+/* Routes Table */
+.routes-container {
+    width: 100%;
+}
+
+.routes-table-wrapper {
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    min-height: 350px; /* Fixed Height */
+    max-height: 450px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* Table Styling */
+.routes-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed; /* Prevents Width Change */
+}
+
+.routes-table th, .routes-table td {
+    padding: 12px;
+    text-align: center;
+    font-size: 14px;
+    white-space: nowrap;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.routes-table th {
+    background: #d02b2b;
+    color: white;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.routes-table tr:nth-child(even) {
+    background: #f9f9f9;
+}
+
+.routes-table tr:hover {
+    background: rgba(208, 43, 43, 0.1);
+}
+
+/* Centering Action Buttons */
+.action-column {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Buttons */
+.btn-redoutline {
+    border: 1px solid #d02b2b;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #d02b2b;
+    background: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-redoutline:hover {
+    transform: translateY(-3px); /* Makes Button Jump */
+    box-shadow: 0 5px 10px rgba(208, 43, 43, 0.3);
+}
+
+/* Responsive Design */
+@media screen and (max-width: 1024px) {
+    .filter-container {
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+
+    .select-wrapper {
+        width: 100%;
+    }
+
+    .routes-table-wrapper {
+        max-height: none;
+        min-height: auto;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .title {
+        font-size: 1.6rem;
+    }
+
+    .routes-table-wrapper {
+        padding: 0.8rem;
+    }
+
+    .routes-table th,
+    .routes-table td {
+        font-size: 0.9rem;
+        padding: 8px;
+    }
+
+    .action-column {
+        flex-direction: column;
+        gap: 5px;
+    }
+}
+
+/* Scrollbar */
+.routes-table-wrapper::-webkit-scrollbar {
+    width: 6px;
+}
+
+.routes-table-wrapper::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.routes-table-wrapper::-webkit-scrollbar-thumb {
+    background: #d02b2b;
+}
+
+.routes-table-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #b21c1c;
+}

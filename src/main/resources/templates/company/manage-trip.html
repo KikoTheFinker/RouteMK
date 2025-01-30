@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Trip</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/company/manage-trip.css">
+</head>
+<body>
+
+<header th:replace="~{replace/navbar}"></header>
+
+<main id="main">
+    <div class="content">
+        <h2>Add a New Trip</h2>
+        <div class="trip-container">
+            <form id="trip-form" class="trip-box">
+                <div class="mb-3">
+                    <label for="trip-time" class="form-label">Trip Time:</label>
+                    <input type="time" id="trip-time" name="trip_time" class="form-control" required>
+                </div>
+
+                <div id="stops-container">
+                    <div class="stop-group">
+                        <label class="form-label">Stop Location:</label>
+                        <input type="text" name="stop_location[]" class="form-control" placeholder="Enter stop location" required>
+
+                        <label class="form-label">ETA:</label>
+                        <input type="time" name="eta[]" class="form-control" required>
+                    </div>
+                </div>
+
+                <button type="button" class="btn btn-outline-light" id="add-stop">+ Add Stop</button>
+                <button type="submit" id="trip-submit" class="btn btn-danger">Submit Trip</button>
+            </form>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{replace/footer}"></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.getElementById('add-stop').addEventListener('click', function() {
+        let stopContainer = document.createElement('div');
+        stopContainer.classList.add('stop-group');
+        stopContainer.innerHTML = `
+            <label class="form-label">Stop Location:</label>
+            <input type="text" name="stop_location[]" class="form-control" placeholder="Enter stop location" required>
+
+            <label class="form-label">ETA:</label>
+            <input type="time" name="eta[]" class="form-control" required>
+        `;
+        document.getElementById('stops-container').appendChild(stopContainer);
+    });
+</script>
+
+</body>
+</html>

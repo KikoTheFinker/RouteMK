@@ -7,15 +7,23 @@ body {
     margin: 0;
 }
 
+.footer {
+    margin-top: auto;
+    padding: 8px 0;
+    font-size: 0.85rem;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+}
+
 .footer-link img {
     transition: transform 0.3s ease, opacity 0.3s ease;
     opacity: 0.8;
+    width: 20px;
+    height: 20px;
 }
 
 .footer-link img:hover {
     transform: scale(1.1);
     opacity: 1;
-}
-.footer {
-    margin-top: auto;
 }

@@ -26,6 +26,9 @@ public class RegisterController {
         if (error != null) {
             model.addAttribute("errorMessage", error);
         }
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        model.addAttribute("principal", auth.getPrincipal().toString());
         model.addAttribute("display", "register");
         return "master";
     }
@@ -43,12 +46,6 @@ public class RegisterController {
         } catch (Exception e) {
             return String.format("redirect:/register?error=%s", e.getMessage());
         }
-
-
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-        model.addAttribute("principal", auth.getPrincipal().toString());
-
 
         return "redirect:/login";
     }
