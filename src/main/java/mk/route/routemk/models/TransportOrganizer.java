@@ -19,7 +19,8 @@ public class TransportOrganizer {
     @Column(name = "company_embg")
     private String companyEmbg;
 
-    @OneToOne(mappedBy = "transportOrganizer")
+    @OneToOne
+    @JoinColumn(name="account_id", referencedColumnName = "account_id")
     private Account account;
 
     // todo: maybe need a list of drivers

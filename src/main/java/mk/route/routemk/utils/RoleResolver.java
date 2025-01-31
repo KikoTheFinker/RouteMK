@@ -9,6 +9,11 @@ import java.util.Collection;
 import java.util.List;
 
 public class RoleResolver {
+    /**
+     * Utility function that helps in determining the role of a user through its referencing children.
+     * @param account The authorized (user) - account on the current thread.
+     * @return Collection of the authorities (roles) belonging to the authorized user.
+     */
     public static Collection<? extends GrantedAuthority> resolveRoles(Account account) {
         List<GrantedAuthority> authorities = new ArrayList<>();
 
@@ -24,6 +29,7 @@ public class RoleResolver {
         if (account.getTransportOrganizer() != null) {
             authorities.add(new SimpleGrantedAuthority("ROLE_TRANSPORT_ORGANIZER"));
         }
+
         authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 
         return authorities;

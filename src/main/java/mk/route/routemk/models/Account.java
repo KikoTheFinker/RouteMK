@@ -16,7 +16,7 @@ public class Account implements UserDetails {
     @Id
     @Column(name = "account_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer account_id;
+    private Integer accountId;
 
     @Column(name = "email")
     protected String email;
@@ -30,20 +30,16 @@ public class Account implements UserDetails {
     @Column(name = "password")
     protected String password;
 
-    @OneToOne(fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name = "account_id", referencedColumnName = "account_id")
+    @OneToOne(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Admin admin;
 
-    @OneToOne(fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name = "account_id", referencedColumnName = "account_id")
+    @OneToOne(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Student student;
 
-    @OneToOne(fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name = "account_id", referencedColumnName = "account_id")
+    @OneToOne(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Driver driver;
 
-    @OneToOne(fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name = "account_id", referencedColumnName = "account_id")
+    @OneToOne(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private TransportOrganizer transportOrganizer;
 
     public Account(String email, String name, String surname, String password) {

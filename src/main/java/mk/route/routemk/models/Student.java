@@ -19,10 +19,9 @@ public class Student {
     @Column(name = "index_number")
     private String indexNumber;
 
-    @OneToOne(mappedBy = "student")
+    @OneToOne
+    @JoinColumn(name="account_id", referencedColumnName = "account_id")
     private Account account;
-
-    // todo: maybe need a list of drivers
 
     public Student(String university, String indexNumber, Account account) {
         this.university = university;

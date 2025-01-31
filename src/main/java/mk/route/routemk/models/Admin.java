@@ -13,11 +13,12 @@ public class Admin {
     @Column(name = "admin_id")
     private Integer adminId;
 
-    @OneToOne(mappedBy = "admin")
+    @OneToOne
+    @JoinColumn(name = "account_id", referencedColumnName = "account_id")
     private Account account;
 
-    public Admin(Account account) {
-        this.account = account;
+    public Integer getAdminId() {
+        return adminId;
     }
 
     public Admin() {

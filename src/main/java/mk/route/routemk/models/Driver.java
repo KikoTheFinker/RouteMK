@@ -20,7 +20,8 @@ public class Driver {
     @Column(name = "years_experience")
     private int yearsExperience;
 
-    @OneToOne(mappedBy = "driver")
+    @OneToOne
+    @JoinColumn(name="account_id", referencedColumnName = "account_id")
     private Account account;
 
     public Driver(Account account, TransportOrganizer tranOrg, int yearsExperience) {
