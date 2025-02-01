@@ -47,6 +47,10 @@ public class Ticket {
     @Column(name = "seat")
     private String seat;
 
+    public Trip getTrip() {
+        return trip;
+    }
+
     public Ticket(Trip trip,
                   Location pickupLocation,
                   Location leavesAtLocation,

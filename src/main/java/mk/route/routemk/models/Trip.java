@@ -2,6 +2,7 @@ package mk.route.routemk.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import mk.route.routemk.models.enums.Status;
 
@@ -32,45 +33,12 @@ public class Trip {
     @Column(name = "date")
     private LocalDate date;
 
-    @ManyToMany
-    @JoinTable(
-            name = "trip_stops",
-            joinColumns = @JoinColumn(name = "trip_id"),
-            inverseJoinColumns = @JoinColumn(name = "location_id")
-    )
+    @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<TripStop> stops;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private Status status;
-
-    public int getTripId() {
-        return tripId;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public TransportOrganizer getTranOrg() {
-        return tranOrg;
-    }
-
-    public Route getRoute() {
-        return route;
-    }
-
-    public int getFreeSeats() {
-        return freeSeats;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public Collection<TripStop> getStops() {
-        return stops;
-    }
 
     public Trip(TransportOrganizer tranOrg,
                 Collection<TripStop> stops,
@@ -86,5 +54,29 @@ public class Trip {
         this.status = status;
     }
     public Trip() {
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public Route getRoute() {
+        return route;
+    }
+
+    public TransportOrganizer getTranOrg() {
+        return tranOrg;
+    }
+
+    public Collection<TripStop> getStops() {
+        return stops;
+    }
+
+    public int getFreeSeats() {
+        return freeSeats;
+    }
+
+    public Status getStatus() {
+        return status;
     }
 }
