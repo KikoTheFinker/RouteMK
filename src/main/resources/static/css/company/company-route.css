@@ -135,11 +135,11 @@ select:hover {
 }
 
 .routes-table th:first-child {
-    border-top-left-radius: 12px; /* Add border radius to top left */
+    border-top-left-radius: 12px;
 }
 
 .routes-table th:last-child {
-    border-top-right-radius: 12px; /* Add border radius to top right */
+    border-top-right-radius: 12px;
 }
 
 .routes-table th {
@@ -173,7 +173,7 @@ select:hover {
 /* Adding scrollable table body */
 .routes-table tbody {
     display: block;
-    max-height: 500px; /* Adjust as necessary to show 15 rows */
+    max-height: 500px;
     overflow-y: auto;
     width: 100%;
 }
@@ -272,17 +272,17 @@ select:hover {
 }
 
 .routes-table-wrapper::-webkit-scrollbar-track {
-    background: #f8f8f8; /* Lighter background to match site theme */
-    border-radius: 10px; /* Rounded scrollbar track */
+    background: #f8f8f8;
+    border-radius: 10px;
 }
 
 .routes-table-wrapper::-webkit-scrollbar-thumb {
-    background: #d02b2b; /* Primary theme color */
-    border-radius: 10px; /* Rounded scrollbar thumb */
-    border: 2px solid #f8f8f8; /* Adds padding around the scrollbar thumb */
+    background: #d02b2b;
+    border-radius: 10px;
+    border: 2px solid #f8f8f8;
 }
 
 .routes-table-wrapper::-webkit-scrollbar-thumb:hover {
-    background: #b21c1c; /* Darker shade for hover effect */
-    border: 2px solid #f8f8f8; /* Keeps padding around the scrollbar thumb */
+    background: #b21c1c;
+    border: 2px solid #f8f8f8;
 }

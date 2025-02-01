@@ -1,167 +1,101 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Route Trips</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/css/company/company-view-trip.css">
+    <link rel="stylesheet" th:href="@{/css/company/company-route.css}"/>
+    <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        .hidden { display: none; }
+        .notification { margin: 20px; font-style: italic; color: #888; }
+    </style>
 </head>
 <body>
+<div id="main">
+    <div class="title-container">
+        <h1 class="title">
+            Trips for Route:
+            <span th:text="${routeSource.getName()} + ' → ' + ${routeDestination.getName()}"></span>
+        </h1>
+    </div>
 
-<main id="main">
-    <div class="content">
-        <h2>Trips for Route</h2>
-
-        <p>
-            <strong>Route:</strong>
-            <span th:text="${routeSource.getName()}"></span> →
-            <span th:text="${routeDestination.getName()}"></span>
-        </p>
-
-        <div th:if="${#lists.isEmpty(trips)}" class="alert alert-warning">
-            No trips found for this route.
-        </div>
-
-        <table th:if="${not #lists.isEmpty(trips)}" class="table table-striped">
-            <thead>
-            <tr>
-                <th>#</th>
-                <th>Trip Date</th>
-                <th>Stops</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="trip, iterStat : ${trips}">
-                <td th:text="${iterStat.count}"></td>
-                <td th:text="${trip.getDate()}"></td>
-                <td>
-                    <ul>
-                        <li th:each="stop : ${tripStops}"
-                            th:if="${stop.getTrip().getTripId() == trip.getTripId()}"
-                            th:text="|${stop.getLocation().getName()} (ETA: ${stop.getStopTime()})|">
-                        </li>
-                    </ul>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-
-        <h2>Add a New Trip</h2>
-        <div class="trip-container">
-            <form id="trip-form" class="trip-box" method="POST" action="/trips/add">
-                <input type="hidden" name="routeId" th:value="${routeId}">
-
-                <div class="mb-3">
-                    <label for="trip-time" class="form-label">Trip Date:</label>
-                    <input type="date" id="trip-time" name="tripDate" class="form-control" required>
-                </div>
-
-                <div class="stop-group">
-                    <label class="form-label">Start Location:</label>
-                    <input type="text" class="form-control" th:value="${routeSource.getName()}" readonly>
-                    <label class="form-label">ETA:</label>
-                    <input type="time" name="eta[]" class="form-control" required>
-                </div>
-
-                <div id="stops-container"></div>
-
-                <div class="stop-group">
-                    <label class="form-label">End Location:</label>
-                    <input type="text" class="form-control" th:value="${routeDestination.getName()}" readonly>
-                    <label class="form-label">ETA:</label>
-                    <input type="time" name="eta[]" class="form-control" required>
-                </div>
-
-                <button type="button" class="btn btn-outline-dark" id="add-stop">+ Add Stop</button>
-                <button type="submit" id="trip-submit" class="btn btn-danger">Submit Trip</button>
-            </form>
+    <div class="filter-container-wrapper">
+        <div class="filter-container">
+            <a th:href="@{/company/trips/new}" class="btn-standard">+ New Trip</a>
+            <select id="statusFilter" class="filter-select">
+                <option value="">All Statuses</option>
+                <option value="NOT_STARTED">Not Started</option>
+                <option value="IN_PROGRESS">In Progress</option>
+                <option value="FINISHED">Finished</option>
+            </select>
         </div>
     </div>
-</main>
 
-<select id="location-template" style="display:none;">
-    <option th:each="location : ${locations}"
-            th:value="${location.getId()}"
-            th:text="${location.getName()}">
-    </option>
-</select>
+    <div class="routes-container">
+        <div class="routes-table-wrapper">
+            <table class="routes-table">
+                <thead>
+                <tr>
+                    <th>Trip ID</th>
+                    <th>Date</th>
+                    <th>Free Seats</th>
+                    <th>Stops</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="trip : ${trips}" th:attr="data-status=${trip.status}">
+                    <td th:text="${trip.tripId}"></td>
+                    <td th:text="${trip.date}"></td>
+                    <td th:text="${trip.freeSeats}"></td>
+                    <td>
+                        <ul>
+                            <li th:each="stop : ${trip.stops}">
+                                <span th:text="${stop.location.name}"></span>
+                                (<span th:text="${stop.stopTime}"></span>)
+                            </li>
+                        </ul>
+                    </td>
+                    <td th:text="${trip.status}"></td>
+                    <td class="action-column">
+                        <a th:href="@{/company/trips/edit/{id}(id=${trip.tripId})}" class="btn-standard">Edit</a>
+                        <a th:href="@{/company/trips/delete/{id}(id=${trip.tripId})}" class="btn-redoutline">Delete</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div id="noTrips" class="notification hidden">
+                No trips available for the selected status.
+            </div>
+        </div>
+    </div>
+</div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const stopsContainer = document.getElementById("stops-container");
-        const addStopBtn = document.getElementById("add-stop");
-        const locationTemplate = document.getElementById("location-template");
+    const tbody = document.querySelector('.routes-table tbody');
+    const allRows = Array.from(tbody.querySelectorAll('tr'));
 
-        let selectedStops = new Set(); // Keep track of selected stops
+    document.getElementById('statusFilter').addEventListener('change', function () {
+        const filterValue = this.value;
+        console.log("Filter value selected:", filterValue);
 
-        function getAvailableOptions() {
-            let options = "";
-            locationTemplate.querySelectorAll("option").forEach(option => {
-                if (!selectedStops.has(option.value)) {
-                    options += `<option value="${option.value}">${option.textContent}</option>`;
-                }
-            });
-            return options;
+        tbody.innerHTML = '';
+
+        const filteredRows = filterValue === ""
+            ? allRows
+            : allRows.filter(row => row.getAttribute('data-status') === filterValue);
+
+        filteredRows.forEach(row => tbody.appendChild(row));
+
+        const notification = document.getElementById('noTrips');
+        if (filteredRows.length === 0) {
+            notification.classList.remove('hidden');
+        } else {
+            notification.classList.add('hidden');
         }
-
-        function updateDropdowns() {
-            document.querySelectorAll(".stop-select").forEach(select => {
-                const currentValue = select.value;
-                select.innerHTML = getAvailableOptions();
-                if (currentValue) {
-                    select.value = currentValue;
-                }
-            });
-        }
-
-        addStopBtn.addEventListener("click", function () {
-            if (getAvailableOptions() === "") {
-                alert("No more available stops!");
-                return;
-            }
-
-            let stopGroup = document.createElement("div");
-            stopGroup.classList.add("stop-group");
-
-            stopGroup.innerHTML = `
-                <label class="form-label">Stop Location:</label>
-                <select name="stop_location[]" class="form-control stop-select" required>
-                    ${getAvailableOptions()}
-                </select>
-
-                <label class="form-label">ETA:</label>
-                <input type="time" name="eta[]" class="form-control" required>
-
-                <button type="button" class="btn btn-danger remove-stop">Delete Stop</button>
-            `;
-
-            stopsContainer.appendChild(stopGroup);
-
-            const selectElement = stopGroup.querySelector(".stop-select");
-
-            selectElement.addEventListener("change", function () {
-                const selectedId = this.value;
-                if (selectedId) {
-                    selectedStops.add(selectedId);
-                }
-                updateDropdowns();
-            });
-
-            stopGroup.querySelector(".remove-stop").addEventListener("click", function () {
-                const select = stopGroup.querySelector(".stop-select");
-                if (select) {
-                    selectedStops.delete(select.value);
-                }
-                stopGroup.remove();
-                updateDropdowns();
-            });
-
-            updateDropdowns();
-        });
     });
 </script>
-
 </body>
 </html>
