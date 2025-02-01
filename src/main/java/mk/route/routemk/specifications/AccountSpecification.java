@@ -3,7 +3,7 @@ package mk.route.routemk.specifications;
 import mk.route.routemk.models.Account;
 import org.springframework.data.jpa.domain.Specification;
 
-public class AccountSpecifications {
+public class AccountSpecification {
     /**
      * Creates a specification to find an account by email.
      *

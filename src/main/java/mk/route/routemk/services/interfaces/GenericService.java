@@ -24,6 +24,12 @@ public interface GenericService<T, ID> {
      */
     void delete(T entity);
 
+
+    /**
+     * Deletes an entity from the database by id
+     * @param id The id of the entity to delete.
+     */
+    void deleteById(ID id);
     /**
      * Finds an entity by its ID.
      * Throws an exception if the entity is not found.

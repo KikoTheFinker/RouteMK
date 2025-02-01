@@ -21,7 +21,7 @@ public class Driver {
     private int yearsExperience;
 
     @OneToOne
-    @JoinColumn(name="account_id", referencedColumnName = "account_id")
+    @JoinColumn(name = "account_id", referencedColumnName = "account_id")
     private Account account;
 
     public Driver(Account account, TransportOrganizer tranOrg, int yearsExperience) {
@@ -29,7 +29,9 @@ public class Driver {
         this.tranOrg = tranOrg;
         this.yearsExperience = yearsExperience;
     }
-
+    public TransportOrganizer getTranOrg() {
+        return tranOrg;
+    }
     public Driver() {
     }
 }

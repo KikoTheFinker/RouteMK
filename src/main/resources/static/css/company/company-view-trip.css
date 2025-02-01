@@ -1,0 +1,201 @@
+:root {
+    --primary-red: #d02b2b;
+    --dark-text: #2c3e50;
+    --light-gray: #f8f9fa;
+    --border-gray: #dee2e6;
+    --hover-red: rgba(208, 43, 43, 0.1);
+}
+
+body {
+    overflow-x: hidden;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: #f5f5f5;
+    font-family: 'Golos Text', sans-serif;
+    color: var(--dark-text);
+}
+
+#main {
+    flex: 1;
+    width: 90%;
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.title-container {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding: 1rem 0;
+}
+
+.title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    position: relative;
+    display: inline-block;
+    padding-bottom: 0.5rem;
+}
+
+.title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 4px;
+    background: var(--primary-red);
+    border-radius: 2px;
+}
+
+.route-info {
+    font-size: 1.2rem;
+    color: #7f8c8d;
+    text-align: center;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background: var(--light-gray);
+    border-radius: 8px;
+}
+
+.routes-table-wrapper {
+    margin: 2rem 0;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.routes-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+.routes-table th,
+.routes-table td {
+    padding: 1.2rem;
+    text-align: center;
+    border-bottom: 1px solid var(--border-gray);
+}
+
+.routes-table th {
+    background: var(--primary-red);
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+.routes-table tbody tr:hover {
+    background: var(--hover-red);
+}
+
+.trip-container {
+    margin-top: 3rem;
+}
+
+.trip-box {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.fixed-stop {
+    background: var(--light-gray);
+    border: 2px solid var(--primary-red);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    position: relative;
+}
+
+.dynamic-stop {
+    background: white;
+    border: 2px dashed var(--border-gray);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    transition: all 0.3s ease;
+}
+
+.dynamic-stop:hover {
+    border-color: var(--primary-red);
+}
+
+.form-label {
+    font-weight: 600;
+    color: var(--dark-text);
+    margin-bottom: 0.8rem;
+    display: block;
+}
+
+.btn-redoutline {
+    background: transparent;
+    border: 2px solid var(--primary-red);
+    color: var(--primary-red);
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-redoutline:hover {
+    background: var(--primary-red);
+    color: white;
+    transform: translateY(-2px);
+}
+
+.add-stop {
+    width: 100%;
+    padding: 1rem;
+    border: 2px dashed var(--border-gray);
+    color: #6c757d;
+    margin: 1.5rem 0;
+    transition: all 0.3s ease;
+}
+
+.add-stop:hover {
+    border-color: var(--primary-red);
+    color: var(--primary-red);
+}
+
+.remove-stop {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@media (max-width: 768px) {
+    #main {
+        padding: 1rem;
+        width: 95%;
+    }
+
+    .title {
+        font-size: 1.8rem;
+    }
+
+    .routes-table th,
+    .routes-table td {
+        padding: 0.8rem;
+        font-size: 0.9rem;
+    }
+
+    .trip-box {
+        padding: 1rem;
+    }
+}

@@ -33,6 +33,18 @@ public class Route {
         return tranOrg;
     }
 
+    public Integer getRouteId() {
+        return routeId;
+    }
+
+    public Location getSource() {
+        return source;
+    }
+
+    public Location getDestination() {
+        return destination;
+    }
+
     public Route() {
 
     }

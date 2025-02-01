@@ -1,27 +1,23 @@
-@import "imports.css";
-
 html, body {
     height: 100%;
     margin: 0;
     padding: 0;
-    overflow:hidden;
 }
 
-.register-container {
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+.register-container, .login-container {
     font-family: "Golos Text", "Helvetica", sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
-}
-
-.login-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: auto;
-    margin-top: 150px;/* Ensure full viewport height */
+    min-height: 80vh;
+    margin: 0;
+    flex-grow: 1;
 }
 
 .login-box {

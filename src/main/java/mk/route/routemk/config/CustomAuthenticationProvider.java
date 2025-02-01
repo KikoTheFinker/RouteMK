@@ -2,7 +2,7 @@ package mk.route.routemk.config;
 
 import mk.route.routemk.exceptions.EntityNotFoundException;
 import mk.route.routemk.services.interfaces.AccountService;
-import mk.route.routemk.specifications.AccountSpecifications;
+import mk.route.routemk.specifications.AccountSpecification;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -39,7 +39,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         }
 
         try {
-            UserDetails userDetails = accountService.findOneByPredicate(AccountSpecifications.hasEmail(username));
+            UserDetails userDetails = accountService.findOneByPredicate(AccountSpecification.hasEmail(username));
 
             //Password must be BCRYPT encoded in DATABASE!!
             if (!passwordEncoder.matches(password, userDetails.getPassword())) {

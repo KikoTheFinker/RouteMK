@@ -28,6 +28,11 @@ public class GenericServiceImpl<T, ID> implements GenericService<T, ID> {
     }
 
     @Override
+    public void deleteById(ID id) {
+        genericRepository.deleteById(id);
+    }
+
+    @Override
     public T findById(ID id) {
         return genericRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Entity not found", id));
     }

@@ -3,7 +3,6 @@ package mk.route.routemk.models;
 import jakarta.persistence.*;
 import lombok.Data;
 
-@Data
 @Entity
 @Table(name = "location")
 public class Location {
@@ -31,4 +30,19 @@ public class Location {
     public Location() {
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public Integer getId() {
+        return id;
+    }
 }

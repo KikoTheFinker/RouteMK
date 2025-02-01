@@ -35,7 +35,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         authorizeRequests ->
                                 authorizeRequests
-                                        .requestMatchers("/", "/home", "/login", "/css/**", "/js/**", "/images/**", "/register", "/company/**").permitAll()
+                                        .requestMatchers("/", "/home", "/login", "/css/**", "/js/**", "/images/**", "/register").permitAll()
+                                        .requestMatchers("/routes/company/**").hasAnyRole("TRANSPORT_ORGANIZER", "DRIVER")
                                         .requestMatchers("/admin/**").hasRole("ADMIN")
                                         .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
                                         .anyRequest().authenticated()

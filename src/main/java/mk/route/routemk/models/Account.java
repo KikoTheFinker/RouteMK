@@ -30,16 +30,16 @@ public class Account implements UserDetails {
     @Column(name = "password")
     protected String password;
 
-    @OneToOne(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToOne(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Admin admin;
 
-    @OneToOne(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToOne(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Student student;
 
-    @OneToOne(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToOne(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Driver driver;
 
-    @OneToOne(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToOne(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private TransportOrganizer transportOrganizer;
 
     public Account(String email, String name, String surname, String password) {
@@ -50,6 +50,10 @@ public class Account implements UserDetails {
     }
 
     public Account() {
+    }
+
+    public Integer getAccountId() {
+        return accountId;
     }
 
     public Admin getAdmin() {

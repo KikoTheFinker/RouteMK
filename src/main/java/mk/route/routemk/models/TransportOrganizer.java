@@ -34,6 +34,10 @@ public class TransportOrganizer {
     public TransportOrganizer() {
     }
 
+    public Integer getTranOrgId() {
+        return tranOrgId;
+    }
+
     public String getCompanyName() {
         return companyName;
     }

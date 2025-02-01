@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Route</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/company/company-route.css">
+</head>
+<body>
+
+<main id="main">
+    <div class="content">
+        <div class="title-container">
+            <h1 class="title">Select a Route</h1>
+        </div>
+
+        <!-- Filter Section -->
+        <div class="filter-container-wrapper center text-center">
+            <div class="filter-heading">
+                <img src="/images/filter.png" alt="Filter Icon">
+                <span>Filter</span>
+            </div>
+            <div class="filter-container">
+                <div class="select-wrapper">
+                    <label for="from-filter" class="filter-label">From/Departure:</label>
+                    <select id="from-filter">
+                        <option value="" style="color:#dedede">Departure Location</option>
+                        <option th:each="location : ${#sets.toSet(companyRoutes.![getSource().getName()])}"
+                                th:value="${location}" th:text="${location}"></option>
+                    </select>
+                </div>
+
+                <div class="select-wrapper">
+                    <label for="to-filter" class="filter-label">To/Arrival:</label>
+                    <select id="to-filter">
+                        <option value="" style="color:#dedede">Arrival Location</option>
+                        <option th:each="location : ${#sets.toSet(companyRoutes.![getDestination().getName()])}"
+                                th:value="${location}" th:text="${location}"></option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="routes-container">
+            <div class="routes-table-wrapper">
+                <table class="routes-table">
+                    <thead>
+                    <tr>
+                        <th>Departure</th>
+                        <th>Arrival</th>
+                        <th>
+                            <img src="/images/cog.png" alt="A cute cog" width='24' height='24'/>
+                            Manage
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody id="routes-list">
+                    <tr th:each="route : ${companyRoutes}">
+                        <td th:text="${route.getSource().getName()}"></td>
+                        <td th:text="${route.getDestination().getName()}"></td>
+                        <td class="action-column">
+                            <a th:href="@{/routes/company/view-trips/{routeId}(routeId=${route.getRouteId()})}"
+                               class="btn-redoutline">View Trips</a>
+
+                            <form th:action="@{/routes/company/delete-route/{routeId}(routeId=${route.getRouteId()})}"
+                                  method="POST" style="display: inline;"
+                                  th:if="${#authorization.expression('!hasRole(''DRIVER'')')}">
+                                <button type="submit" class="btn-redoutline">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const fromFilter = document.getElementById("from-filter");
+        const toFilter = document.getElementById("to-filter");
+        const routesList = document.getElementById("routes-list");
+        const rows = Array.from(routesList.getElementsByTagName("tr"));
+
+        function filterRoutes() {
+            const fromValue = fromFilter.value.toLowerCase();
+            const toValue = toFilter.value.toLowerCase();
+
+            rows.forEach(row => {
+                const fromText = row.cells[0].textContent.toLowerCase();
+                const toText = row.cells[1].textContent.toLowerCase();
+                const matchesFrom = !fromValue || fromText.includes(fromValue);
+                const matchesTo = !toValue || toText.includes(toValue);
+
+                row.style.display = matchesFrom && matchesTo ? "" : "none";
+            });
+        }
+
+        fromFilter.addEventListener("change", filterRoutes);
+        toFilter.addEventListener("change", filterRoutes);
+    });
+</script>
+
+</body>
+</html>
