@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -98,52 +98,6 @@
         </div>
     </div>
 </div>
-</div>
-
-<script>
-    const tbody = document.querySelector('.routes-table tbody');
-    const allRows = Array.from(tbody.querySelectorAll('tr'));
-
-    const statusFilter = document.getElementById('statusFilter');
-    const beforeDate = document.getElementById('beforeDate');
-    const afterDate = document.getElementById('afterDate');
-    const companyFilter = document.getElementById('companyFilter');
-
-    function filterTrips() {
-        const statusValue = statusFilter.value;
-        const beforeDateValue = beforeDate.value;
-        const afterDateValue = afterDate.value;
-        const companyValue = companyFilter.value.toLowerCase();
-
-        tbody.innerHTML = '';
-
-        const filteredRows = allRows.filter(row => {
-            const date = new Date(row.querySelector('td:nth-child(1)').innerText);
-            const status = row.getAttribute('data-status');
-            const company = row.querySelector('td:nth-child(5)').innerText.toLowerCase();
-
-            let matchesStatus = !statusValue || status === statusValue;
-            let matchesBeforeDate = !beforeDateValue || date <= new Date(beforeDateValue);
-            let matchesAfterDate = !afterDateValue || date >= new Date(afterDateValue);
-            let matchesCompany = !companyValue || company.startsWith(companyValue);
-
-            return matchesStatus && matchesBeforeDate && matchesAfterDate && matchesCompany;
-        });
-
-        filteredRows.forEach(row => tbody.appendChild(row));
-
-        const notification = document.getElementById('noTrips');
-        if (filteredRows.length === 0) {
-            notification.classList.remove('hidden');
-        } else {
-            notification.classList.add('hidden');
-        }
-    }
-
-    statusFilter.addEventListener('change', filterTrips);
-    beforeDate.addEventListener('change', filterTrips);
-    afterDate.addEventListener('change', filterTrips);
-    companyFilter.addEventListener('input', filterTrips);
-</script>
+<script src="/js/filtering.js"></script>
 </body>
 </html>

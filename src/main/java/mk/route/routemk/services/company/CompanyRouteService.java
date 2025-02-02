@@ -7,6 +7,7 @@ import mk.route.routemk.specifications.RouteSpecification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 @Service
 public class CompanyRouteService {
@@ -33,12 +34,8 @@ public class CompanyRouteService {
      * @return true if the route is deleted else false.
      */
     public boolean deleteRouteIfAuthorized(Integer routeId) {
-        Route route = routeService.findById(routeId);
-
-        if (authorizationService.isAuthorizedTransportOrganizer(route.getTranOrg().getTranOrgId())) {
-            routeService.deleteById(routeId);
-            return true;
-        }
-        return false;
+        return authorizationService.isAuthorizedTransportOrganizer(routeService.findById(routeId).getTranOrg().getTranOrgId())
+                ? ((Supplier<Boolean>)(() -> { routeService.deleteById(routeId); return true; })).get()
+                : false;
     }
 }

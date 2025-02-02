@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,8 +7,59 @@
     <link rel="stylesheet" th:href="@{/css/company/company-route.css}"/>
     <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
-        .hidden { display: none; }
+        .hidden { display: none !important; }
         .notification { margin: 20px; font-style: italic; color: #888; }
+
+        .modal {
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #fff;
+            padding: 20px;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 5px;
+            position: relative;
+        }
+        .modal-content h2 { margin-top: 0; }
+        .close-modal {
+            position: absolute;
+            right: 15px;
+            top: 10px;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .location-entry {
+            border: 1px solid #ccc;
+            padding: 8px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .location-entry.fixed { background-color: #eee; }
+        .location-entry select,
+        .location-entry input[type="time"] {
+            flex: 1;
+        }
+        .location-entry button.remove-location {
+            background: #f44336;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -19,17 +70,41 @@
             <span th:text="${routeSource.getName()} + ' → ' + ${routeDestination.getName()}"></span>
         </h1>
     </div>
+    <div th:if="${message}" class="alert alert-success" role="alert" th:text="${message}"></div>
+    <div th:if="${error}" class="alert alert-danger" role="alert" th:text="${error}"></div>
 
     <div class="filter-container-wrapper">
-        <div class="filter-container">
-            <a th:href="@{/company/trips/new}" class="btn-standard">+ New Trip</a>
-            <select id="statusFilter" class="filter-select">
-                <option value="">All Statuses</option>
-                <option value="NOT_STARTED">Not Started</option>
-                <option value="IN_PROGRESS">In Progress</option>
-                <option value="FINISHED">Finished</option>
-            </select>
+        <div class="filter-container d-flex flex-column align-items-center">
+            <div class="filter-heading mb-3">
+                <img src="/images/filter.png" alt="Filter Icon">
+                <span>Filter</span>
+            </div>
+            <div class="mb-3 trip-filter-criteria w-100">
+                <label for="statusFilter" class="form-label">Status</label>
+                <select id="statusFilter" class="form-control">
+                    <option value="">All Statuses</option>
+                    <option value="NOT_STARTED">Not Started</option>
+                    <option value="IN_PROGRESS">In Progress</option>
+                    <option value="FINISHED">Finished</option>
+                </select>
+            </div>
+            <div class="mb-3 trip-filter-criteria w-100">
+                <label for="beforeDate" class="form-label">Before Date</label>
+                <input type="date" id="beforeDate" class="form-control" placeholder="Before Date">
+            </div>
+            <div class="mb-3 trip-filter-criteria w-100">
+                <label for="afterDate" class="form-label">After Date</label>
+                <input type="date" id="afterDate" class="form-control" placeholder="After Date">
+            </div>
+            <div class="mb-3 trip-filter-criteria w-100">
+                <label for="companyFilter" class="form-label">Company Name</label>
+                <input type="text" id="companyFilter" class="form-control" placeholder="Company Name">
+            </div>
         </div>
+    </div>
+
+    <div style="margin-bottom: 5px">
+        <button id="newTripButton" class="btn-standard">+ New Trip</button>
     </div>
 
     <div class="routes-container">
@@ -42,60 +117,89 @@
                     <th>Free Seats</th>
                     <th>Stops</th>
                     <th>Status</th>
+                    <th>Company</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="trip : ${trips}" th:attr="data-status=${trip.status}">
-                    <td th:text="${trip.tripId}"></td>
-                    <td th:text="${trip.date}"></td>
-                    <td th:text="${trip.freeSeats}"></td>
+                <tr th:each="trip : ${trips}" th:attr="data-status=${trip.getStatus()}">
+                    <td th:text="${trip.getTripId()}"></td>
+                    <td th:text="${trip.getDate()}"></td>
+                    <td th:text="${trip.getFreeSeats()}"></td>
                     <td>
                         <ul>
-                            <li th:each="stop : ${trip.stops}">
-                                <span th:text="${stop.location.name}"></span>
-                                (<span th:text="${stop.stopTime}"></span>)
+                            <li th:if="${!trip.getStops().isEmpty()}" th:each="stop : ${trip.getStops()}">
+                                <span th:text="${stop.getLocation().getName()}"></span>
+                                (<span th:text="${stop.getStopTime()}"></span>)
                             </li>
+                            <li th:if="${trip.getStops().isEmpty()}">No Stops</li>
                         </ul>
                     </td>
-                    <td th:text="${trip.status}"></td>
+                    <td th:text="${trip.getStatus()}"></td>
+                    <td th:text="${trip.getTranOrg().getCompanyName()}"></td>
                     <td class="action-column">
-                        <a th:href="@{/company/trips/edit/{id}(id=${trip.tripId})}" class="btn-standard">Edit</a>
-                        <a th:href="@{/company/trips/delete/{id}(id=${trip.tripId})}" class="btn-redoutline">Delete</a>
+                        <a th:href="@{/routes/company/view-trips/edit-trip/{tripId}(tripId=${trip.getTripId()})}" class="btn-standard">Edit</a>
+                        <form th:action="@{/routes/company/view-trips/delete-trip/{tripId}(tripId=${trip.getTripId()})}"
+                              method="POST" style="display: inline;"
+                              th:if="${#authorization.expression('!hasRole(''DRIVER'')')}">
+                            <button type="submit" class="btn-redoutline">Delete</button>
+                        </form>
                     </td>
                 </tr>
                 </tbody>
             </table>
             <div id="noTrips" class="notification hidden">
-                No trips available for the selected status.
+                No trips available for the selected criteria.
             </div>
         </div>
     </div>
 </div>
 
-<script>
-    const tbody = document.querySelector('.routes-table tbody');
-    const allRows = Array.from(tbody.querySelectorAll('tr'));
+<div id="newTripModal" class="modal hidden">
+    <div class="modal-content">
+        <span class="close-modal" id="closeModal">&times;</span>
+        <h2>Add New Trip</h2>
+        <form id="newTripForm" th:action="@{/routes/company/view-trips/{routeId}/add-trip(routeId=${routeId})}" method="POST">
+            <div class="form-group">
+                <label for="tripDate">Date</label>
+                <input type="date" id="tripDate" name="date" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="freeSeats">Free Seats</label>
+                <input type="number" id="freeSeats" name="freeSeats" class="form-control" required>
+            </div>
+            <h3>Locations</h3>
+            <div class="location-entry fixed">
+                <strong>From:</strong>
+                <span th:text="${routeSource.getName()}"></span>
+                <input type="hidden" name="locations[]" th:value="${routeSource.getId()}">
+                <label>ETA:</label>
+                <input type="time" name="etas[]" class="form-control" required>
+            </div>
+            <div id="additionalLocationsSection"></div>
+            <div class="location-entry fixed">
+                <strong>To:</strong>
+                <span th:text="${routeDestination.getName()}"></span>
+                <input type="hidden" name="locations[]" th:value="${routeDestination.getId()}">
+                <label>ETA:</label>
+                <input type="time" name="etas[]" class="form-control" required>
+            </div>
+            <button type="button" id="addLocationButton" class="btn-standard">Add Location</button>
+            <br/><br/>
+            <button type="submit" class="btn-standard">Submit</button>
+        </form>
+    </div>
+</div>
 
-    document.getElementById('statusFilter').addEventListener('change', function () {
-        const filterValue = this.value;
-        console.log("Filter value selected:", filterValue);
-
-        tbody.innerHTML = '';
-
-        const filteredRows = filterValue === ""
-            ? allRows
-            : allRows.filter(row => row.getAttribute('data-status') === filterValue);
-
-        filteredRows.forEach(row => tbody.appendChild(row));
-
-        const notification = document.getElementById('noTrips');
-        if (filteredRows.length === 0) {
-            notification.classList.remove('hidden');
-        } else {
-            notification.classList.add('hidden');
-        }
-    });
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    window.modalData = {
+        allLocations: /*[[${locations}]]*/ [],
+        routeSourceId: /*[[${routeSource.getId()}]]*/ 0,
+        routeDestinationId: /*[[${routeDestination.getId()}]]*/ 0
+    };
 </script>
+<script src="/js/modal.js"></script>
+<script src="/js/filtering.js"></script>
 </body>
 </html>
