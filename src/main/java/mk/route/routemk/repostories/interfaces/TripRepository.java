@@ -11,13 +11,4 @@ import java.time.LocalDate;
 
 @Repository
 public interface TripRepository extends GenericRepository<Trip, Integer>{
-    @Modifying
-    @Transactional
-    @Query(value = "INSERT INTO trip (transport_organizer_id, route_id, free_seats, date, status) " +
-            "VALUES (:transportOrganizerId, :routeId, :freeSeats, :date, CAST(:status AS trip_status))", nativeQuery = true)
-    void insertTrip(@Param("transportOrganizerId") int transportOrganizerId,
-                    @Param("routeId") int routeId,
-                    @Param("freeSeats") int freeSeats,
-                    @Param("date") LocalDate date,
-                    @Param("status") String status);
 }

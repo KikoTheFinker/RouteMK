@@ -7,7 +7,7 @@ import mk.route.routemk.services.GenericServiceImpl;
 import mk.route.routemk.services.interfaces.TicketService;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Collection;
 
 @Service
 public class TicketServiceImpl extends GenericServiceImpl<Ticket, Integer> implements TicketService {
@@ -20,7 +20,7 @@ public class TicketServiceImpl extends GenericServiceImpl<Ticket, Integer> imple
     }
 
     @Override
-    public List<? extends Ticket> findTripsByAccountId(Integer accountId) {
+    public Collection<? extends Ticket> findTripsByAccountId(Integer accountId) {
         return ticketRepository.findTicketsByAccount_AccountId(accountId);
     }
 }

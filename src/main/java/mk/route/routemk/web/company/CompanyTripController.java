@@ -72,10 +72,12 @@ public class CompanyTripController {
             redirectAttributes.addFlashAttribute("error", "Mismatch between locations and ETAs.");
             return "redirect:/routes/company/view-trips/";
         }
+
         Integer transportOrganizerId = companyAuthorizationService.getAuthenticatedTransportOrganizerId();
         if (!companyAuthorizationService.isAuthorizedTransportOrganizer(transportOrganizerId)) {
             return "redirect:/";
         }
+
         Trip trip = new Trip();
         trip.setDate(date);
         trip.setFreeSeats(freeSeats);
@@ -92,7 +94,7 @@ public class CompanyTripController {
             tripStopService.save(tripStop);
         }
         redirectAttributes.addFlashAttribute("message", "Trip created successfully!");
-        return "redirect:/routes/company/view-trips";
+        return "redirect:/routes/company/view-trips/" + routeId.toString();
     }
 
     @PostMapping("/delete-trip/{tripId}")

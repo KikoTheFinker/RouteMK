@@ -42,7 +42,7 @@ public class Trip {
     private Collection<TripStop> stops;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", columnDefinition = "trip_status")
+    @Column(name = "status", nullable = false)
     private Status status = Status.NOT_STARTED;
 
     public Trip(TransportOrganizer tranOrg,

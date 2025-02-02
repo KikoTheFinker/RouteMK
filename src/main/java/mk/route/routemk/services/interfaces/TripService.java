@@ -2,10 +2,10 @@ package mk.route.routemk.services.interfaces;
 
 import mk.route.routemk.models.Trip;
 
-import java.util.List;
+import java.util.Collection;
 
 public interface TripService extends GenericService<Trip, Integer> {
 
-    List<? extends Trip> findTripsBookedByAccount(Integer accountId);
+    Collection<? extends Trip> findTripsBookedByAccount(Integer accountId);
 
 }
