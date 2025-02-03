@@ -33,7 +33,6 @@ public class UserTripController {
     @GetMapping("/{routeId}")
     public String viewTripsForRoute(Model model, @PathVariable Integer routeId) {
         List<Trip> trips = tripService.findTripsByRouteId(routeId);
-        trips.sort(Comparator.comparing(Trip::getDate).reversed());
         Route route = routeService.findById(routeId);
         model.addAttribute("display", "user/view-trips");
         model.addAttribute("trips", trips);

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Trips</title>
-    <link rel="stylesheet" th:href="@{/css/company/company-route.css}"/>
+    <link rel="stylesheet" th:href="@{/css/trip-route-filter-table.css}"/>
     <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         .hidden {
@@ -42,18 +42,19 @@
             </div>
 
             <div class="mb-3 trip-filter-criteria w-100">
-                <label for="beforeDate" class="form-label">Before Date</label>
-                <input type="date" id="beforeDate" class="form-control" placeholder="Before Date">
-            </div>
-
-            <div class="mb-3 trip-filter-criteria w-100">
                 <label for="afterDate" class="form-label">After Date</label>
                 <input type="date" id="afterDate" class="form-control" placeholder="After Date">
             </div>
-
+            <div class="mb-3 trip-filter-criteria w-100">
+                <label for="beforeDate" class="form-label">Before Date</label>
+                <input type="date" id="beforeDate" class="form-control" placeholder="Before Date">
+            </div>
             <div class="mb-3 trip-filter-criteria w-100">
                 <label for="companyFilter" class="form-label">Company Name</label>
                 <input type="text" id="companyFilter" class="form-control" placeholder="Company Name">
+            </div>
+            <div class="mb-2 text-center">
+                <button id="resetFiltersButton" class="btn-standard">Reset Filters</button>
             </div>
         </div>
     </div>
@@ -81,11 +82,12 @@
                 <td th:text="${trip.getRoute().getSource().getName()} + ' - ' + ${trip.getRoute().getDestination().getName()}"></td>
                 <td th:text="${trip.getTranOrg.getCompanyName()}"></td>
                 <td th:if="${!trip.getStops().isEmpty()}">
-                    <ul>
-                        <li th:each="stop : ${trip.getStops()}">
-                            <span th:text="${stop.getLocation().getName()}"></span>
-                            (<span th:text="${stop.getStopTime()}"></span>)
+                    <ul class="list-unstyled">
+                        <li th:if="${!trip.getStops().isEmpty()}" th:each="stop : ${trip.getStops()}">
+                            <span class="fw-bold" th:text="${stop.getLocation().getName()}"></span>
+                            (<span class="text-muted" th:text="${stop.getStopTime()}"></span>)
                         </li>
+                        <li th:if="${trip.getStops().isEmpty()}">No Stops</li>
                     </ul>
                 </td>
                 <td class="text-centered text-danger" th:if="${trip.getStops().isEmpty()}"> No Stops</td>

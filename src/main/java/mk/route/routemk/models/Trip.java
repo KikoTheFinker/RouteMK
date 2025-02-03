@@ -39,6 +39,7 @@ public class Trip {
     private LocalDate date;
 
     @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("stopTime ASC")
     private Collection<TripStop> stops;
 
     @Enumerated(EnumType.STRING)

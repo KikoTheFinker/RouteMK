@@ -29,7 +29,6 @@ public class TripServiceImpl extends GenericServiceImpl<Trip, Integer> implement
         return ticketService.findTripsByAccountId(accountId)
                 .stream()
                 .map(Ticket::getTrip)
-                .sorted(Comparator.comparing(Trip::getDate))
                 .collect(Collectors.toList());
     }
 

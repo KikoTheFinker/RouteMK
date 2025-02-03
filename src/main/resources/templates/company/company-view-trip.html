@@ -4,11 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Route Trips</title>
-    <link rel="stylesheet" th:href="@{/css/company/company-route.css}"/>
+    <link rel="stylesheet" th:href="@{/css/trip-route-filter-table.css}"/>
     <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
-        .hidden { display: none !important; }
-        .notification { margin: 20px; font-style: italic; color: #888; }
+        .hidden {
+            display: none !important;
+        }
+
+        .notification {
+            margin: 20px;
+            font-style: italic;
+            color: #888;
+        }
 
         .modal {
             position: fixed;
@@ -23,6 +30,7 @@
             justify-content: center;
             align-items: center;
         }
+
         .modal-content {
             background-color: #fff;
             padding: 20px;
@@ -31,15 +39,11 @@
             border-radius: 5px;
             position: relative;
         }
-        .modal-content h2 { margin-top: 0; }
-        .close-modal {
-            position: absolute;
-            right: 15px;
-            top: 10px;
-            font-size: 24px;
-            font-weight: bold;
-            cursor: pointer;
+
+        .modal-content h2 {
+            margin-top: 0;
         }
+
         .location-entry {
             border: 1px solid #ccc;
             padding: 8px;
@@ -48,11 +52,16 @@
             align-items: center;
             gap: 8px;
         }
-        .location-entry.fixed { background-color: #eee; }
+
+        .location-entry.fixed {
+            background-color: #eee;
+        }
+
         .location-entry select,
         .location-entry input[type="time"] {
             flex: 1;
         }
+
         .location-entry button.remove-location {
             background: #f44336;
             color: white;
@@ -89,19 +98,19 @@
                 </select>
             </div>
             <div class="mb-3 trip-filter-criteria w-100">
-                <label for="beforeDate" class="form-label">Before Date</label>
-                <input type="date" id="beforeDate" class="form-control" placeholder="Before Date">
-            </div>
-            <div class="mb-3 trip-filter-criteria w-100">
                 <label for="afterDate" class="form-label">After Date</label>
                 <input type="date" id="afterDate" class="form-control" placeholder="After Date">
             </div>
             <div class="mb-3 trip-filter-criteria w-100">
-                <label for="companyFilter" class="form-label">Company Name</label>
-                <input type="text" id="companyFilter" class="form-control" placeholder="Company Name">
+                <label for="beforeDate" class="form-label">Before Date</label>
+                <input type="date" id="beforeDate" class="form-control" placeholder="Before Date">
             </div>
         </div>
+        <div class="mb-2 text-center">
+            <button id="resetFiltersButton" class="btn-standard">Reset Filters</button>
+        </div>
     </div>
+
 
     <div style="margin-bottom: 5px">
         <button id="newTripButton" class="btn-standard">+ New Trip</button>
@@ -112,7 +121,6 @@
             <table class="routes-table">
                 <thead>
                 <tr>
-                    <th>Trip ID</th>
                     <th>Date</th>
                     <th>Free Seats</th>
                     <th>Stops</th>
@@ -123,27 +131,29 @@
                 </thead>
                 <tbody>
                 <tr th:each="trip : ${trips}" th:attr="data-status=${trip.getStatus()}">
-                    <td th:text="${trip.getTripId()}"></td>
                     <td th:text="${trip.getDate()}"></td>
                     <td th:text="${trip.getFreeSeats()}"></td>
-                    <td>
-                        <ul>
-                            <li th:if="${!trip.getStops().isEmpty()}" th:each="stop : ${trip.getStops()}">
-                                <span th:text="${stop.getLocation().getName()}"></span>
-                                (<span th:text="${stop.getStopTime()}"></span>)
-                            </li>
-                            <li th:if="${trip.getStops().isEmpty()}">No Stops</li>
-                        </ul>
+                    <td class="text-center">
+                        <button class="btn-standard view-stops-btn" data-trip-id="${trip.getTripId()}">View Stops
+                        </button>
+                        <div class="hidden-stops hidden" th:each="stop : ${trip.getStops()}">
+                            <span class="stop-location" th:text="${stop.getLocation().getName()}"></span>
+                            <span class="stop-time" th:text="${stop.getStopTime()}"></span>
+                        </div>
                     </td>
+
                     <td th:text="${trip.getStatus()}"></td>
                     <td th:text="${trip.getTranOrg().getCompanyName()}"></td>
-                    <td class="action-column">
-                        <a th:href="@{/routes/company/view-trips/edit-trip/{tripId}(tripId=${trip.getTripId()})}" class="btn-standard">Edit</a>
-                        <form th:action="@{/routes/company/view-trips/delete-trip/{tripId}(tripId=${trip.getTripId()})}"
-                              method="POST" style="display: inline;"
-                              th:if="${#authorization.expression('!hasRole(''DRIVER'')')}">
-                            <button type="submit" class="btn-redoutline">Delete</button>
-                        </form>
+                    <td class="text-center">
+                        <div class="d-flex justify-content-center gap-2">
+                            <a th:href="@{/routes/company/view-trips/edit-trip/{tripId}(tripId=${trip.getTripId()})}"
+                               class="btn-standard">Edit</a>
+                            <form th:action="@{/routes/company/view-trips/delete-trip/{tripId}(tripId=${trip.getTripId()})}"
+                                  method="POST" style="display: inline;"
+                                  th:if="${#authorization.expression('!hasRole(''DRIVER'')')}">
+                                <button type="submit" class="btn-redoutline">Delete</button>
+                            </form>
+                        </div>
                     </td>
                 </tr>
                 </tbody>
@@ -155,11 +165,20 @@
     </div>
 </div>
 
+<div id="stopsModal" class="modal hidden">
+    <div class="modal-content wide">
+        <span class="close-modal" id="closeStopsModal">&times;</span>
+        <h2 class="modal-title">🗺️ Trip Stops Overview</h2>
+        <div id="stopsFlow" class="stops-flow"></div>
+    </div>
+</div>
+
 <div id="newTripModal" class="modal hidden">
     <div class="modal-content">
         <span class="close-modal" id="closeModal">&times;</span>
         <h2>Add New Trip</h2>
-        <form id="newTripForm" th:action="@{/routes/company/view-trips/{routeId}/add-trip(routeId=${routeId})}" method="POST">
+        <form id="newTripForm" th:action="@{/routes/company/view-trips/{routeId}/add-trip(routeId=${routeId})}"
+              method="POST">
             <div class="form-group">
                 <label for="tripDate">Date</label>
                 <input type="date" id="tripDate" name="date" class="form-control" required>
@@ -201,5 +220,6 @@
 </script>
 <script src="/js/modal.js"></script>
 <script src="/js/filtering.js"></script>
+<script src="/js/stops-modal.js"></script>
 </body>
 </html>
