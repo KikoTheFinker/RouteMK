@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Trips</title>
+    <link rel="stylesheet" th:href="@{/css/company/company-route.css}"/>
+    <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        .hidden {
+            display: none;
+        }
+
+        .notification {
+            margin: 20px;
+            font-style: italic;
+            color: #888;
+        }
+
+        input[type = "text"], label {
+            display: inline;
+        }
+
+        #main {
+            flex: 1;
+            width: 50%;
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+
+<div id="main" class="container mt-4">
+    <div class="title-container text-center">
+        <h1 class="title">Search routes</h1>
+    </div>
+
+    <div class="filter-container-wrapper">
+        <div class="filter-container d-flex flex-column align-items-center p-3 border rounded shadow-sm bg-light">
+            <form th:method="POST" th:action="@{/search-routes}" class="w-100 align-items-center">
+                <div class="row mb-3 g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">From</label>
+                        <input type="text" name="from" class="form-control">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">To</label>
+                        <input type="text" name="to" class="form-control">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-danger w-50">Search</button>
+            </form>
+
+
+            <!--            <div th:if="${routes} != null" class="w-100">-->
+            <!--                <div th:each="route : ${routes}" class="mb-3 trip-filter-criteria w-100 p-3 border rounded bg-white">-->
+            <!--                    <span class="location fw-bold text-danger" th:text="${route.source.name}"></span> →-->
+            <!--                    <span class="location fw-bold text-danger" th:text="${route.destination.name}"></span>-->
+            <!--                    <p class="mt-2 mb-1">Organizer:-->
+            <!--                        <span class="transport-organizer fw-semibold" th:text="${route.tranOrg.companyName}"></span>-->
+            <!--                    </p>-->
+
+            <!--                    <form th:action="@{/trips/{routeId}(routeId=${route.routeId})}" th:method="GET">-->
+            <!--                        <button type="submit" class="btn-redoutline">View trips</button>-->
+            <!--                    </form>-->
+            <!--                </div>-->
+            <!--            </div>-->
+
+
+            <div class="routes-container">
+                <div class="routes-table-wrapper">
+                    <table class="routes-table">
+                        <thead>
+                        <tr>
+                            <th>Departure and Arival</th>
+                            <th>Organizer</th>
+                            <th>
+<!--                                <img src="/images/cog.png" alt="A cute cog" width='24' height='24'/>-->
+                                Explore
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody id="routes-list">
+                        <tr th:each="route : ${routes}">
+                            <td th:text="${route.getSource().getName()} + '   ->   ' +  ${route.getDestination().getName()}" ></td>
+<!--                            <td th:text="${route.getDestination().getName()}"></td>-->
+                            <td th:text="${route.tranOrg.companyName}"></td>
+
+                            <td class="action-column">
+                                <form th:action="@{/trips/{routeId}(routeId=${route.routeId})}" th:method="GET">
+                                    <button type="submit" class="btn-redoutline">View trips</button>
+                                </form>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+            <div id="noTrips" class="notification hidden text-danger text-center fw-semibold"
+                 th:if="${noRoutesMessage} != null"
+                 th:text="${noRoutesMessage}">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>

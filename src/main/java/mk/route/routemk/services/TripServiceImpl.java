@@ -5,6 +5,8 @@ import mk.route.routemk.models.Trip;
 import mk.route.routemk.repostories.interfaces.GenericRepository;
 import mk.route.routemk.services.interfaces.TicketService;
 import mk.route.routemk.services.interfaces.TripService;
+import mk.route.routemk.specifications.RouteSpecification;
+import mk.route.routemk.specifications.TripSpecification;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -30,4 +32,10 @@ public class TripServiceImpl extends GenericServiceImpl<Trip, Integer> implement
                 .sorted(Comparator.comparing(Trip::getDate))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<Trip> findTripsByRouteId(Integer routeId) {
+        return findAllByPredicate(TripSpecification.tripsByRoute(routeId));
+    }
+
 }
