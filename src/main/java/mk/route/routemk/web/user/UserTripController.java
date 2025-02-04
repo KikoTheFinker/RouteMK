@@ -1,8 +1,6 @@
 package mk.route.routemk.web.user;
 
-import mk.route.routemk.models.Account;
 import mk.route.routemk.models.Route;
-import mk.route.routemk.models.Trip;
 import mk.route.routemk.services.auth.AuthenticationService;
 import mk.route.routemk.services.interfaces.RouteService;
 import mk.route.routemk.services.interfaces.TripService;
@@ -12,14 +10,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-
 @Controller
 @RequestMapping("/trips")
 public class UserTripController {
-
     private final AuthenticationService authenticationService;
     private final TripService tripService;
     private final RouteService routeService;
@@ -31,26 +24,20 @@ public class UserTripController {
     }
 
     @GetMapping("/{routeId}")
-    public String viewTripsForRoute(Model model, @PathVariable Integer routeId) {
-        List<Trip> trips = tripService.findTripsByRouteId(routeId);
+    public String viewTripsForRoute(@PathVariable Integer routeId, Model model) {
         Route route = routeService.findById(routeId);
+
+        model.addAttribute("trips", tripService.findTripsByRouteId(routeId));
+        model.addAttribute("routeSource", route.getSource().getName());
+        model.addAttribute("routeDestination", route.getDestination().getName());
+
         model.addAttribute("display", "user/view-trips");
-        model.addAttribute("trips", trips);
-        model.addAttribute("from", route.getSource().getName());
-        model.addAttribute("to", route.getDestination().getName());
         return "master";
     }
 
     @GetMapping("/user")
     public String myTripsPage(Model model) {
-
-        Optional<Account> accountOpt = authenticationService.getAuthenticatedAccount();
-
-        assert accountOpt.isPresent();
-
-        Integer currentAccountId = accountOpt
-                .get()
-                .getAccountId();
+        Integer currentAccountId = authenticationService.getAuthenticatedUserId();
 
         model.addAttribute("trips", tripService.findTripsBookedByAccount(currentAccountId));
         model.addAttribute("display", "user/my-trips");

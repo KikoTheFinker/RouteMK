@@ -126,11 +126,11 @@
                     <th>Stops</th>
                     <th>Status</th>
                     <th>Company</th>
-                    <th>Actions</th>
+                    <th>Payment</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="trip : ${trips}" th:attr="data-status=${trip.getStatus()}">
+                <tr th:each="trip : ${trips}" th:if="${trip != null}" th:attr="data-status=${trip.getStatus()}">
                     <td th:text="${trip.getDate()}"></td>
                     <td th:text="${trip.getFreeSeats()}"></td>
                     <td class="text-center">
@@ -168,23 +168,22 @@
 <div id="stopsModal" class="modal hidden">
     <div class="modal-content wide">
         <span class="close-modal" id="closeStopsModal">&times;</span>
-        <h2 class="modal-title">🗺️ Trip Stops Overview</h2>
+        <h2 class="modal-title">Trip Stops Overview</h2>
         <div id="stopsFlow" class="stops-flow"></div>
     </div>
 </div>
 
 <div id="newTripModal" class="modal hidden">
-    <div class="modal-content">
+    <div class="modal-content wide">
         <span class="close-modal" id="closeModal">&times;</span>
-        <h2>Add New Trip</h2>
-        <form id="newTripForm" th:action="@{/routes/company/view-trips/{routeId}/add-trip(routeId=${routeId})}"
-              method="POST">
+        <h2 class="modal-title">Add New Trip</h2>
+        <form id="newTripForm" th:action="@{/routes/company/view-trips/{routeId}/add-trip(routeId=${routeId})}" method="POST">
             <div class="form-group">
-                <label for="tripDate">Date</label>
+                <label for="tripDate" style="font-weight: bold">Date</label>
                 <input type="date" id="tripDate" name="date" class="form-control" required>
             </div>
             <div class="form-group">
-                <label for="freeSeats">Free Seats</label>
+                <label for="freeSeats" style="font-weight: bold">Free Seats</label>
                 <input type="number" id="freeSeats" name="freeSeats" class="form-control" required>
             </div>
             <h3>Locations</h3>
@@ -203,19 +202,20 @@
                 <label>ETA:</label>
                 <input type="time" name="etas[]" class="form-control" required>
             </div>
-            <button type="button" id="addLocationButton" class="btn-standard">Add Location</button>
+            <button type="button" id="addLocationButton" class="btn-standard">+ Add Location</button>
             <br/><br/>
-            <button type="submit" class="btn-standard">Submit</button>
+            <button type="submit" class="btn-standard" style="padding: 8px 14px">Submit</button>
         </form>
     </div>
 </div>
+
 
 <script th:inline="javascript">
     /*<![CDATA[*/
     window.modalData = {
         allLocations: /*[[${locations}]]*/ [],
-        routeSourceId: /*[[${routeSource.getId()}]]*/ 0,
-        routeDestinationId: /*[[${routeDestination.getId()}]]*/ 0
+        routeSourceId: /*[[${from.getId()}]]*/ 0,
+        routeDestinationId: /*[[${to.getId()}]]*/ 0
     };
 </script>
 <script src="/js/modal.js"></script>

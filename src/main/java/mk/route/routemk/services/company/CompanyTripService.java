@@ -45,7 +45,6 @@ public class CompanyTripService {
         trip.setFreeSeats(freeSeats);
         trip.setTranOrgId(transportOrganizerId);
         trip.setRouteId(routeId);
-        trip.setStatus(Status.NOT_STARTED);
         tripService.save(trip);
 
         saveTripStopsForTrip(trip.getTripId(), locationIds, etas);

@@ -1,5 +1,6 @@
 package mk.route.routemk.web.company;
 
+import mk.route.routemk.models.Route;
 import mk.route.routemk.models.Trip;
 import mk.route.routemk.services.company.CompanyTripService;
 import mk.route.routemk.services.interfaces.LocationService;
@@ -33,12 +34,13 @@ public class CompanyTripController {
     @GetMapping("/{routeId}")
     public String routeTrips(@PathVariable Integer routeId, Model model) {
         List<Trip> trips = companyTripService.getAuthorizedTripsByRoute(routeId);
+        Route route = routeService.findById(routeId);
 
         model.addAttribute("trips", trips);
         model.addAttribute("routeId", routeId);
         model.addAttribute("locations", locationService.findAll());
-        model.addAttribute("routeSource", routeService.findById(routeId).getSource());
-        model.addAttribute("routeDestination", routeService.findById(routeId).getDestination());
+        model.addAttribute("routeSource", route.getSource());
+        model.addAttribute("routeDestination", route.getDestination());
         model.addAttribute("display", "/company/company-view-trip");
 
         return "master";

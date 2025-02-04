@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface TripService extends GenericService<Trip, Integer> {
 
-    Collection<? extends Trip> findTripsBookedByAccount(Integer accountId);
+    List<Trip> findTripsBookedByAccount(Integer accountId);
     List<Trip> findTripsByRouteId(Integer routeId);
 }

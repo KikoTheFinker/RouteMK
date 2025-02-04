@@ -35,14 +35,14 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         authorizeRequests ->
                                 authorizeRequests
-                                        .requestMatchers("/", "/home", "/login", "/css/**", "/js/**", "/images/**", "/register", "/search-routes", "/trips/{routeId}")
+                                        .requestMatchers("/", "/home", "/login", "/css/**", "/js/**", "/images/**", "/register", "/search-routes", "/trips/{routeId:\\d+}")
                                         .permitAll()
                                         .requestMatchers("/routes/company/**").hasAnyRole("TRANSPORT_ORGANIZER", "DRIVER")
                                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                                        .requestMatchers("/trips/user/**").hasAnyRole("USER", "ADMIN")
+                                        .requestMatchers("/trips/user/**").hasRole("USER")
                                         .anyRequest().authenticated()
                 )
-                .formLogin( login ->
+                .formLogin(login ->
                         login.loginPage("/login")
                                 .permitAll()
                                 .defaultSuccessUrl("/")

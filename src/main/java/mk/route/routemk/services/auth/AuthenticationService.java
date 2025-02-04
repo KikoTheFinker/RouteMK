@@ -98,5 +98,4 @@ public class AuthenticationService {
         return getRoles().contains("ROLE_" + role);
     }
 
-
 }

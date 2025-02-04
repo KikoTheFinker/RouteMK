@@ -8,13 +8,40 @@
     <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         .hidden {
-            display: none;
+            display: none !important;
         }
 
         .notification {
             margin: 20px;
             font-style: italic;
             color: #888;
+        }
+
+        .modal {
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 20px;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 5px;
+            position: relative;
+        }
+
+        .modal-content h2 {
+            margin-top: 0;
         }
     </style>
 </head>
@@ -60,46 +87,59 @@
     </div>
 
     <div class="routes-container">
-    </div>
-    <div class="routes-table-wrapper">
-        <table class="routes-table">
-            <thead>
-            <tr>
-                <th>Date</th>
-                <th>Free Seats</th>
-                <th>Status</th>
-                <th>Route</th>
-                <th>Company</th>
-                <th>Stops</th>
-                <th>Manage</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="trip : ${trips}" th:attr="data-status=${trip.getStatus()}">
-                <td th:text="${trip.getDate()}"></td>
-                <td th:text="${trip.getFreeSeats()}"></td>
-                <td th:text="${trip.getStatus()}"></td>
-                <td th:text="${trip.getRoute().getSource().getName()} + ' - ' + ${trip.getRoute().getDestination().getName()}"></td>
-                <td th:text="${trip.getTranOrg.getCompanyName()}"></td>
-                <td th:if="${!trip.getStops().isEmpty()}">
-                    <ul class="list-unstyled">
-                        <li th:if="${!trip.getStops().isEmpty()}" th:each="stop : ${trip.getStops()}">
-                            <span class="fw-bold" th:text="${stop.getLocation().getName()}"></span>
-                            (<span class="text-muted" th:text="${stop.getStopTime()}"></span>)
-                        </li>
-                        <li th:if="${trip.getStops().isEmpty()}">No Stops</li>
-                    </ul>
-                </td>
-                <td class="text-centered text-danger" th:if="${trip.getStops().isEmpty()}"> No Stops</td>
-                <td></td>
-            </tr>
-            </tbody>
-        </table>
-        <div id="noTrips" class="notification hidden">
-            No trips available for the selected criteria.
+        <div class="routes-table-wrapper">
+            <table class="routes-table">
+                <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Free Seats</th>
+                    <th>Route</th>
+                    <th>Stops</th>
+                    <th>Status</th>
+                    <th>Company</th>
+                    <th>Payment</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="trip : ${trips}" th:if="${trip != null}" th:attr="data-status=${trip.getStatus()}">
+                    <td th:text="${trip.getDate()}"></td>
+                    <td th:text="${trip.getFreeSeats()}"></td>
+                    <td th:text="${trip.getRoute().getSource().getName()} + ' → ' + ${trip.getRoute().getDestination().getName()}"></td>
+                    <td class="text-center">
+                        <button class="btn-standard view-stops-btn" data-trip-id="${trip.getTripId()}">View Stops
+                        </button>
+                        <div class="hidden-stops hidden" th:each="stop : ${trip.getStops()}">
+                            <span class="stop-location" th:text="${stop.getLocation().getName()}"></span>
+                            <span class="stop-time" th:text="${stop.getStopTime()}"></span>
+                        </div>
+                    </td>
+
+                    <td th:text="${trip.getStatus()}"></td>
+                    <td th:text="${trip.getTranOrg().getCompanyName()}"></td>
+                    <td class="text-center">
+                        <div class="d-flex justify-content-center gap-2">
+                            <button class="btn-standard">Details</button>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div id="noTrips" class="notification hidden">
+                No trips available for the selected criteria.
+            </div>
         </div>
     </div>
 </div>
+
+<div id="stopsModal" class="modal hidden">
+    <div class="modal-content wide">
+        <span class="close-modal" id="closeStopsModal">&times;</span>
+        <h2 class="modal-title">Trip Stops Overview</h2>
+        <div id="stopsFlow" class="stops-flow"></div>
+    </div>
+</div>
+
 <script src="/js/filtering.js"></script>
+<script src="/js/stops-modal.js"></script>
 </body>
 </html>

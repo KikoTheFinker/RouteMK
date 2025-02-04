@@ -1,13 +1,8 @@
 package mk.route.routemk.web.user;
 
 import mk.route.routemk.models.Route;
-import mk.route.routemk.services.company.CompanyRouteService;
 import mk.route.routemk.services.interfaces.RouteService;
 import mk.route.routemk.services.interfaces.TripService;
-import mk.route.routemk.specifications.RouteSpecification;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,27 +21,21 @@ public class UserRouteController {
         this.routeService = routeService;
     }
 
-    @GetMapping()
+    @GetMapping
     public String display(Model model) {
         model.addAttribute("display", "user/search-routes");
         model.addAttribute("routes", routeService.findAll());
         return "master";
     }
 
-    @PostMapping()
+    @PostMapping
     public String findRoutesByFromAndTo(@RequestParam(required = false) String from,
                                         @RequestParam(required = false) String to,
-                                        Model model
-    ) {
+                                        Model model) {
         List<Route> filteredRoutes = routeService.findRouteByFromAndToDest(from, to);
-        if (filteredRoutes.isEmpty()) {
-            model.addAttribute("noRoutesMessage", "No routes found for your search.");
-        } else {
-            model.addAttribute("routes", filteredRoutes);
-        }
+
+        model.addAttribute(filteredRoutes.isEmpty() ? "noRoutesMessage" : "routes", filteredRoutes.isEmpty() ? "No routes found for your search." : filteredRoutes);
         model.addAttribute("display", "user/search-routes");
         return "master";
     }
-
-
 }

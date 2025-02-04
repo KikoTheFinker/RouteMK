@@ -325,15 +325,14 @@ select:hover {
     max-width: 500px;
     border-radius: 15px;
     position: relative;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-    border: 2px solid #d02b2b;
+    border: 1px solid #b4b4b4;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.09);
     transition: all 0.3s ease;
     animation: slideIn 0.3s ease;
 }
 
 .modal-title {
     text-align: center;
-    color: #d02b2b;
     font-size: 1.8rem;
     margin-bottom: 20px;
     letter-spacing: 1px;
@@ -367,11 +366,14 @@ select:hover {
 }
 
 .arrow-down {
-    font-size: 20px;
-    color: #d02b2b;
+    font-size: 22px;
     font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    margin: 5px 0;
+    height: 20px;
 }
-
 
 .stop-box:hover {
     transform: scale(1.03);
@@ -421,7 +423,7 @@ select:hover {
     position: absolute;
     right: 20px;
     top: 15px;
-    font-size: 28px;
+    font-size: 32px;
     font-weight: bold;
     color: #d02b2b;
     cursor: pointer;

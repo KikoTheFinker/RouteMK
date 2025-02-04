@@ -25,7 +25,7 @@ public class TripServiceImpl extends GenericServiceImpl<Trip, Integer> implement
     }
 
     @Override
-    public List<? extends Trip> findTripsBookedByAccount(Integer accountId) {
+    public List<Trip> findTripsBookedByAccount(Integer accountId) {
         return ticketService.findTripsByAccountId(accountId)
                 .stream()
                 .map(Ticket::getTrip)

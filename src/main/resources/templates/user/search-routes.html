@@ -75,7 +75,7 @@
                     <table class="routes-table">
                         <thead>
                         <tr>
-                            <th>Departure and Arival</th>
+                            <th>Departure and Arrival</th>
                             <th>Organizer</th>
                             <th>
 <!--                                <img src="/images/cog.png" alt="A cute cog" width='24' height='24'/>-->
@@ -99,9 +99,7 @@
                     </table>
                 </div>
             </div>
-
-
-            <div id="noTrips" class="notification hidden text-danger text-center fw-semibold"
+            <div id="noTrips" class="notification text-danger text-center fw-semibold"
                  th:if="${noRoutesMessage} != null"
                  th:text="${noRoutesMessage}">
             </div>

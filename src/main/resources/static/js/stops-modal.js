@@ -15,17 +15,26 @@ document.addEventListener("DOMContentLoaded", function () {
                 const location = stopElements[i]?.innerText || "Unknown City";
                 const time = stopElements[i + 1]?.innerText || "Unknown Time";
 
+                const stopWrapper = document.createElement("div");
+                stopWrapper.className = "stop-wrapper";
+
                 const stopBox = document.createElement("div");
                 stopBox.className = "stop-box";
                 stopBox.textContent = `${location}: ${time}`;
-                stopsFlow.appendChild(stopBox);
 
-                if (i + 2 < stopElements.length) {
+                stopWrapper.appendChild(stopBox);
+
+                const isLastInRow = (i / 2 + 1) % 4 === 0;
+                const isLastStop = i + 2 >= stopElements.length;
+
+                if (!isLastInRow && !isLastStop) {
                     const arrow = document.createElement("div");
                     arrow.className = "arrow-down";
                     arrow.textContent = "↓";
-                    stopsFlow.appendChild(arrow);
+                    stopWrapper.appendChild(arrow);
                 }
+
+                stopsFlow.appendChild(stopWrapper);
             }
 
             stopsModal.classList.remove("hidden");
