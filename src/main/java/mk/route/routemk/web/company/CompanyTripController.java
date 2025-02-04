@@ -41,6 +41,10 @@ public class CompanyTripController {
         model.addAttribute("locations", locationService.findAll());
         model.addAttribute("routeSource", route.getSource());
         model.addAttribute("routeDestination", route.getDestination());
+
+        System.out.println(route.getSource());
+        System.out.println(route.getDestination());
+
         model.addAttribute("display", "/company/company-view-trip");
 
         return "master";

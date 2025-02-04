@@ -51,10 +51,12 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            border-radius: 5px;
         }
 
         .location-entry.fixed {
             background-color: #eee;
+            border-radius: 5px;
         }
 
         .location-entry select,
@@ -177,7 +179,7 @@
     <div class="modal-content wide">
         <span class="close-modal" id="closeModal">&times;</span>
         <h2 class="modal-title">Add New Trip</h2>
-        <form id="newTripForm" th:action="@{/routes/company/view-trips/{routeId}/add-trip(routeId=${routeId})}" method="POST">
+        <form id="newTripForm" th:action="@{/routes/company/view-trips/{routeId}/add-trip (routeId=${routeId})}" method="POST">
             <div class="form-group">
                 <label for="tripDate" style="font-weight: bold">Date</label>
                 <input type="date" id="tripDate" name="date" class="form-control" required>
@@ -214,8 +216,8 @@
     /*<![CDATA[*/
     window.modalData = {
         allLocations: /*[[${locations}]]*/ [],
-        routeSourceId: /*[[${from.getId()}]]*/ 0,
-        routeDestinationId: /*[[${to.getId()}]]*/ 0
+        routeSourceId: /*[[${routeSource.getId()}]]*/ 0,
+        routeDestinationId: /*[[${routeDestination.getId()}]]*/ 0
     };
 </script>
 <script src="/js/modal.js"></script>

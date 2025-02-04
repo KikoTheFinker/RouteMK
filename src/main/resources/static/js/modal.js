@@ -96,6 +96,7 @@ document.addEventListener("DOMContentLoaded", function () {
     var closeModal = document.getElementById("closeModal");
 
     newTripButton.addEventListener("click", function (event) {
+        console.log("here")
         event.preventDefault();
         newTripModal.classList.remove("hidden");
     });
