@@ -136,29 +136,40 @@
                     <td th:text="${trip.getDate()}"></td>
                     <td th:text="${trip.getFreeSeats()}"></td>
                     <td class="text-center">
-                        <button class="btn-standard view-stops-btn" data-trip-id="${trip.getTripId()}">View Stops
+                        <button class="btn-standard view-stops-btn" th:data-trip-id="${trip.getTripId()}">View Stops
                         </button>
-                        <div class="hidden-stops hidden" th:each="stop : ${trip.getStops()}">
-                            <span class="stop-location" th:text="${stop.getLocation().getName()}"></span>
-                            <span class="stop-time" th:text="${stop.getStopTime()}"></span>
+
+                        <div class="hidden-stops hidden" th:each="stop, iterStat : ${trip.getStops()}"
+                             th:data-trip-id="${trip.getTripId()}">
+                            <input type="hidden"
+                                   th:id="'stop-location-' + ${trip.getTripId()} + '-' + ${iterStat.index}"
+                                   th:value="${stop.getLocation().getName()}"/>
+                            <input type="hidden" th:id="'stop-time-' + ${trip.getTripId()} + '-' + ${iterStat.index}"
+                                   th:value="${stop.getStopTime()}"/>
                         </div>
                     </td>
 
                     <td th:text="${trip.getStatus()}"></td>
                     <td th:text="${trip.getTranOrg().getCompanyName()}"></td>
                     <td class="text-center">
-                        <div class="d-flex justify-content-center gap-2">
-                            <a th:href="@{/routes/company/view-trips/edit-trip/{tripId}(tripId=${trip.getTripId()})}"
-                               class="btn-standard">Edit</a>
-                            <form th:action="@{/routes/company/view-trips/delete-trip/{tripId}(tripId=${trip.getTripId()})}"
-                                  method="POST" style="display: inline;"
-                                  th:if="${#authorization.expression('!hasRole(''DRIVER'')')}">
+                        <div class="d-flex justify-content-center gap-2"
+                             th:if="${#authorization.expression('!hasRole(''DRIVER'')')}">
+                            <button type="button"
+                                    class="editTripButton btn-standard"
+                                    th:data-trip-id="${trip.tripId}"
+                                    th:data-trip-date="${trip.date}"
+                                    th:data-free-seats="${trip.freeSeats}">
+                                Edit
+                            </button>
+                            <form th:action="@{/routes/company/view-trips/{routeId}/delete-trip/{tripId}(routeId=${routeId}, tripId=${trip.getTripId()})}"
+                                  method="POST" style="display: inline;">
                                 <button type="submit" class="btn-redoutline">Delete</button>
                             </form>
                         </div>
                     </td>
                 </tr>
                 </tbody>
+
             </table>
             <div id="noTrips" class="notification hidden">
                 No trips available for the selected criteria.
@@ -179,15 +190,17 @@
     <div class="modal-content wide">
         <span class="close-modal" id="closeModal">&times;</span>
         <h2 class="modal-title">Add New Trip</h2>
-        <form id="newTripForm" th:action="@{/routes/company/view-trips/{routeId}/add-trip (routeId=${routeId})}" method="POST">
+        <form id="newTripForm" th:action="@{/routes/company/view-trips/{routeId}/add-trip (routeId=${routeId})}"
+              method="POST">
             <div class="form-group">
-                <label for="tripDate" style="font-weight: bold">Date</label>
+                <label for="tripDate"><strong>Date</strong></label>
                 <input type="date" id="tripDate" name="date" class="form-control" required>
             </div>
             <div class="form-group">
-                <label for="freeSeats" style="font-weight: bold">Free Seats</label>
+                <label for="freeSeats"><strong>Free Seats</strong></label>
                 <input type="number" id="freeSeats" name="freeSeats" class="form-control" required>
             </div>
+
             <h3>Locations</h3>
             <div class="location-entry fixed">
                 <strong>From:</strong>
@@ -196,7 +209,9 @@
                 <label>ETA:</label>
                 <input type="time" name="etas[]" class="form-control" required>
             </div>
+
             <div id="additionalLocationsSection"></div>
+
             <div class="location-entry fixed">
                 <strong>To:</strong>
                 <span th:text="${routeDestination.getName()}"></span>
@@ -204,9 +219,50 @@
                 <label>ETA:</label>
                 <input type="time" name="etas[]" class="form-control" required>
             </div>
-            <button type="button" id="addLocationButton" class="btn-standard">+ Add Location</button>
+
+            <button type="button" id="addLocationButton" class="btn-standard">+ Add Stop</button>
             <br/><br/>
-            <button type="submit" class="btn-standard" style="padding: 8px 14px">Submit</button>
+            <button type="submit" class="btn-standard">Submit</button>
+        </form>
+    </div>
+</div>
+
+<div id="editTripModal" class="modal hidden">
+    <div class="modal-content wide">
+        <span class="close-modal" id="closeEditModal">&times;</span>
+        <h2 class="modal-title">Edit Trip</h2>
+        <form id="editTripForm" method="POST">
+            <div class="form-group">
+                <label for="editTripDate"><strong>Date</strong></label>
+                <input type="date" id="editTripDate" name="date" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="editFreeSeats"><strong>Free Seats</strong></label>
+                <input type="number" id="editFreeSeats" name="freeSeats" class="form-control" required>
+            </div>
+
+            <h3>Locations</h3>
+            <div class="location-entry fixed">
+                <strong>From:</strong>
+                <span th:text="${routeSource.getName()}"></span>
+                <input type="hidden" name="locations[]" th:value="${routeSource.getId()}">
+                <label>ETA:</label>
+                <input type="time" name="etas[]" id="editFromStopETA" class="form-control" required>
+            </div>
+
+            <div id="editAdditionalLocationsSection"></div>
+
+            <div class="location-entry fixed">
+                <strong>To:</strong>
+                <span th:text="${routeDestination.getName()}"></span>
+                <input type="hidden" name="locations[]" th:value="${routeDestination.getId()}">
+                <label>ETA:</label>
+                <input type="time" name="etas[]" id="editToStopETA" class="form-control" required>
+            </div>
+
+            <button type="button" id="editAddLocationButton" class="btn-standard">+ Add Stop</button>
+            <br/><br/>
+            <button type="submit" class="btn-standard">Submit Changes</button>
         </form>
     </div>
 </div>
@@ -217,11 +273,12 @@
     window.modalData = {
         allLocations: /*[[${locations}]]*/ [],
         routeSourceId: /*[[${routeSource.getId()}]]*/ 0,
-        routeDestinationId: /*[[${routeDestination.getId()}]]*/ 0
+        routeDestinationId: /*[[${routeDestination.getId()}]]*/ 0,
+        routeId: /*[[${routeId}]]*/ 0
     };
 </script>
 <script src="/js/modal.js"></script>
-<script src="/js/filtering.js"></script>
 <script src="/js/stops-modal.js"></script>
+<script src="/js/filtering.js"></script>
 </body>
 </html>

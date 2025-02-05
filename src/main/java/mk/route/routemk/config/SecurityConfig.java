@@ -35,7 +35,14 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         authorizeRequests ->
                                 authorizeRequests
-                                        .requestMatchers("/", "/home", "/login", "/css/**", "/js/**", "/images/**", "/register", "/search-routes", "/trips/{routeId:\\d+}")
+                                        .requestMatchers("/", "/home",  // Globally available
+                                                "/login",
+                                                "/css/**",
+                                                "/js/**",
+                                                "/images/**",
+                                                "/register",
+                                                "/search-routes",
+                                                "/trips/{routeId:\\d+}")
                                         .permitAll()
                                         .requestMatchers("/routes/company/**").hasAnyRole("TRANSPORT_ORGANIZER", "DRIVER")
                                         .requestMatchers("/admin/**").hasRole("ADMIN")

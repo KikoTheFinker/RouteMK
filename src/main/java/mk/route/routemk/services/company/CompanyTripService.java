@@ -1,8 +1,8 @@
 package mk.route.routemk.services.company;
 
+import mk.route.routemk.models.Route;
 import mk.route.routemk.models.Trip;
 import mk.route.routemk.models.TripStop;
-import mk.route.routemk.models.enums.Status;
 import mk.route.routemk.services.interfaces.TripService;
 import mk.route.routemk.services.interfaces.TripStopService;
 import mk.route.routemk.specifications.TripSpecification;
@@ -32,8 +32,8 @@ public class CompanyTripService {
     /**
      * Creates a new trip after validating input and checking authorization.
      */
-    public void createTrip(Integer routeId, LocalDate date, int freeSeats, List<Integer> locationIds, List<LocalTime> etas) {
-        tripValidator.validateTripData(freeSeats, locationIds, etas);
+    public void createTrip(Route route, LocalDate date, int freeSeats, List<Integer> locationIds, List<LocalTime> etas) {
+        tripValidator.validateTripData(route.getSource().getId(), route.getDestination().getId(), freeSeats, locationIds, etas);
         Integer transportOrganizerId = authorizationService.getAuthenticatedTransportOrganizerId();
 
         if (!authorizationService.isAuthorizedTransportOrganizer(transportOrganizerId)) {
@@ -44,7 +44,7 @@ public class CompanyTripService {
         trip.setDate(date);
         trip.setFreeSeats(freeSeats);
         trip.setTranOrgId(transportOrganizerId);
-        trip.setRouteId(routeId);
+        trip.setRouteId(route.getRouteId());
         tripService.save(trip);
 
         saveTripStopsForTrip(trip.getTripId(), locationIds, etas);
@@ -95,7 +95,8 @@ public class CompanyTripService {
         return authorizationService.isAuthorizedTransportOrganizer(tripService.findById(tripId).getRoute().getTranOrg().getTranOrgId())
                 ? ((Supplier<Boolean>) (() -> {
             tripService.deleteById(tripId);
-            return true;})).get() : false;
+            return true;
+        })).get() : false;
     }
 
 }

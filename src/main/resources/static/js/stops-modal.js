@@ -1,3 +1,4 @@
+
 document.addEventListener("DOMContentLoaded", function () {
     const viewStopsButtons = document.querySelectorAll(".view-stops-btn");
     const stopsModal = document.getElementById("stopsModal");

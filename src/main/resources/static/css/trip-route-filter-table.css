@@ -444,6 +444,7 @@ select:hover {
     pointer-events: none;
     transition: opacity 0.3s ease;
 }
+
 @keyframes slideIn {
     from {
         transform: translateY(-50px);
@@ -453,4 +454,15 @@ select:hover {
         transform: translateY(0);
         opacity: 1;
     }
+}
+
+#goodbutton {
+    color: white;
+    background-color: #d02b2b;
+    transition: background-color 0.15s ease-in-out;
+    width: 100%;
+}
+
+#goodbutton:hover {
+    background-color: #b21c1c;
 }
