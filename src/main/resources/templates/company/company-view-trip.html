@@ -141,6 +141,7 @@
 
                         <div class="hidden-stops hidden" th:each="stop : ${trip.getStops()}">
                             <span class="stop-location" th:text="${stop.getLocation().getName()}"></span>
+                            <span class="stop-id" th:text="${stop.getTripStopId()}"></span>
                             <span class="stop-time" th:text="${stop.getStopTime()}"></span>
                         </div>
                     </td>
@@ -227,7 +228,10 @@
     <div class="modal-content wide">
         <span class="close-modal" id="closeEditModal">&times;</span>
         <h2 class="modal-title">Edit Trip</h2>
-        <form id="editTripForm" method="POST">
+        <form id="editTripForm"
+              th:action="@{/routes/company/view-trips/{routeId}/edit-trip/{tripId}(routeId=${routeId}, tripId=0)}"
+              method="POST">
+            <input type="hidden" name="tripId" id="editTripId">
             <div class="form-group">
                 <label for="editTripDate"><strong>Date</strong></label>
                 <input type="date" id="editTripDate" name="date" class="form-control" required>
@@ -260,6 +264,7 @@
             <br/><br/>
             <button type="submit" class="btn-standard">Submit Changes</button>
         </form>
+
     </div>
 </div>
 

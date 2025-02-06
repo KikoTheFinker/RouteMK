@@ -5,4 +5,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TripStopRepository extends GenericRepository<TripStop, Integer> {
+    void deleteByTripId(Integer tripId);
 }
+

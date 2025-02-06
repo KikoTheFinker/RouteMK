@@ -23,8 +23,8 @@ public class UserRouteController {
 
     @GetMapping
     public String display(Model model) {
-        model.addAttribute("display", "user/search-routes");
         model.addAttribute("routes", routeService.findAll());
+        model.addAttribute("display", "user/search-routes");
         return "master";
     }
 
@@ -33,7 +33,6 @@ public class UserRouteController {
                                         @RequestParam(required = false) String to,
                                         Model model) {
         List<Route> filteredRoutes = routeService.findRouteByFromAndToDest(from, to);
-
         model.addAttribute(filteredRoutes.isEmpty() ? "noRoutesMessage" : "routes", filteredRoutes.isEmpty() ? "No routes found for your search." : filteredRoutes);
         model.addAttribute("display", "user/search-routes");
         return "master";

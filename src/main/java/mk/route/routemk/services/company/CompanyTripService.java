@@ -1,5 +1,6 @@
 package mk.route.routemk.services.company;
 
+import jakarta.transaction.Transactional;
 import mk.route.routemk.models.Route;
 import mk.route.routemk.models.Trip;
 import mk.route.routemk.models.TripStop;
@@ -28,28 +29,50 @@ public class CompanyTripService {
         this.tripValidator = tripValidator;
     }
 
-
     /**
      * Creates a new trip after validating input and checking authorization.
      */
-    public void createTrip(Route route, LocalDate date, int freeSeats, List<Integer> locationIds, List<LocalTime> etas) {
-        tripValidator.validateTripData(route.getSource().getId(), route.getDestination().getId(), freeSeats, locationIds, etas);
-        Integer transportOrganizerId = authorizationService.getAuthenticatedTransportOrganizerId();
+    @Transactional
+    public void updateTrip(Route route, Integer tripId, LocalDate date, int freeSeats, List<Integer> locationIds, List<LocalTime> etas) {
+        validateAndAuthorizeTrip(route, freeSeats, locationIds, etas);
 
-        if (!authorizationService.isAuthorizedTransportOrganizer(transportOrganizerId)) {
-            throw new SecurityException("Unauthorized to access these trips.");
+        Trip trip = tripService.findById(tripId);
+        if (trip == null) {
+            throw new IllegalArgumentException("Trip not found with ID: " + tripId);
         }
+
+        trip.setDate(date);
+        trip.setFreeSeats(freeSeats);
+        tripService.save(trip);
+
+        tripStopService.deleteByTripId(tripId);
+        saveTripStopsForTrip(tripId, locationIds, etas);
+    }
+
+    public void createTrip(Route route, LocalDate date, int freeSeats, List<Integer> locationIds, List<LocalTime> etas) {
+        validateAndAuthorizeTrip(route, freeSeats, locationIds, etas);
 
         Trip trip = new Trip();
         trip.setDate(date);
         trip.setFreeSeats(freeSeats);
-        trip.setTranOrgId(transportOrganizerId);
+        trip.setTranOrgId(authorizationService.getAuthenticatedTransportOrganizerId());
         trip.setRouteId(route.getRouteId());
         tripService.save(trip);
 
         saveTripStopsForTrip(trip.getTripId(), locationIds, etas);
     }
 
+    /**
+     * Validates trip data and checks authorization.
+     */
+    private void validateAndAuthorizeTrip(Route route, int freeSeats, List<Integer> locationIds, List<LocalTime> etas) {
+        tripValidator.validateTripData(route.getSource().getId(), route.getDestination().getId(), freeSeats, locationIds, etas);
+        Integer transportOrganizerId = authorizationService.getAuthenticatedTransportOrganizerId();
+
+        if (!authorizationService.isAuthorizedTransportOrganizer(transportOrganizerId)) {
+            throw new SecurityException("Unauthorized to access these trips.");
+        }
+    }
 
     /**
      * Saves trip stops associated with a trip.

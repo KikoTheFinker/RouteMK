@@ -7,7 +7,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const dynamicLocations = allLocations.filter(loc => loc.id !== routeSourceId && loc.id !== routeDestinationId);
     let selectedLocationIds = [];
 
-    // Helper Functions
     function updateSelectOptions(selectElement) {
         const currentVal = selectElement.value;
         selectElement.innerHTML = `<option value="">Select location</option>`;
@@ -91,6 +90,10 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("newTripModal").classList.add("hidden");
     });
 
+    document.getElementById("closeEditModal").addEventListener("click", () => {
+        document.getElementById("editTripModal").classList.add("hidden");
+    });
+
     document.querySelectorAll('.editTripButton').forEach(button => {
         button.addEventListener('click', function () {
             const tripId = this.getAttribute('data-trip-id');
@@ -99,29 +102,50 @@ document.addEventListener("DOMContentLoaded", function () {
 
             document.getElementById('editTripDate').value = tripDate;
             document.getElementById('editFreeSeats').value = freeSeats;
+            document.getElementById("editTripId").value = tripId;
+
+            const form = document.getElementById('editTripForm');
+            form.action = `/routes/company/view-trips/${routeId}/edit-trip/${tripId}`
 
             const stopsContainer = document.getElementById('editAdditionalLocationsSection');
             stopsContainer.innerHTML = '';
 
-            const hiddenStops = document.querySelectorAll(`div[data-trip-id="${tripId}"] input`);
+            const stopElements = this.closest('tr').querySelectorAll('.hidden-stops');
+            if (stopElements.length === 0) {
+                console.error("No stops found for trip ID:", tripId);
+                return;
+            }
 
-            for (let i = 0; i < hiddenStops.length; i += 2) {
-                const location = hiddenStops[i].value;
-                const stopTime = hiddenStops[i + 1].value;
+            const stops = Array.from(stopElements).map(stop => ({
+                location: stop.querySelector('.stop-location')?.innerText.trim() || '',
+                stopId: stop.querySelector('.stop-id')?.innerText.trim() || '',
+                stopTime: stop.querySelector('.stop-time')?.innerText.trim() || ''
+            }));
 
+            if (stops.length < 2) {
+                console.error("Insufficient stops data for trip ID:", tripId);
+                return;
+            }
+
+            document.getElementById('editFromStopETA').value = stops[0].stopTime;
+
+            for (let i = 1; i < stops.length - 1; i++) {
                 const stopElement = document.createElement('div');
-                stopElement.classList.add('location-entry');
+                stopElement.classList.add('location-entry', 'dynamic');
 
                 stopElement.innerHTML = `
-                <strong>Stop ${i / 2 + 1}:</strong>
-                <input type="text" name="locations[]" value="${location}" readonly />
+                <input type="hidden" name="stopIds[]" value="${stops[i].stopId}" />
+                <strong>Stop:</strong>
+                <input type="text" name="locations[]" value="${stops[i].location}" class="form-control" />
                 <label>ETA:</label>
-                <input type="time" name="etas[]" value="${stopTime}" required />
-                <button type="button" class="remove-location">Remove</button>
+                <input type="time" name="etas[]" value="${stops[i].stopTime}" class="form-control" required />
+                <button type="button" class="remove-location btn-redoutline">Remove</button>
             `;
 
                 stopsContainer.appendChild(stopElement);
             }
+
+            document.getElementById('editToStopETA').value = stops[stops.length - 1].stopTime;
 
             document.getElementById('editTripModal').classList.remove('hidden');
         });
@@ -129,7 +153,25 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.addEventListener('click', function (event) {
         if (event.target.classList.contains('remove-location')) {
+            event.target.closest('.location-entry').remove();
+        }
+    });
+
+
+
+    document.addEventListener('click', function (event) {
+        if (event.target.classList.contains('remove-location')) {
             event.target.parentElement.remove();
         }
+    });
+    document.addEventListener("click", function (event) {
+        const modals = ["editTripModal", "newTripModal"];
+
+        modals.forEach(modalId => {
+            const modal = document.getElementById(modalId);
+            if (modal && event.target === modal) {
+                modal.classList.add("hidden");
+            }
+        });
     });
 });

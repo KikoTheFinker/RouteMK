@@ -35,7 +35,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         authorizeRequests ->
                                 authorizeRequests
-                                        .requestMatchers("/", "/home",  // Globally available
+                                        .requestMatchers("/", "/home",
                                                 "/login",
                                                 "/css/**",
                                                 "/js/**",

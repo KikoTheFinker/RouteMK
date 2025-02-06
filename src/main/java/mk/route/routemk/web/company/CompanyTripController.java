@@ -60,15 +60,31 @@ public class CompanyTripController {
     }
 
     @PostMapping("/edit-trip/{tripId}")
-    public String editTrip(@PathVariable Integer routeId, @PathVariable Integer tripId) {
-
+    public String editTrip(@PathVariable Integer routeId,
+                           @PathVariable Integer tripId,
+                           @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+                           @RequestParam("freeSeats") int freeSeats,
+                           @RequestParam("locations") List<Integer> locationIds,
+                           @RequestParam("etas") @DateTimeFormat(pattern = "HH:mm") List<LocalTime> etas,
+                           RedirectAttributes redirectAttributes) {
+        System.out.println(date);
+        System.out.println(freeSeats);
+        System.out.println(locationIds);
+        System.out.println(etas);
+        try {
+            Route route = routeService.findById(routeId);
+            companyTripService.updateTrip(route, tripId, date, freeSeats, locationIds, etas);
+            redirectAttributes.addFlashAttribute("message", "Trip updated successfully!");
+        } catch (IllegalArgumentException | SecurityException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
         return "redirect:/routes/company/view-trips/" + routeId;
     }
+
 
     @PostMapping("/delete-trip/{tripId}")
     public String deleteTrip(@PathVariable Integer routeId, @PathVariable Integer tripId) {
         return companyTripService.deleteTripIfAuthorized(tripId) ? "redirect:/routes/company/view-trips/" + routeId : "redirect:/";
     }
-
 
 }

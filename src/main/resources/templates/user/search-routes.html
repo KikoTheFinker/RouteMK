@@ -37,7 +37,6 @@
         <h1 class="title">Select a Route</h1>
     </div>
 
-    <!-- Filter Section -->
     <div class="filter-container-wrapper center text-center">
         <div class="filter-heading">
             <img src="/images/filter.png" alt="Filter Icon">
@@ -60,7 +59,6 @@
         </form>
     </div>
 
-    <!-- Content -->
     <div class="routes-container">
         <div class="routes-table-wrapper">
             <table class="routes-table">
@@ -68,6 +66,7 @@
                 <tr>
                     <th>Departure</th>
                     <th>Arrival</th>
+                    <th>Company</th>
                     <th>
                         <img src="/images/eye.png" alt="A gazing eye" width='24' height='24'/>
                         Explore
@@ -78,6 +77,7 @@
                 <tr th:each="route : ${routes}">
                     <td th:text="${route.getSource().getName()}"></td>
                     <td th:text="${route.getDestination().getName()}"></td>
+                    <td th:text="${route.getTranOrg().getCompanyName()}"></td>
                     <td class="action-column">
                         <a th:href="@{/trips/user}"
                            class="btn-redoutline">View Trips</a>

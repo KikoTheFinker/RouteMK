@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", function () {
         tbody.innerHTML = "";
 
         var filteredRows = allRows.filter(function (row) {
-            var dateText = row.querySelector('td:nth-child(2)').innerText;
+            var dateText = row.querySelector('td:nth-child(1)').innerText;
             var date = new Date(dateText);
             var status = row.getAttribute("data-status");
             var company = row.querySelector('td:nth-child(6)').innerText.toLowerCase();
