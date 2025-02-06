@@ -128,7 +128,7 @@
                     <th>Stops</th>
                     <th>Status</th>
                     <th>Company</th>
-                    <th>Payment</th>
+                    <th>Manage</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -139,13 +139,9 @@
                         <button class="btn-standard view-stops-btn" th:data-trip-id="${trip.getTripId()}">View Stops
                         </button>
 
-                        <div class="hidden-stops hidden" th:each="stop, iterStat : ${trip.getStops()}"
-                             th:data-trip-id="${trip.getTripId()}">
-                            <input type="hidden"
-                                   th:id="'stop-location-' + ${trip.getTripId()} + '-' + ${iterStat.index}"
-                                   th:value="${stop.getLocation().getName()}"/>
-                            <input type="hidden" th:id="'stop-time-' + ${trip.getTripId()} + '-' + ${iterStat.index}"
-                                   th:value="${stop.getStopTime()}"/>
+                        <div class="hidden-stops hidden" th:each="stop : ${trip.getStops()}">
+                            <span class="stop-location" th:text="${stop.getLocation().getName()}"></span>
+                            <span class="stop-time" th:text="${stop.getStopTime()}"></span>
                         </div>
                     </td>
 
@@ -278,7 +274,8 @@
     };
 </script>
 <script src="/js/modal.js"></script>
-<script src="/js/stops-modal.js"></script>
 <script src="/js/filtering.js"></script>
+<script src="/js/stops-modal.js"></script>
+
 </body>
 </html>
