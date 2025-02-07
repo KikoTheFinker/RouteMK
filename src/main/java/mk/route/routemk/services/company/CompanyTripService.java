@@ -31,14 +31,20 @@ public class CompanyTripService {
 
     /**
      * Creates a new trip after validating input and checking authorization.
+     *
+     * @param route The route on which the trip being updated is undertaken.
+     * @param tripId The ID of the trip being updated.
+     * @param freeSeats Number of free initial/current seats on the trip.
+     * @param locationIds Location ids (where the trip stops overall).
+     * @param etas ETAs (Estimated Times of Arrival) according to each location.
      */
     @Transactional
-    public void updateTrip(Route route, Integer tripId, LocalDate date, int freeSeats, List<Integer> locationIds, List<LocalTime> etas) {
+    public void updateTrip(Route route, Integer tripId, LocalDate date, int freeSeats, List<Integer> locationIds, List<LocalTime> etas) throws IllegalArgumentException {
         validateAndAuthorizeTrip(route, freeSeats, locationIds, etas);
 
         Trip trip = tripService.findById(tripId);
         if (trip == null) {
-            throw new IllegalArgumentException("Trip not found with ID: " + tripId);
+            throw new IllegalArgumentException(String.format("Trip not found with ID: %d", tripId));
         }
 
         trip.setDate(date);
@@ -49,7 +55,7 @@ public class CompanyTripService {
         saveTripStopsForTrip(tripId, locationIds, etas);
     }
 
-    public void createTrip(Route route, LocalDate date, int freeSeats, List<Integer> locationIds, List<LocalTime> etas) {
+    public void createTrip(Route route, LocalDate date, int freeSeats, List<Integer> locationIds, List<LocalTime> etas) throws IllegalArgumentException  {
         validateAndAuthorizeTrip(route, freeSeats, locationIds, etas);
 
         Trip trip = new Trip();
@@ -63,9 +69,16 @@ public class CompanyTripService {
     }
 
     /**
-     * Validates trip data and checks authorization.
+     * Performs a check on the integrity of the trip being added/edited and as a safety measure checks if the current
+     * user is a transport organizer.
+     *
+     * @param route Route of the new/edited trip.
+     * @param freeSeats Number of free initial/current seats on the trip.
+     * @param locationIds Location ids (where the trip stops overall).
+     * @param etas ETAs (Estimated Times of Arrival) according to each location.
      */
-    private void validateAndAuthorizeTrip(Route route, int freeSeats, List<Integer> locationIds, List<LocalTime> etas) {
+    private void validateAndAuthorizeTrip(Route route, int freeSeats, List<Integer> locationIds, List<LocalTime> etas) throws IllegalArgumentException  {
+
         tripValidator.validateTripData(route.getSource().getId(), route.getDestination().getId(), freeSeats, locationIds, etas);
         Integer transportOrganizerId = authorizationService.getAuthenticatedTransportOrganizerId();
 
@@ -115,11 +128,13 @@ public class CompanyTripService {
      * @return true if the trip is deleted else false.
      */
     public boolean deleteTripIfAuthorized(Integer tripId) {
-        return authorizationService.isAuthorizedTransportOrganizer(tripService.findById(tripId).getRoute().getTranOrg().getTranOrgId())
-                ? ((Supplier<Boolean>) (() -> {
+        if (authorizationService.isAuthorizedTransportOrganizer
+                (tripService.findById(tripId).getRoute().getTranOrg().getTranOrgId())
+        ) {
             tripService.deleteById(tripId);
             return true;
-        })).get() : false;
+        }
+        return false;
     }
 
 }

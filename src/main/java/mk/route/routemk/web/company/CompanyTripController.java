@@ -84,7 +84,9 @@ public class CompanyTripController {
 
     @PostMapping("/delete-trip/{tripId}")
     public String deleteTrip(@PathVariable Integer routeId, @PathVariable Integer tripId) {
-        return companyTripService.deleteTripIfAuthorized(tripId) ? "redirect:/routes/company/view-trips/" + routeId : "redirect:/";
+        return companyTripService.deleteTripIfAuthorized(tripId)
+                ? "redirect:/routes/company/view-trips/" + routeId
+                : "redirect:/";
     }
 
 }
