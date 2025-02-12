@@ -67,10 +67,6 @@ public class CompanyTripController {
                            @RequestParam("locations") List<Integer> locationIds,
                            @RequestParam("etas") @DateTimeFormat(pattern = "HH:mm") List<LocalTime> etas,
                            RedirectAttributes redirectAttributes) {
-        System.out.println(date);
-        System.out.println(freeSeats);
-        System.out.println(locationIds);
-        System.out.println(etas);
         try {
             Route route = routeService.findById(routeId);
             companyTripService.updateTrip(route, tripId, date, freeSeats, locationIds, etas);
