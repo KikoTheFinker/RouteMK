@@ -141,6 +141,7 @@
 
                         <div class="hidden-stops hidden" th:each="stop : ${trip.getStops()}">
                             <span class="stop-location" th:text="${stop.getLocation().getName()}"></span>
+                            <span class="stop-location-id" th:text="${stop.getLocation().getId()}"></span>
                             <span class="stop-id" th:text="${stop.getTripStopId()}"></span>
                             <span class="stop-time" th:text="${stop.getStopTime()}"></span>
                         </div>
@@ -187,6 +188,7 @@
     <div class="modal-content wide">
         <span class="close-modal" id="closeModal">&times;</span>
         <h2 class="modal-title">Add New Trip</h2>
+        <span id="locationErrorNew" class="error-message" style="display:none; color: red; font-weight: bold">Please select a valid location.</span>
         <form id="newTripForm" th:action="@{/routes/company/view-trips/{routeId}/add-trip (routeId=${routeId})}"
               method="POST">
             <div class="form-group">
@@ -228,6 +230,7 @@
     <div class="modal-content wide">
         <span class="close-modal" id="closeEditModal">&times;</span>
         <h2 class="modal-title">Edit Trip</h2>
+        <span id="locationErrorEdit" class="error-message" style="display:none; color: red; font-weight: bold">Please select a valid location.</span>
         <form id="editTripForm"
               th:action="@{/routes/company/view-trips/{routeId}/edit-trip/{tripId}(routeId=${routeId}, tripId=0)}"
               method="POST">

@@ -45,6 +45,18 @@ document.addEventListener("DOMContentLoaded", function () {
         updateSelectOptions(select);
         select.value = selectedId;
 
+        select.addEventListener("change", () => {
+            updateAllSelects(isEdit ? "editAdditionalLocationsSection" : "additionalLocationsSection", isEdit ? "editAddLocationButton" : "addLocationButton");
+
+            const errorMessageNew = document.getElementById("locationErrorNew");
+            const errorMessageEdit = document.getElementById("locationErrorEdit");
+
+            if (select.value !== "") {
+                errorMessageNew.style.display = "none";
+                errorMessageEdit.style.display = "none";
+            }
+        });
+
         const timeInput = document.createElement("input");
         timeInput.type = "time";
         timeInput.name = "etas[]";
@@ -61,13 +73,55 @@ document.addEventListener("DOMContentLoaded", function () {
             updateAllSelects(isEdit ? "editAdditionalLocationsSection" : "additionalLocationsSection", isEdit ? "editAddLocationButton" : "addLocationButton");
         });
 
-        select.addEventListener("change", () => {
-            updateAllSelects(isEdit ? "editAdditionalLocationsSection" : "additionalLocationsSection", isEdit ? "editAddLocationButton" : "addLocationButton");
-        });
-
         div.append(select, timeInput, removeBtn);
         return div;
     }
+
+    function validateLocations(isEditForm = false) {
+        const formSelector = isEditForm ? "#editTripForm" : "#newTripForm";
+        const selects = document.querySelectorAll(`${formSelector} select[name='locations[]']`);
+        let isValid = true;
+
+        const errorMessage = document.getElementById(isEditForm ? "locationErrorEdit" : "locationErrorNew");
+        errorMessage.style.display = "none";
+
+        for (let select of selects) {
+            if (select.value === "") {
+                isValid = false;
+                errorMessage.style.display = "inline";
+                select.focus();
+                break;
+            }
+        }
+        return isValid;
+    }
+
+    const forms = document.querySelectorAll("#editTripForm, #newTripForm");
+
+    forms.forEach(form => {
+        form.addEventListener("submit", function (event) {
+            const isEditForm = form.id === "editTripForm";
+            if (!validateLocations(isEditForm)) {
+                event.preventDefault();
+            }
+        });
+    });
+
+    const locationSections = document.querySelectorAll("#editAdditionalLocationsSection, #additionalLocationsSection");
+
+    locationSections.forEach(section => {
+        section.addEventListener("change", (event) => {
+            if (event.target && event.target.matches("select[name='locations[]']")) {
+                const errorMessageNew = document.getElementById("locationErrorNew");
+                const errorMessageEdit = document.getElementById("locationErrorEdit");
+
+                if (event.target.value !== "") {
+                    errorMessageNew.style.display = "none";
+                    errorMessageEdit.style.display = "none";
+                }
+            }
+        });
+    });
 
     document.getElementById("addLocationButton").addEventListener("click", () => {
         const container = document.getElementById("additionalLocationsSection");
@@ -105,7 +159,7 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById("editTripId").value = tripId;
 
             const form = document.getElementById('editTripForm');
-            form.action = `/routes/company/view-trips/${routeId}/edit-trip/${tripId}`
+            form.action = `/routes/company/view-trips/${routeId}/edit-trip/${tripId}`;
 
             const stopsContainer = document.getElementById('editAdditionalLocationsSection');
             stopsContainer.innerHTML = '';
@@ -117,9 +171,10 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             const stops = Array.from(stopElements).map(stop => ({
-                location: stop.querySelector('.stop-location')?.innerText.trim() || '',
                 stopId: stop.querySelector('.stop-id')?.innerText.trim() || '',
-                stopTime: stop.querySelector('.stop-time')?.innerText.trim() || ''
+                stopTime: stop.querySelector('.stop-time')?.innerText.trim() || '',
+                locationId: stop.querySelector('.stop-location-id')?.innerText.trim() || '',
+                location: stop.querySelector('.stop-location')?.innerText.trim() || ''
             }));
 
             if (stops.length < 2) {
@@ -130,18 +185,7 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById('editFromStopETA').value = stops[0].stopTime;
 
             for (let i = 1; i < stops.length - 1; i++) {
-                const stopElement = document.createElement('div');
-                stopElement.classList.add('location-entry', 'dynamic');
-
-                stopElement.innerHTML = `
-                <input type="hidden" name="stopIds[]" value="${stops[i].stopId}" />
-                <strong>Stop:</strong>
-                <input type="text" name="locations[]" value="${stops[i].location}" class="form-control" />
-                <label>ETA:</label>
-                <input type="time" name="etas[]" value="${stops[i].stopTime}" class="form-control" required />
-                <button type="button" class="remove-location btn-redoutline">Remove</button>
-            `;
-
+                const stopElement = createLocationEntry(stops[i].locationId, stops[i].stopTime, true);
                 stopsContainer.appendChild(stopElement);
             }
 
@@ -157,13 +201,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-
-
-    document.addEventListener('click', function (event) {
-        if (event.target.classList.contains('remove-location')) {
-            event.target.parentElement.remove();
-        }
-    });
     document.addEventListener("click", function (event) {
         const modals = ["editTripModal", "newTripModal"];
 

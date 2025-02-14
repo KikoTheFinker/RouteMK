@@ -31,19 +31,8 @@ public class TripValidator {
             throw new IllegalArgumentException("Mismatch between source and destination.");
         }
 
-        LocalTime srcETA = etas.get(0);
-        LocalTime destETA  = etas.get(etas.size() - 1);
-
-        int n = etas.size() - 1;
-
-        // Check validity ETAs of the stops in-between
-        for (int i = 1; i < n; ++i) {
-            System.out.println(etas.get(i));
-            if (
-                etas.get(i).isBefore(srcETA)
-                    ||
-                etas.get(i).isAfter(destETA)
-            ) {
+        for (int i = 1; i < etas.size() - 1; i++) {
+            if (etas.get(i).isBefore(etas.get(0)) || etas.get(i).isAfter(etas.get(etas.size() - 1))) {
                 throw new IllegalArgumentException("ETAs must be within the time range of the first and last locations.");
             }
         }

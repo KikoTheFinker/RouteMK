@@ -25,10 +25,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 stopWrapper.appendChild(stopBox);
 
-                const isLastInRow = (i / 2 + 1) % 4 === 0;
-                const isLastStop = i + 2 >= stopElements.length;
-
-                if (!isLastInRow && !isLastStop) {
+                if (i + 2 < stopElements.length) {
                     const arrow = document.createElement("div");
                     arrow.className = "arrow-down";
                     arrow.textContent = "↓";
