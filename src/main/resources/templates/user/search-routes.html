@@ -42,13 +42,13 @@
             <img src="/images/filter.png" alt="Filter Icon">
             <span>Filter</span>
         </div>
-        <form th:method="POST" th:action="@{/search-routes}" class="w-100 align-items-center">
+        <form th:method="GET" th:action="@{/search-routes}" class="w-100 align-items-center">
             <div class="row mb-3 g-3">
                 <div class="col-md-6"><label class="filter-label" for="departure">From/Departure:</label>
                     <input id="departure" type="text" name="from" class="form-control">
                 </div>
                 <div class="col-md-6">
-                    <label class="filter-label" for="arrival">To/Arrival:</label> 
+                    <label class="filter-label" for="arrival">To/Arrival:</label>
                     <input id="arrival" name="to" class="form-control">
                 </div>
             </div>
@@ -82,6 +82,9 @@
                         <a th:href="@{/trips/user}"
                            class="btn-redoutline">View Trips</a>
                     </td>
+                <tr th:if="${noRoutesMessage}">
+                    <td colspan="4" class="notification" th:text="${noRoutesMessage}"></td>
+                </tr>
                 </tr>
                 </tbody>
             </table>
