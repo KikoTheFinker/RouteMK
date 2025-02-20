@@ -1,13 +1,14 @@
 package mk.route.routemk.services.company;
 
-import mk.route.routemk.services.auth.AuthenticationService;
+import mk.route.routemk.services.auth.interfaces.AuthenticationService;
+import mk.route.routemk.services.company.interfaces.CompanyAuthorizationService;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CompanyAuthorizationService {
+public class CompanyAuthorizationServiceImpl implements CompanyAuthorizationService {
     private final AuthenticationService authenticationService;
 
-    public CompanyAuthorizationService(AuthenticationService authenticationService) {
+    public CompanyAuthorizationServiceImpl(AuthenticationService authenticationService) {
         this.authenticationService = authenticationService;
     }
 

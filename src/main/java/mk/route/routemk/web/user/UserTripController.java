@@ -1,7 +1,8 @@
 package mk.route.routemk.web.user;
 
 import mk.route.routemk.models.Route;
-import mk.route.routemk.services.auth.AuthenticationService;
+import mk.route.routemk.services.auth.AuthenticationServiceImpl;
+import mk.route.routemk.services.auth.interfaces.AuthenticationService;
 import mk.route.routemk.services.interfaces.RouteService;
 import mk.route.routemk.services.interfaces.TripService;
 import org.springframework.stereotype.Controller;

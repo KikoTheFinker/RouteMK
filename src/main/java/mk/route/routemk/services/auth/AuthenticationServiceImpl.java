@@ -3,6 +3,7 @@ package mk.route.routemk.services.auth;
 import mk.route.routemk.models.Account;
 import mk.route.routemk.models.Driver;
 import mk.route.routemk.models.TransportOrganizer;
+import mk.route.routemk.services.auth.interfaces.AuthenticationService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,7 +14,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-public class AuthenticationService {
+public class AuthenticationServiceImpl implements AuthenticationService {
 
     /**
      * Retrieves the current authentication object if authenticated.

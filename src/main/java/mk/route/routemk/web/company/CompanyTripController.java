@@ -1,7 +1,8 @@
 package mk.route.routemk.web.company;
 
 import mk.route.routemk.models.Route;
-import mk.route.routemk.services.company.CompanyTripService;
+import mk.route.routemk.services.company.CompanyTripServiceImpl;
+import mk.route.routemk.services.company.interfaces.CompanyTripService;
 import mk.route.routemk.services.interfaces.LocationService;
 import mk.route.routemk.services.interfaces.RouteService;
 import org.springframework.format.annotation.DateTimeFormat;

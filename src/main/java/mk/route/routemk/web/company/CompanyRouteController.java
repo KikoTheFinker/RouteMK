@@ -1,6 +1,7 @@
 package mk.route.routemk.web.company;
 
-import mk.route.routemk.services.company.CompanyRouteService;
+import mk.route.routemk.services.company.CompanyRouteServiceImpl;
+import mk.route.routemk.services.company.interfaces.CompanyRouteService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -4,6 +4,8 @@ import jakarta.transaction.Transactional;
 import mk.route.routemk.models.Route;
 import mk.route.routemk.models.Trip;
 import mk.route.routemk.models.TripStop;
+import mk.route.routemk.services.company.interfaces.CompanyAuthorizationService;
+import mk.route.routemk.services.company.interfaces.CompanyTripService;
 import mk.route.routemk.services.interfaces.TripService;
 import mk.route.routemk.services.interfaces.TripStopService;
 import mk.route.routemk.specifications.TripSpecification;
@@ -15,13 +17,13 @@ import java.time.LocalTime;
 import java.util.List;
 
 @Service
-public class CompanyTripService {
+public class CompanyTripServiceImpl implements CompanyTripService {
     private final TripService tripService;
     private final TripStopService tripStopService;
     private final CompanyAuthorizationService authorizationService;
     private final TripValidator tripValidator;
 
-    public CompanyTripService(TripService tripService, TripStopService tripStopService, CompanyAuthorizationService authorizationService, TripValidator tripValidator) {
+    public CompanyTripServiceImpl(TripService tripService, TripStopService tripStopService, CompanyAuthorizationServiceImpl authorizationService, TripValidator tripValidator) {
         this.tripService = tripService;
         this.tripStopService = tripStopService;
         this.authorizationService = authorizationService;
