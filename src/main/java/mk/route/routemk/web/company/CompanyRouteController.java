@@ -21,7 +21,7 @@ public class CompanyRouteController {
     @GetMapping("/company")
     public String routes(Model model) {
         model.addAttribute("companyRoutes", companyRouteService.getAuthorizedRoutes());
-        model.addAttribute("display", "/company/company-route");
+        model.addAttribute("display", "company/company-route");
 
         return "master";
     }
