@@ -1,5 +1,5 @@
 # RouteMK
-![banner](https://github.com/user-attachments/assets/e2612869-0fb0-4721-8fa3-3dbec4a1d73d)
+![banner](https://github.com/user-attachments/assets/b1ebc5ff-6488-4af7-9a19-fc66ddef579a)
 
 Welcome to RouteMK, a decentralised transport application in Macedonia, allowing online ticket purchases for transportation.
 
