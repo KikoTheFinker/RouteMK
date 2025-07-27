@@ -31,38 +31,38 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .headers(
                         headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
-                )
-                .authorizeHttpRequests(
-                        authorizeRequests ->
-                                authorizeRequests
-                                        .requestMatchers("/", "/home",
-                                                "/login",
-                                                "/css/**",
-                                                "/js/**",
-                                                "/images/**",
-                                                "/register",
-                                                "/search-routes",
-                                                "/trips/{routeId:\\d+}")
-                                        .permitAll()
-                                        .requestMatchers("/routes/company/**").hasAnyRole("TRANSPORT_ORGANIZER", "DRIVER")
-                                        .requestMatchers("/admin/**").hasRole("ADMIN")
-                                        .requestMatchers("/trips/user/**").hasRole("USER")
-                                        .anyRequest().authenticated()
-                )
-                .formLogin(login ->
-                        login.loginPage("/login")
-                                .permitAll()
-                                .defaultSuccessUrl("/")
-                                .failureUrl("/login?error")
-                )
-                .logout(
-                        logout ->
-                                logout.permitAll()
-                                        .logoutSuccessUrl("/")
-                                        .deleteCookies("JSESSIONID")
-                                        .invalidateHttpSession(true)
-                                        .clearAuthentication(true)
-                );
+                ).authorizeHttpRequests(a -> a.requestMatchers("**").permitAll());
+//                .authorizeHttpRequests(
+//                        authorizeRequests ->
+//                                authorizeRequests
+//                                        .requestMatchers("/", "/home",
+//                                                "/login",
+//                                                "/css/**",
+//                                                "/js/**",
+//                                                "/images/**",
+//                                                "/register",
+//                                                "/search-routes",
+//                                                "/trips/{routeId:\\d+}")
+//                                        .permitAll()
+//                                        .requestMatchers("/routes/company/**").hasAnyRole("TRANSPORT_ORGANIZER", "DRIVER")
+//                                        .requestMatchers("/admin/**").hasRole("ADMIN")
+//                                        .requestMatchers("/trips/user/**").hasRole("USER")
+//                                        .anyRequest().authenticated()
+//                )
+//                .formLogin(login ->
+//                        login.loginPage("/login")
+//                                .permitAll()
+//                                .defaultSuccessUrl("/")
+//                                .failureUrl("/login?error")
+//                )
+//                .logout(
+//                        logout ->
+//                                logout.permitAll()
+//                                        .logoutSuccessUrl("/")
+//                                        .deleteCookies("JSESSIONID")
+//                                        .invalidateHttpSession(true)
+//                                        .clearAuthentication(true)
+//                );
 
         return http.build();
 

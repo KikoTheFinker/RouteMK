@@ -72,10 +72,10 @@
                     <td th:text="${route.getSource().getName()}"></td>
                     <td th:text="${route.getDestination().getName()}"></td>
                     <td th:text="${route.getTranOrg().getCompanyName()}"></td>
-                    <td class="action-column">
-                        <a th:href="@{/trips/user}"
-                           class="btn-redoutline">View Trips</a>
+                    <td>
+                        <a th:href="@{/trips/{routeId}(routeId=${route.routeId})}" class="btn-redoutline">View Trips</a>
                     </td>
+
                 <tr th:if="${noRoutesMessage}">
                     <td colspan="4" class="notification" th:text="${noRoutesMessage}"></td>
                 </tr>

@@ -73,4 +73,40 @@ public class Ticket {
 
     public Ticket() {
     }
+
+    public Integer getTicketId() {
+        return ticketId;
+    }
+
+    public Location getPickupLocation() {
+        return pickupLocation;
+    }
+
+    public Location getLeavesAtLocation() {
+        return leavesAtLocation;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public Payment getPaymentId() {
+        return paymentId;
+    }
+
+    public LocalDate getDatePurchased() {
+        return datePurchased;
+    }
+
+    public LocalTime getTimePurchased() {
+        return timePurchased;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public String getSeat() {
+        return seat;
+    }
 }
