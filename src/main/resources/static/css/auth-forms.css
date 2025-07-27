@@ -1,3 +1,5 @@
+@import "imports.css";
+
 html, body {
     height: 100%;
     margin: 0;
@@ -10,13 +12,14 @@ body {
 }
 
 .register-container, .login-container {
-    font-family: "Golos Text", "Helvetica", sans-serif;
+    font-family: "Open Sans", "Helvetica", sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
-    min-height: 80vh;
-    margin: 0;
+    margin: auto;
+    height: calc(100vh - 100px);
+    font-size: 10px;
     flex-grow: 1;
 }
 
@@ -26,13 +29,16 @@ body {
     border-radius: 12px;
     border: 1px solid #B4B4B4FF;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    align-self: center;
+    justify-self: center;
     width: 100%;
     max-width: 450px;
+    max-height: 700px;
     text-align: center;
 }
 
 .login-box h2 {
-    margin-bottom: 20px;
+    margin-bottom: 18px;
     font-weight: bold;
     color: #333;
 }
@@ -57,13 +63,11 @@ body {
     color: #000;
 }
 
-#loginbut {
-    color: white;
-    background-color: #d02b2b;
-    transition: background-color 0.15s ease-in-out;
-    width: 100%;
+input {
+    border: 1px solid #eaeaea;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-#loginbut:hover {
-    background-color: #b21c1c;
+input:hover {
+    border-color: #d95e5e;
 }

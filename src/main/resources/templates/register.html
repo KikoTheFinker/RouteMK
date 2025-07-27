@@ -4,6 +4,7 @@
 </head>
 <div class="register-container">
     <div class="login-box">
+        <h2 class="text-center"><i class="bi bi-person-plus"></i></h2>
         <h3 class="text-center fw-bold">Create an Account on Route<span style="color:#ff1616">MK</span></h3>
         <form method="POST" th:action="@{/register}">
             <p th:if="${errorMessage}" th:text="${errorMessage}" class="alert alert-danger"></p>
@@ -27,7 +28,7 @@
                 <label for="confirm-password" class="form-label">Confirm Password</label>
                 <input type="password" class="form-control" name="confirmPassword" id="confirm-password" placeholder="Re-enter your password...">
             </div>
-            <button type="submit" id="loginbut" class="btn w-100">Register</button>
+            <button type="submit" id="loginbut" class="btn w-100 glowable">Register</button>
             <p class="text-center mt-3"><a href="/login">Already have an account? Login</a></p>
         </form>
     </div>

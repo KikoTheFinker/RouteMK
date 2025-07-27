@@ -9,6 +9,7 @@ body {
 
 .footer {
     margin-top: auto;
+    height:100px;
     padding: 8px 0;
     font-size: 0.85rem;
     text-align: center;

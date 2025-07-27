@@ -1,58 +1,39 @@
-@import "imports.css";
-
-body {
-    margin:0;
-}
-header {
-    font-family: "Golos Text", "Helvetica", sans-serif !important;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 60px !important;
-    height:40px;
+html, body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-.logo {
-    font-size: 20px;
-    font-weight: bold;
-    color: #333;
+*, *::before, *::after {
+    box-sizing: inherit;
 }
 
-.logo span {
-    color: red;
+.btn-transparent {
+    background-color: transparent;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: border-color 0.2s ease-in;
 }
 
-#mainbar {
-    background-color: #eeeeee !important;
-    border-bottom: 1px solid #b4b4b4 !important;
-    box-shadow: 0 0 3px rgba(33, 33, 33, 0.45);
+.btn-transparent:hover {
+    background-color: transparent;
+    border-color: #d9d9d9;
 }
 
-.nav-links {
-    display: flex;
-    gap: 20px;
-}
-
-.nav-links a {
-    text-decoration: none;
-    color: #333;
-    font-size: 14px;
-}
-
-.nav-links a:hover {
-    color: #555;
-}
-
-.redoutline {
-    border: 1px solid #ff5353;
+nav#mainbar {
+    position: fixed;
+    backdrop-filter: blur(7px);
+    -webkit-backdrop-filter: blur(7px);
+    top: 10px;
+    left: 5 0px;
+    right: 50px;
+    z-index: 1000;
     border-radius: 10px;
-    padding: 2px 4px;
-    transition: all 0.3s ease-in-out;
-    margin-right: 5px;
+    border: 1px solid #c4c4c4;
+    transition: border-color 0.3s ease;
 }
 
-.redoutline:hover {
-    border: 1px solid #c20000;
-    border-radius: 12px;
-    padding: 2px 4px;
+nav#mainbar:hover {
+    border-color: #ee8b8b;
 }
+

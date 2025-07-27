@@ -1,7 +1,6 @@
 @import "imports.css";
 
 body {
-    overflow-x: hidden;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -26,7 +25,7 @@ body {
 }
 
 .title-container {
-    text-align: center;
+    text-align: left;
     margin-bottom: 1.5rem;
     position: relative;
 }
@@ -37,18 +36,6 @@ body {
     text-transform: uppercase;
     color: #333;
     margin-bottom: 1rem;
-}
-
-.title::after {
-    content: '';
-    position: absolute;
-    bottom: -3px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 50%;
-    height: 3px;
-    background: #b4b4b4;
-    border-radius: 2px;
 }
 
 .filter-container-wrapper {

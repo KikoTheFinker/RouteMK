@@ -1,15 +1,8 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Trips</title>
     <link rel="stylesheet" th:href="@{/css/trip-route-filter-table.css}"/>
-    <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
-        .hidden {
-            display: none;
-        }
 
         .notification {
             margin: 20px;
@@ -29,12 +22,13 @@
             padding: 1.5rem;
         }
     </style>
+    <title>Routes</title>
 </head>
-<body>
 
+<body>
 <main id="main">
-    <div class="title-container">
-        <h1 class="title">Select a Route</h1>
+    <div class="title-container mt-5">
+        <h1 class="title"><i class="bi bi-signpost-split me-2"></i>Search Routes</h1>
     </div>
 
     <div class="filter-container-wrapper center text-center">

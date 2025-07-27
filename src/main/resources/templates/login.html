@@ -1,9 +1,10 @@
 <head>
     <link rel="stylesheet" href="/css/auth-forms.css">
 </head>
-<div class="login-container">
+<div class="login-container align-self-center justify-self-center">
     <div class="login-box">
-        <h3 class="text-center fw-bold">Sign in to Route<span style="color:#ff1616">MK</span></h3>
+        <h2 class="text-center"><i class="bi bi-door-open"></i></h2>
+        <h3 class="text-center fw-bold">Login to Route<span style="color:#ff1616">MK</span></h3>
         <form th:action="@{/login}" th:method="POST">
             <p th:if="${param.error}" class="alert alert-danger">
                 Invalid credentials provided.
@@ -16,7 +17,7 @@
                 <label for="password" class="form-label">Password</label>
                 <input type="password" name="password" class="form-control" id="password" placeholder="Your password...">
             </div>
-            <button type="submit" id="loginbut" class="btn w-100">Login</button>
+            <button type="submit" id="loginbut" class="btn w-100 glowable">Login</button>
             <p class="text-center mt-3"><a href="/register">Dont have an account? Register</a></p>
         </form>
     </div>
