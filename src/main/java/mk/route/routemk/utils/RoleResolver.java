@@ -29,8 +29,9 @@ public class RoleResolver {
         if (account.getTransportOrganizer() != null) {
             authorities.add(new SimpleGrantedAuthority("ROLE_TRANSPORT_ORGANIZER"));
         }
-        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-
+        if (account.getTransportOrganizer() == null) { // add the user role for everyone except for transport organizers so they can travel
+            authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+        }
 
         return authorities;
     }

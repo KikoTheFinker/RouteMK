@@ -1,6 +1,7 @@
 package mk.route.routemk.services.company;
 
 import mk.route.routemk.models.Route;
+import mk.route.routemk.models.TransportOrganizer;
 import mk.route.routemk.services.company.interfaces.CompanyAuthorizationService;
 import mk.route.routemk.services.company.interfaces.CompanyRouteService;
 import mk.route.routemk.services.interfaces.RouteService;

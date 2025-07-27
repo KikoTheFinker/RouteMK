@@ -40,7 +40,6 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
         try {
             UserDetails userDetails = accountService.findOneByPredicate(AccountSpecification.hasEmail(username));
-
             //Password must be BCRYPT encoded in DATABASE!!
             if (!passwordEncoder.matches(password, userDetails.getPassword())) {
                 throw new BadCredentialsException("Invalid username or password");

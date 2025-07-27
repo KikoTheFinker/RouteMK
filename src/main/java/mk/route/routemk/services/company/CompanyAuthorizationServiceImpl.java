@@ -1,5 +1,6 @@
 package mk.route.routemk.services.company;
 
+import mk.route.routemk.models.TransportOrganizer;
 import mk.route.routemk.services.auth.interfaces.AuthenticationService;
 import mk.route.routemk.services.company.interfaces.CompanyAuthorizationService;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,11 @@ public class CompanyAuthorizationServiceImpl implements CompanyAuthorizationServ
         return authenticationService.getTransportOrganizerId() != null
                 ? authenticationService.getTransportOrganizerId()
                 : authenticationService.getTransportOrganizerIdFromDriverAccountId();
+    }
+
+    @Override
+    public TransportOrganizer getAuthenticatedTransportOrganizer() {
+        return authenticationService.getTransportOrganizer();
     }
 
     /**

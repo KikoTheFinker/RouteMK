@@ -233,14 +233,13 @@ INSERT INTO account values(400, 'verche@outlook.com', 'Verche', 'Verchoska', '$2
 
 INSERT INTO transport_organizer values(100, 100, 'Galeb', '1234512345123');
 INSERT INTO transport_organizer values(200, 200, 'Delfina', '1234512345124');
-INSERT INTO transport_organizer values(300, 300, 'Classic', '123453245124');
-
+INSERT INTO admin values(100, 300);
 
 INSERT INTO location values(100, 3.2, 1.3, 'Ohrid');
 INSERT INTO location values(200, 3.6, 1.4, 'Bitola');
 INSERT INTO location values(300, 1.1, 4.5, 'Skopje');
 INSERT INTO location values(400, 1.2, 4.8, 'Veles');
-INSERT INTO location values(500, 1.3, 4.2, 'Prilep');
+INSERT INTO location values(500 1.3, 4.2, 'Prilep');
 INSERT INTO location values(600, 1.5, 4.5, 'Vevcani');
 
 
