@@ -8,6 +8,9 @@ import mk.route.routemk.services.interfaces.TicketService;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TicketServiceImpl extends GenericServiceImpl<Ticket, Integer> implements TicketService {
@@ -22,5 +25,13 @@ public class TicketServiceImpl extends GenericServiceImpl<Ticket, Integer> imple
     @Override
     public Collection<? extends Ticket> findTripsByAccountId(Integer accountId) {
         return ticketRepository.findTicketsByAccount_AccountId(accountId);
+    }
+
+    @Override
+    public Ticket findCheapestTicketForTrip(Integer tripId) {
+       return ticketRepository.findAllByTrip_TripId(tripId)
+                   .stream()
+                   .min(Comparator.comparing(Ticket::getPrice))
+                   .orElse(null);
     }
 }
