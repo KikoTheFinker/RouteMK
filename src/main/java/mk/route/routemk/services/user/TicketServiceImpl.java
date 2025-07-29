@@ -29,12 +29,9 @@ public class TicketServiceImpl extends GenericServiceImpl<Ticket, Integer> imple
 
     @Override
     public Ticket findCheapestTicketForTrip(Integer tripId) {
-        List<Ticket> tickets =  ticketRepository.findAllByTrip_TripId(tripId).
-                stream().sorted(Comparator.comparing(Ticket::getPrice)).collect(Collectors.toList());
-
-        if (tickets.isEmpty()) {
-            return null; // or throw an exception
-        }
-        return tickets.get(0); // return the first ticket, the cheapest due to sorting
+       return ticketRepository.findAllByTrip_TripId(tripId)
+                   .stream()
+                   .min(Comparator.comparing(Ticket::getPrice))
+                   .orElse(null);
     }
 }
