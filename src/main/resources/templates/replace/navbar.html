@@ -11,7 +11,13 @@
 
         <div class="collapse navbar-collapse justify-content-center">
             <ul class="navbar-nav">
-                <li class="nav-item"><a class="nav-link btn btn-small btn-transparent" href="/search-routes"><i class="bi bi-signpost-split text-danger me-2"></i>Routes</a></li>
+                <li class="nav-item"><a class="nav-link btn btn-small btn-transparent" href="/search-routes"><i class="bi bi-signpost-split text-danger me-2"></i>All Routes</a></li>
+                <li th:if="${#authorization.expression('hasRole(''TRANSPORT_ORGANIZER'')')}"
+                        class="nav-item"><a class="nav-link btn btn-small btn-transparent" href="/routes/company"><i class="bi bi-buildings text-primary me-2"></i>Company Routes</a></li>
+                <li th:if="${#authorization.expression('hasRole(''ADMIN'')')}"
+                    class="nav-item"><a class="nav-link btn btn-small btn-transparent" href="/admin"><i class="bi bi-person-lock text-success me-2"></i>Admin Panel</a></li>
+                <li th:if="${#authorization.expression('hasRole(''USER'')')}"
+                    class="nav-item"><a class="nav-link btn btn-small btn-transparent" href="/user/my-trips"><i class="bi bi-backpack text-info me-2"></i>My Trips</a></li>
             </ul>
         </div>
 

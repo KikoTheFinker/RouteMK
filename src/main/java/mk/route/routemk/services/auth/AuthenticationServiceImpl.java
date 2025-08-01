@@ -26,7 +26,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .filter(Authentication::isAuthenticated);
     }
 
-
     /**
      * Retrieves the authenticated Account object if present.
      *
@@ -59,6 +58,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return getAuthenticatedAccount()
                 .map(Account::getTransportOrganizer)
                 .map(TransportOrganizer::getTranOrgId)
+                .orElse(null);
+    }
+
+    public TransportOrganizer getTransportOrganizer() {
+        return getAuthenticatedAccount()
+                .map(Account::getTransportOrganizer)
                 .orElse(null);
     }
 

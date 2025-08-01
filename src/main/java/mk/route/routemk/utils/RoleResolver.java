@@ -31,7 +31,6 @@ public class RoleResolver {
         }
         authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 
-
         return authorities;
     }
 }
