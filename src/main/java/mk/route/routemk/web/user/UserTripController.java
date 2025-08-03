@@ -3,9 +3,7 @@ package mk.route.routemk.web.user;
 import mk.route.routemk.models.Route;
 import mk.route.routemk.models.Ticket;
 import mk.route.routemk.models.Trip;
-import mk.route.routemk.models.TripStop;
 import mk.route.routemk.models.enums.Status;
-import mk.route.routemk.services.auth.AuthenticationServiceImpl;
 import mk.route.routemk.services.auth.interfaces.AuthenticationService;
 import mk.route.routemk.services.interfaces.RouteService;
 import mk.route.routemk.services.interfaces.TicketService;
@@ -18,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Controller
@@ -45,17 +42,14 @@ public class UserTripController {
 
         List<Trip> trips = tripService.findTripsByRouteId(routeId);
 
-        // filter by upcoming trips
         trips = trips.stream()
                 .filter(trip -> trip.getStatus() == Status.NOT_STARTED)
                 .collect(Collectors.toList());
 
-        // return empty trips message
         if (trips.isEmpty()) {
             model.addAttribute("emptyMessage", "No upcoming trips.");
         }
 
-        // map for cheapest ticket per trip
         HashMap<Integer, Object> cheapestTicket = new HashMap<>();
         for (Trip trip : trips) {
             Ticket cheapest = ticketService.findCheapestTicketForTrip(trip.getTripId());

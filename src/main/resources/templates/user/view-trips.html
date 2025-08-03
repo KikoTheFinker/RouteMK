@@ -1,20 +1,138 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Trips</title>
-    <link rel="stylesheet" th:href="@{/css/company/company-route.css}"/>
+    <link rel="stylesheet" th:href="@{/css/trip-route-filter-table.css}"/>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+    <style>
+        .notification {
+            margin: 20px;
+            font-style: italic;
+            color: #888;
+        }
+
+        input[type = "text"], label {
+            display: inline;
+        }
+
+        #main {
+            flex: 1;
+            width: 50%;
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 1.5rem;
+        }
+
+        .date-filter {
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .date-filter label {
+            font-weight: bold;
+        }
+        #datepicker {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
+
+    <title>Routes</title>
 </head>
 <body>
+<div id="main">
+    <div class="title-container mt-5">
+        <h1 class="title">
+            <i class="bi bi-signpost-split me-2"></i>
+            <span th:text="${routeSource + ' to ' + routeDestination}"></span>
+        </h1>
+    </div>
 
-<div>
-    <h2 th:text="${routeSource}"></h2> -> <h2 th:text="${routeDestination}"></h2>
-</div>
+    <div th:if="${trips != null and !trips.isEmpty()}">
+        <div class="date-filter">
+            <label for="datepicker">Filter by date:</label>
+            <input type="text" id="datepicker" placeholder="Select date...">
+            <button id="clearDate" class="btn-redoutline">Clear filter</button>
+        </div>
+    </div>
 
-<div th:if="${trips} != null">
-    <div th:each="trip : ${trips}">
-        <span th:text="${trip.getDate()}"></span>
-        <span th:text="${trip.getFreeSeats()}"></span>
+
+    <div th:if="${trips != null and !trips.isEmpty()}">
+        <div class="routes-container">
+            <div class="routes-table-wrapper">
+                <table class="routes-table" id="routesTable">
+                    <thead>
+                    <tr>
+                        <th>Departure</th>
+                        <th>Stops</th>
+                        <th>Available tickets</th>
+                        <th>Lowest price</th>
+                        <th>Purchase</th>
+                    </tr>
+                    </thead>
+                    <tbody id="routes-list">
+                    <tr th:each="trip : ${trips}" class="route-row">
+                        <td th:text="${trip.getDate()}" th:attr="data-date=${#temporals.format(trip.getDate(), 'yyyy-MM-dd')}"></td>
+                        <td th:text="${stops[trip.getTripId()]}"></td>
+                        <td th:text="${trip.getFreeSeats()}"></td>
+
+                        <td th:text="${cheapestTicketPrice[trip.getTripId()]}"></td>
+
+                        <td th:if="${cheapestTicketPrice[trip.getTripId()]} != 'No available tickets.'">
+                            <a th:href="@{/}" class="btn-redoutline">Purchase</a>
+                        </td>
+                        <td th:if="${cheapestTicketPrice[trip.getTripId()]} == 'No available tickets.'">
+                            Sold out.
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div th:if="${emptyMessage}">
+        <p class="notification" th:text="${emptyMessage}"></p>
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        const datepicker = flatpickr("#datepicker", {
+            dateFormat: "Y-m-d",
+            allowInput: true,
+            onChange: function(selectedDates, dateStr) {
+                filterByDate(dateStr);
+            }
+        });
+
+        document.getElementById('clearDate').addEventListener('click', function() {
+            datepicker.clear();
+            filterByDate('');
+        });
+
+        function filterByDate(dateStr) {
+            const rows = document.querySelectorAll('#routes-list tr.route-row');
+            rows.forEach(row => {
+                const dateCell = row.querySelector('td[data-date]');
+                if (dateCell) {
+                    const rowDate = dateCell.getAttribute('data-date');
+                    if (dateStr === '' || rowDate === dateStr) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                }
+            });
+        }
+    });
+</script>
 </body>
+</html>
