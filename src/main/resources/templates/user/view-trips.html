@@ -14,6 +14,14 @@
             color: #888;
         }
 
+        .icon-arrow {
+            color: white;
+        }
+
+        thead th {
+            cursor: pointer;
+        }
+
         input[type = "text"], label {
             display: inline;
         }
@@ -32,9 +40,11 @@
             align-items: center;
             gap: 10px;
         }
+
         .date-filter label {
             font-weight: bold;
         }
+
         #datepicker {
             padding: 8px;
             border: 1px solid #ddd;
@@ -68,16 +78,17 @@
                 <table class="routes-table" id="routesTable">
                     <thead>
                     <tr>
-                        <th>Departure</th>
-                        <th>Stops</th>
-                        <th>Available tickets</th>
-                        <th>Lowest price</th>
-                        <th>Purchase</th>
+                        <th>Departure <span class="icon-arrow">&UpArrow;</span></th>
+                        <th>Stops <span class="icon-arrow">&UpArrow;</span></th>
+                        <th>Available tickets <span class="icon-arrow">&UpArrow;</span></th>
+                        <th>Lowest price <span class="icon-arrow">&UpArrow;</span></th>
+                        <th>Purchase <span class="icon-arrow">&UpArrow;</span></th>
                     </tr>
                     </thead>
                     <tbody id="routes-list">
                     <tr th:each="trip : ${trips}" class="route-row">
-                        <td th:text="${trip.getDate()}" th:attr="data-date=${#temporals.format(trip.getDate(), 'yyyy-MM-dd')}"></td>
+                        <td th:text="${trip.getDate()}"
+                            th:attr="data-date=${#temporals.format(trip.getDate(), 'yyyy-MM-dd')}"></td>
                         <td th:text="${stops[trip.getTripId()]}"></td>
                         <td th:text="${trip.getFreeSeats()}"></td>
 
@@ -108,12 +119,12 @@
         const datepicker = flatpickr("#datepicker", {
             dateFormat: "Y-m-d",
             allowInput: true,
-            onChange: function(selectedDates, dateStr) {
+            onChange: function (selectedDates, dateStr) {
                 filterByDate(dateStr);
             }
         });
 
-        document.getElementById('clearDate').addEventListener('click', function() {
+        document.getElementById('clearDate').addEventListener('click', function () {
             datepicker.clear();
             filterByDate('');
         });
@@ -134,5 +145,6 @@
         }
     });
 </script>
+
 </body>
 </html>
