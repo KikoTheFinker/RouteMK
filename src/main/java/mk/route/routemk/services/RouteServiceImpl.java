@@ -18,4 +18,5 @@ public class RouteServiceImpl extends GenericServiceImpl<Route, Integer> impleme
     public List<Route> findRouteByFromAndToDest(String from, String to) {
         return findAllByPredicate(RouteSpecification.routesByFromAndToLocation(from, to));
     }
+
 }

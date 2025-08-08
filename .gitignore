@@ -36,3 +36,5 @@ build/
 /out/
 /application-db.properties
 /application.properties
+
+.src/main/java/mk/route/routemk/config/SecurityConfig.java
