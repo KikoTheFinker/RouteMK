@@ -61,8 +61,6 @@ public class UserTripController {
             }
         }
 
-        // TODO add stop strings?
-
         model.addAttribute("trips", trips);
         model.addAttribute("cheapestTicketPrice", cheapestTicket); // used to sort by cheapest ticket price
         model.addAttribute("routeSource", route.getSource().getName());
@@ -89,6 +87,16 @@ public class UserTripController {
 
     @GetMapping("/user")
     public String myTripsPage(Model model) {
+        Integer currentAccountId = authenticationService.getAuthenticatedUserId();
+
+        model.addAttribute("trips", tripService.findTripsBookedByAccount(currentAccountId));
+        model.addAttribute("display", "user/my-trips");
+
+        return "master";
+    }
+
+    @GetMapping("/buy/{id}")
+    public String buyTickets(Model model) {
         Integer currentAccountId = authenticationService.getAuthenticatedUserId();
 
         model.addAttribute("trips", tripService.findTripsBookedByAccount(currentAccountId));
