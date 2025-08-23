@@ -25,6 +25,9 @@ public class Trip {
     @Column(name = "transport_organizer_id")
     private Integer tranOrgId;
 
+    @Column(name = "base_price")
+    private Double basePrice;
+
     @ManyToOne
     @JoinColumn(name = "route_id", referencedColumnName = "route_id", insertable = false, updatable = false)
     private Route route;

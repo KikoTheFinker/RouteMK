@@ -136,6 +136,7 @@ CREATE TABLE route (
 
 CREATE TABLE trip (
     trip_id SERIAL PRIMARY KEY,
+    base_price DOUBLE PRECISION NOT NULL,
     transport_organizer_id INT NOT NULL,
     route_id INT NOT NULL,
     free_seats INT CHECK (free_seats >= 0),
@@ -251,12 +252,12 @@ INSERT INTO route values(600, 100, 300, 100);
 INSERT INTO route values(700, 300, 300, 100);
 
 
-INSERT INTO trip values(400, 100, 100, 33, '12-02-2025', 'NOT_STARTED');
-INSERT INTO trip values(500, 200, 100, 40, '02-03-2025', 'NOT_STARTED');
-INSERT INTO trip values(600, 200, 300, 6, '02-05-2025', 'NOT_STARTED');
-INSERT INTO trip values(700, 100, 300, 13, '12-01-2025', 'NOT_STARTED');
-INSERT INTO trip values(800, 200, 300, 50, '02-9-2025', 'NOT_STARTED');
-INSERT INTO trip values(900, 200, 300, 6, '02-10-2025', 'NOT_STARTED');
+INSERT INTO trip values(400, 20,100, 100, 33, '12-02-2025', 'NOT_STARTED');
+INSERT INTO trip values(500, 20,200, 100, 40, '02-03-2025', 'NOT_STARTED');
+INSERT INTO trip values(600, 20, 200, 300, 6, '02-05-2025', 'NOT_STARTED');
+INSERT INTO trip values(700, 20, 100, 300, 13, '12-01-2025', 'NOT_STARTED');
+INSERT INTO trip values(800, 20, 200, 300, 50, '02-9-2025', 'NOT_STARTED');
+INSERT INTO trip values(900, 20,200, 300, 6, '02-10-2025', 'NOT_STARTED');
 
 INSERT INTO trip_stops values(300, 400, 300, '19:00');
 INSERT INTO trip_stops values(400, 400, 100, '20:00');
