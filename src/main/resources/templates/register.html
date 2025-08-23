@@ -7,7 +7,7 @@
         <h2 class="text-center"><i class="bi bi-person-plus"></i></h2>
         <h3 class="text-center fw-bold">Create an Account on Route<span style="color:#ff1616">MK</span></h3>
         <form method="POST" th:action="@{/register}">
-            <p th:if="${errorMessage}" th:text="${errorMessage}" class="alert alert-danger"></p>
+            <div th:if="${errorMessage}" th:text="${errorMessage}" class="alert alert-danger"></div>
             <div class="mb-3 text-start">
                 <label for="name" class="form-label">First Name</label>
                 <input type="text" class="form-control" name="name" id="name" placeholder="Your Name...">
