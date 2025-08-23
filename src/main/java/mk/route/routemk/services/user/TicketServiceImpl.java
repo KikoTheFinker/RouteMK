@@ -34,4 +34,9 @@ public class TicketServiceImpl extends GenericServiceImpl<Ticket, Integer> imple
                    .min(Comparator.comparing(Ticket::getPrice))
                    .orElse(null);
     }
+
+    @Override
+    public Collection<? extends Ticket> findAllTicketsForTrip(Integer tripId) {
+        return ticketRepository.findAllByTrip_TripId(tripId);
+    }
 }

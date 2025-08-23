@@ -225,11 +225,11 @@ CREATE TABLE ticket_relations (
     CONSTRAINT ticket_relations_parent_ticket_id_fkey FOREIGN KEY (parent_ticket_id) REFERENCES ticket(ticket_id) ON DELETE CASCADE,
     CONSTRAINT ticket_relations_child_ticket_id_fkey FOREIGN KEY (child_ticket_id) REFERENCES ticket(ticket_id) ON DELETE CASCADE
 );
+
 INSERT INTO account values(100, 'duko@outlook.com', 'David', 'Davidov', '$2a$12$pr3az9qix0CnAsX84C2clu9cG9JDlfqfK.sMqaFhPYR7D5fiz8BjO'); -- pw: d
 INSERT INTO account values(200, 'kiko@outlook.com', 'Kiko', 'Kikoski', '$2a$12$KCpRdwqqm2S0BX8fHjzCBO570ivpoJZ6tuIc1W6gwSpzObvxykZ8y'); -- pw: k
 INSERT INTO account values(300, 'jama@outlook.com', 'Jana', 'Janoska', '$2a$12$XO94fugzv1B9T.IjEbFSWu4WyCDFTdMM9Vg4Xli7DWiDH1LGwgj7G'); -- pw: j
-INSERT INTO account values(400, 'verche@outlook.com', 'Verche', 'Verchoska', '$2a$12$XO94fugzv1B9T.IjEbFSWu4WyCDFTdMM9Vg4Xli7DWiDH1LGwgj7G'); -- pw: v
-
+INSERT INTO account values(400, 'verche@outlook.com', 'Verche', 'Verchoska', '$2a$12$VsQC7v9cFj4QApvLQoTtP.3H5BYizpbKDGE3yddvQrhUGfzdlR3Hi'); -- pw: v
 
 INSERT INTO transport_organizer values(100, 100, 'Galeb', '1234512345123');
 INSERT INTO transport_organizer values(200, 200, 'Delfina', '1234512345124');

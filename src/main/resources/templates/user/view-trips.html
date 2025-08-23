@@ -76,18 +76,14 @@
                     </tr>
                     </thead>
                     <tbody id="routes-list">
+<!--                    TODO: implement purchasing through ticket creation-->
                     <tr th:each="trip : ${trips}" class="route-row">
                         <td th:text="${trip.getDate()}" th:attr="data-date=${#temporals.format(trip.getDate(), 'yyyy-MM-dd')}"></td>
                         <td th:text="${stops[trip.getTripId()]}"></td>
-                        <td th:text="${trip.getFreeSeats()}"></td>
-
+                        <td th:text="${seatsLeftPerTrip[trip.getTripId()]}"></td>
                         <td th:text="${cheapestTicketPrice[trip.getTripId()]}"></td>
-
-                        <td th:if="${cheapestTicketPrice[trip.getTripId()]} != 'No available tickets.'">
-                            <a th:href="@{/}" class="btn-redoutline">Purchase</a>
-                        </td>
-                        <td th:if="${cheapestTicketPrice[trip.getTripId()]} == 'No available tickets.'">
-                            Sold out.
+                        <td>
+                            <a th:if="${seatsLeftPerTrip[trip.getTripId()] != 0}" th:href="@{/}" class="btn-redoutline">Purchase</a>
                         </td>
                     </tr>
                     </tbody>

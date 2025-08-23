@@ -135,7 +135,7 @@
                 <tbody>
                 <tr th:each="trip : ${trips}" th:if="${trip != null}" th:attr="data-status=${trip.getStatus()}">
                     <td th:text="${trip.getDate()}"></td>
-                    <td th:text="${trip.getFreeSeats()}"></td>
+                    <td th:text="${freeSeatMap.get(trip.getTripId())}"></td>
                     <td class="text-center">
                         <button class="btn-standard view-stops-btn" th:data-trip-id="${trip.getTripId()}">View Stops
                         </button>
@@ -155,9 +155,9 @@
                              th:if="${#authorization.expression('!hasRole(''DRIVER'')')}">
                             <button type="button"
                                     class="editTripButton btn-standard"
-                                    th:data-trip-id="${trip.tripId}"
-                                    th:data-trip-date="${trip.date}"
-                                    th:data-free-seats="${trip.freeSeats}">
+                                    th:data-trip-id="${trip.getTripId()}"
+                                    th:data-trip-date="${trip.getDate()}"
+                                    th:data-free-seats="${freeSeatMap.get(trip.getTripId())}">
                                 Edit
                             </button>
                             <form th:action="@{/routes/company/view-trips/{routeId}/delete-trip/{tripId}(routeId=${routeId}, tripId=${trip.getTripId()})}"
