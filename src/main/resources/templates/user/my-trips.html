@@ -52,12 +52,15 @@
     </div>
 
     <div class="filter-container-wrapper">
-        <div class="filter-container d-flex flex-column align-items-center">
-            <div class="filter-heading mb-3">
-                <img src="/images/filter.png" alt="Filter Icon">
-                <span>Filter</span>
+        <div class="filter-heading mb-3 d-flex justify-content-between align-items-center">
+            <div class="d-flex justify-content-between align-items-center">
+                <i class="bi bi-funnel me-2"></i> <span>Filter</span>
             </div>
-
+            <div class="ms-1 text-center d-flex justify-content-center align-items-center">
+                <button id="resetFiltersButton" class="btn-standard h-100">Reset Filters</button>
+            </div>
+        </div>
+        <div class="filter-container d-flex gap-2">
             <div class="mb-3 trip-filter-criteria w-100">
                 <label for="statusFilter" class="form-label">Status</label>
                 <select id="statusFilter" class="form-control">
@@ -79,9 +82,6 @@
             <div class="mb-3 trip-filter-criteria w-100">
                 <label for="companyFilter" class="form-label">Company Name</label>
                 <input type="text" id="companyFilter" class="form-control" placeholder="Company Name">
-            </div>
-            <div class="mb-2 text-center">
-                <button id="resetFiltersButton" class="btn-standard">Reset Filters</button>
             </div>
         </div>
     </div>
@@ -139,7 +139,7 @@
     </div>
 </div>
 
-<script src="/js/filtering.js"></script>
+<script src="/js/trip-filtering.js"></script>
 <script src="/js/stops-modal.js"></script>
 </body>
 </html>

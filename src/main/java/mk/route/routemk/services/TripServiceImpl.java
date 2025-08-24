@@ -29,7 +29,7 @@ public class TripServiceImpl extends GenericServiceImpl<Trip, Integer> implement
 
     @Override
     public List<Trip> findTripsBookedByAccount(Integer accountId) {
-        return ticketService.findTripsByAccountId(accountId)
+        return ticketService.findTicketsByAccountId(accountId)
                 .stream()
                 .map(Ticket::getTrip)
                 .collect(Collectors.toList());

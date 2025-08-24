@@ -28,8 +28,7 @@ public class UserRouteController {
                 ? routeService.findAll()
                 : routeService.findRouteByFromAndToDest(from, to);
 
-        model.addAttribute(filteredRoutes.isEmpty() ? "noRoutesMessage" : "routes",
-                filteredRoutes.isEmpty() ? "No routes found for your search." : filteredRoutes);
+        model.addAttribute("routes", filteredRoutes);
         model.addAttribute("display", "user/search-routes");
 
         return "master";

@@ -86,10 +86,9 @@
     <div th:if="${error}" class="alert alert-danger" role="alert" th:text="${error}"></div>
 
     <div class="filter-container-wrapper">
-        <div class="filter-container d-flex flex-column align-items-center">
+        <div class="filter-container d-flex flex-column align-items-left">
             <div class="filter-heading mb-3">
-                <img src="/images/filter.png" alt="Filter Icon">
-                <span>Filter</span>
+                <i class="bi bi-funnel me-1"></i> <span>Filter</span>
             </div>
             <div class="mb-3 trip-filter-criteria w-100">
                 <label for="statusFilter" class="form-label">Status</label>
@@ -283,7 +282,7 @@
     };
 </script>
 <script src="/js/modal.js"></script>
-<script src="/js/filtering.js"></script>
+<script src="/js/trip-filtering.js"></script>
 <script src="/js/stops-modal.js"></script>
 
 </body>
