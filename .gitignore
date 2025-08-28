@@ -38,3 +38,4 @@ build/
 /application.properties
 
 .src/main/java/mk/route/routemk/config/SecurityConfig.java
+

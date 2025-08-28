@@ -90,6 +90,40 @@
         <div class="title-container mt-5">
             <h3 class="title fs-5"><i class="bi bi-signpost-split me-2"></i>Indirect routes</h3>
         </div>
+
+        <div class="routes-table-wrapper">
+            <table class="routes-table">
+                <thead>
+                <tr>
+                    <th>Departure</th>
+                    <th>Arrival</th>
+                    <th>Company</th>
+                    <th>
+                        <img src="/images/eye.png" alt="A gazing eye" width='24' height='24'/>
+                        Explore
+                    </th>
+                </tr>
+                </thead>
+                <tbody id="routes-list-indirect">
+                <tr th:each="route : ${IndirectRoutes}">
+                    <td th:text="${route.getSource().getName()}"></td>
+                    <td th:text="${route.getDestination().getName()}"></td>
+                    <td th:text="${route.getTranOrg().getCompanyName()}"></td>
+                    <td>
+                        <a th:href="@{/trips/{routeId}(routeId=${route.routeId})}" class="btn-redoutline">View Trips</a>
+                    </td>
+
+                <tr th:if="${noRoutesMessage}">
+                    <td colspan="4" class="notification" th:text="${noRoutesMessage}"></td>
+                </tr>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+
+
     </div>
 </main>
 

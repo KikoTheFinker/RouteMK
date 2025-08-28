@@ -9,4 +9,5 @@ public interface TripService extends GenericService<Trip, Integer> {
 
     List<Trip> findTripsBookedByAccount(Integer accountId);
     List<Trip> findTripsByRouteId(Integer routeId);
+    List<Trip> findIndirectTrips(Integer startId, Integer endId);
 }
