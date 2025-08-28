@@ -14,5 +14,5 @@ public interface TripService extends GenericService<Trip, Integer> {
     Map<Integer, String> getStopNameTableForTrips(Collection<? extends Trip> trips, String from, String to);
     Map<Integer, Object> getCheapestTicketTableForTrips(Collection<? extends Trip> trips);
     Map<Integer, Integer> getFreeSeatTableForTrips(Collection<? extends Trip> trips);
-
+    List<Trip> findIndirectTrips(Integer startId, Integer endId);
 }

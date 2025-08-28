@@ -7,6 +7,7 @@ import mk.route.routemk.repostories.interfaces.TripRepository;
 import mk.route.routemk.services.interfaces.TicketService;
 import mk.route.routemk.services.interfaces.TripService;
 import mk.route.routemk.specifications.TripSpecification;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -94,4 +95,11 @@ public class TripServiceImpl extends GenericServiceImpl<Trip, Integer> implement
 
         return tripSeatCapacity - ticketsPurchasedAlready;
     }
+  
+    public List<Trip> findIndirectTrips(Integer startId, Integer endId) {
+        Specification<Trip> trips = TripSpecification.findTripsWithStartAndEndLocations(startId, endId);
+        System.out.printf("Trips with start and end locations: %s\n", trips);
+        return findAllByPredicate(trips);
+    }
+
 }
