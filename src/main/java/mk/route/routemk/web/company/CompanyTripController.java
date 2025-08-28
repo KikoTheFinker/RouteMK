@@ -1,10 +1,11 @@
 package mk.route.routemk.web.company;
 
 import mk.route.routemk.models.Route;
-import mk.route.routemk.services.company.CompanyTripServiceImpl;
+import mk.route.routemk.models.Trip;
 import mk.route.routemk.services.company.interfaces.CompanyTripService;
 import mk.route.routemk.services.interfaces.LocationService;
 import mk.route.routemk.services.interfaces.RouteService;
+import mk.route.routemk.services.interfaces.TripService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,20 +22,24 @@ public class CompanyTripController {
     private final CompanyTripService companyTripService;
     private final LocationService locationService;
     private final RouteService routeService;
+    private final TripService tripService;
 
-    public CompanyTripController(CompanyTripService companyTripService, LocationService locationService, RouteService routeService) {
+    public CompanyTripController(CompanyTripService companyTripService, LocationService locationService, RouteService routeService, TripService tripService) {
         this.companyTripService = companyTripService;
         this.locationService = locationService;
         this.routeService = routeService;
+        this.tripService = tripService;
     }
 
     @GetMapping
     public String routeTrips(@PathVariable Integer routeId, Model model) {
         Route route = routeService.findById(routeId);
+        List<Trip> tripsAuthorized = companyTripService.getAuthorizedTripsByRoute(routeId);
 
-        model.addAttribute("trips", companyTripService.getAuthorizedTripsByRoute(routeId));
+        model.addAttribute("trips", tripsAuthorized);
         model.addAttribute("routeId", routeId);
         model.addAttribute("locations", locationService.findAll());
+        model.addAttribute("freeSeatMap", tripService.getFreeSeatTableForTrips(tripsAuthorized));
         model.addAttribute("routeSource", route.getSource());
         model.addAttribute("routeDestination", route.getDestination());
         model.addAttribute("display", "company/company-view-trip");

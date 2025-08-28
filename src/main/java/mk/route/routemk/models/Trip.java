@@ -3,7 +3,6 @@ package mk.route.routemk.models;
 import jakarta.persistence.*;
 import lombok.Data;
 import mk.route.routemk.models.enums.Status;
-import org.hibernate.annotations.Type;
 
 import java.time.LocalDate;
 import java.util.Collection;
@@ -115,7 +114,7 @@ public class Trip {
         return stops;
     }
 
-    public int getFreeSeats() {
+    public int getSeatCapacity() {
         return freeSeats;
     }
 
