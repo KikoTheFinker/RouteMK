@@ -1,21 +1,22 @@
 package mk.route.routemk.services;
 
 import mk.route.routemk.models.Review;
-import mk.route.routemk.models.Ticket;
-import mk.route.routemk.models.Trip;
+import mk.route.routemk.repostories.interfaces.GenericRepository;
 import mk.route.routemk.repostories.interfaces.ReviewRepository;
 import mk.route.routemk.repostories.interfaces.TicketRepository;
 import mk.route.routemk.repostories.interfaces.TripRepository;
 import mk.route.routemk.services.interfaces.ReviewService;
-import org.hibernate.annotations.SecondaryRow;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static mk.route.routemk.specifications.ReviewSpecification.*;
+
 @Service
-public class ReviewServiceImpl implements ReviewService {
+public class ReviewServiceImpl extends GenericServiceImpl<Review, Integer> implements ReviewService {
 
 
     private final ReviewRepository reviewRepository;
@@ -23,7 +24,8 @@ public class ReviewServiceImpl implements ReviewService {
     private final TicketRepository ticketRepository;
 
 
-    public ReviewServiceImpl(ReviewRepository reviewRepository, TripRepository tripRepository, TicketRepository ticketRepository) {
+    public ReviewServiceImpl(GenericRepository<Review, Integer> genericRepository, ReviewRepository reviewRepository, TripRepository tripRepository, TicketRepository ticketRepository) {
+        super(genericRepository);
         this.reviewRepository = reviewRepository;
         this.tripRepository = tripRepository;
         this.ticketRepository = ticketRepository;
@@ -31,40 +33,18 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public List<Review> findReviewsForTrip(Integer tripId) {
-
-        List<Review> reviews = reviewRepository.findAll();
-        List<Review> filteredReviews = new ArrayList<>();
-        for (Review review : reviews) {
-            if (review.getTicket().getTrip().getTripId() == tripId) {
-                filteredReviews.add(review);
-            }
-        }
-        return filteredReviews;
+        return findAllByPredicate(hasTripId(tripId)).stream().toList();
     }
 
     @Override
     public List<Review> findReviewsForRoute(Integer routeId) {
-        List<Review> reviews = reviewRepository.findAll();
-        List<Review> filteredReviews = new ArrayList<>();
-        for (Review review : reviews) {
-            if (Objects.equals(review.getTicket().getTrip().getRoute().getRouteId(), routeId)) {
-                filteredReviews.add(review);
-            }
-        }
-        return filteredReviews;
+        return findAllByPredicate(hasRouteId(routeId)).stream().toList();
     }
 
 
     @Override
     public List<Review> findReviewsForTransportOrganizer(Integer transportOrganizerId) {
-        List<Review> reviews = reviewRepository.findAll();
-        List<Review> filteredReviews = new ArrayList<>();
-        for (Review review : reviews) {
-            if (Objects.equals(review.getTicket().getTrip().getRoute().getTranOrg().getTranOrgId(), transportOrganizerId)) {
-                filteredReviews.add(review);
-            }
-        }
-        return filteredReviews;
+        return findAllByPredicate(hasTransportOrganizerId(transportOrganizerId)).stream().toList();
     }
 }
 
