@@ -73,4 +73,14 @@ public class UserTripController {
 
         return "master";
     }
+
+    @GetMapping("/buy/{id}")
+    public String buyTickets(Model model) {
+        Integer currentAccountId = authenticationService.getAuthenticatedUserId();
+
+        model.addAttribute("trips", tripService.findTripsBookedByAccount(currentAccountId));
+        model.addAttribute("display", "user/my-trips");
+
+        return "master";
+    }
 }

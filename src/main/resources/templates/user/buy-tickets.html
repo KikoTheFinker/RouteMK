@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" th:href="@{/css/trip-route-filter-table.css}"/>
+    <title>Buy Tickets</title>
+
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        main {
+            flex: 1 0 auto;
+        }
+
+        footer {
+            flex-shrink: 0;
+        }
+
+        #main {
+            flex: 1;
+            width: 80%;
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 1.5rem;
+        }
+
+        .trip-summary {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid #dee2e6;
+        }
+
+        .trip-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .trip-detail {
+            text-align: center;
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .trip-detail h5 {
+            color: #495057;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .trip-detail p {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .arrow-separator {
+            font-size: 2rem;
+            color: #6c757d;
+            margin: 0 1rem;
+        }
+
+        .ticket-selection {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .seat-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            max-width: 300px;
+            margin: 2rem auto;
+        }
+
+        .seat {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .seat.available {
+            background-color: #e7f3ff;
+            border-color: #007bff;
+            color: #007bff;
+        }
+
+        .seat.available:hover {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .seat.selected {
+            background-color: #28a745;
+            border-color: #28a745;
+            color: white;
+        }
+
+        .seat.occupied {
+            background-color: #dc3545;
+            border-color: #dc3545;
+            color: white;
+            cursor: not-allowed;
+        }
+
+        .seat-legend {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .legend-seat {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+
+        .passenger-info {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .passenger-form {
+            display: none;
+            border-top: 1px solid #dee2e6;
+            padding-top: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .passenger-form.show {
+            display: block;
+        }
+
+        .price-summary {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .price-breakdown {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .total-price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-top: 1rem;
+        }
+
+        .purchase-button {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            border: none;
+            padding: 1rem 3rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .purchase-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.4);
+        }
+
+        .purchase-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .notification {
+            margin: 20px 0;
+            font-style: italic;
+            color: #6c757d;
+        }
+
+        @media (max-width: 768px) {
+            .trip-info {
+                flex-direction: column;
+            }
+
+            .arrow-separator {
+                transform: rotate(90deg);
+                margin: 0.5rem 0;
+            }
+        }
+    </style>
+</head>
+<body>
+<th:block th:if="${display != 'login' and display != 'register'}">
+    <header th:replace="~{replace/navbar}"></header>
+</th:block>
+
+<main id="main">
+    <div class="title-container mt-5">
+        <h1 class="title">
+            <i class="bi bi-ticket-perforated me-2"></i>
+            Buy Tickets
+        </h1>
+    </div>
+
+    <!-- Trip Summary -->
+    <div class="trip-summary">
+        <div class="trip-info">
+            <div class="trip-detail">
+                <h5><i class="bi bi-geo-alt"></i> From</h5>
+                <p th:text="${routeSource ?: 'Departure City'}">Departure City</p>
+            </div>
+
+            <div class="arrow-separator">
+                <i class="bi bi-arrow-right"></i>
+            </div>
+
+            <div class="trip-detail">
+                <h5><i class="bi bi-geo-alt-fill"></i> To</h5>
+                <p th:text="${routeDestination ?: 'Arrival City'}">Arrival City</p>
+            </div>
+
+            <div class="trip-detail">
+                <h5><i class="bi bi-calendar3"></i> Date</h5>
+                <p th:text="${tripDate ?: '2024-12-01'}">2024-12-01</p>
+            </div>
+
+            <div class="trip-detail">
+                <h5><i class="bi bi-clock"></i> Departure Time</h5>
+                <p th:text="${departureTime ?: '10:30'}">10:30</p>
+            </div>
+
+            <div class="trip-detail">
+                <h5><i class="bi bi-building"></i> Company</h5>
+                <p th:text="${companyName ?: 'Bus Company'}">Bus Company</p>
+            </div>
+        </div>
+
+        <!-- Additional trip details -->
+        <div class="mt-3 pt-3 border-top">
+            <div class="row text-center">
+                <div class="col-md-3">
+                    <h6><i class="bi bi-signpost-2"></i> Stops</h6>
+                    <p class="mb-0" th:text="${stops ?: '3 stops'}">3 stops</p>
+                </div>
+                <div class="col-md-3">
+                    <h6><i class="bi bi-seat"></i> Available Seats</h6>
+                    <p class="mb-0" th:text="${availableSeats ?: '15'}">15</p>
+                </div>
+                <div class="col-md-3">
+                    <h6><i class="bi bi-currency-dollar"></i> Price per Ticket</h6>
+                    <p class="mb-0" th:text="${ticketPrice ?: '$25.50'}">$25.50</p>
+                </div>
+                <div class="col-md-3">
+                    <h6><i class="bi bi-clock-history"></i> Duration</h6>
+                    <p class="mb-0" th:text="${duration ?: '4h 30m'}">4h 30m</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Seat Selection -->
+    <div class="ticket-selection">
+        <h3 class="mb-4 text-center">
+            <i class="bi bi-layout-wtf me-2"></i>
+            Select Your Seats
+        </h3>
+
+        <div class="seat-grid" id="seatsGrid">
+            <!-- Seats will be generated by JavaScript -->
+        </div>
+
+        <div class="seat-legend">
+            <div class="legend-item">
+                <div class="legend-seat available" style="background-color: #e7f3ff; border: 1px solid #007bff;"></div>
+                <span>Available</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-seat selected" style="background-color: #28a745;"></div>
+                <span>Selected</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-seat occupied" style="background-color: #dc3545;"></div>
+                <span>Occupied</span>
+            </div>
+        </div>
+
+        <p class="text-center mt-3 text-muted">
+            <i class="bi bi-info-circle"></i>
+            Click on available seats to select them. Maximum 4 seats per booking.
+        </p>
+    </div>
+
+    <!-- Passenger Information -->
+    <div class="passenger-info">
+        <h3 class="mb-4">
+            <i class="bi bi-person-fill me-2"></i>
+            Passenger Information
+        </h3>
+
+        <div id="passengerForms">
+            <!-- Passenger forms will be generated by JavaScript -->
+        </div>
+    </div>
+
+    <!-- Price Summary -->
+    <div class="price-summary" id="priceSummary" style="display: none;">
+        <h4><i class="bi bi-receipt me-2"></i>Booking Summary</h4>
+        <div id="priceBreakdown">
+            <!-- Price breakdown will be generated by JavaScript -->
+        </div>
+        <div class="total-price">
+            Total: $<span id="totalPrice">0.00</span>
+        </div>
+    </div>
+
+    <!-- Purchase Button -->
+    <div class="text-center">
+        <button type="button" class="btn btn-danger purchase-button" id="purchaseBtn" disabled>
+            <i class="bi bi-credit-card me-2"></i>
+            Purchase Tickets
+        </button>
+    </div>
+
+    <!-- No trip selected message -->
+    <div th:if="${emptyMessage}" class="notification text-center">
+        <p th:text="${emptyMessage}">Please select a trip to purchase tickets.</p>
+        <a th:href="@{/search-routes}" class="btn btn-primary">
+            <i class="bi bi-search me-2"></i>
+            Search Routes
+        </a>
+    </div>
+</main>
+
+<footer th:replace="~{replace/footer}"></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const maxSeats = 4;
+        const seatPrice = seatPriceFromBackend;
+
+        let selectedSeats = [];
+        let totalSeats = parseInt('[[${totalSeats}]]') || 40;
+        let occupiedSeatsData = '[[${occupiedSeats}]]' || '';
+        let occupiedSeats = occupiedSeatsData ? occupiedSeatsData.split(',').map(Number) : [5, 12, 18, 23, 31];
+        let seatPriceFromBackend = parseFloat('[[${ticketPrice}]]'.replace(/[^\d.-]/g, '')) || 25.50;
+
+        function generateSeats() {
+            const seatsGrid = document.getElementById('seatsGrid');
+
+            for (let i = 1; i <= totalSeats; i++) {
+                const seat = document.createElement('div');
+                seat.className = 'seat';
+                seat.textContent = i;
+                seat.setAttribute('data-seat', i);
+
+                if (occupiedSeats.includes(i)) {
+                    seat.classList.add('occupied');
+                } else {
+                    seat.classList.add('available');
+                    seat.addEventListener('click', () => toggleSeat(i, seat));
+                }
+
+                seatsGrid.appendChild(seat);
+            }
+        }
+
+        function toggleSeat(seatNumber, seatElement) {
+            if (seatElement.classList.contains('selected')) {
+                seatElement.classList.remove('selected');
+                seatElement.classList.add('available');
+                selectedSeats = selectedSeats.filter(s => s !== seatNumber);
+            } else if (selectedSeats.length < maxSeats) {
+                seatElement.classList.remove('available');
+                seatElement.classList.add('selected');
+                selectedSeats.push(seatNumber);
+            } else {
+                alert(`Maximum ${maxSeats} seats allowed per booking.`);
+                return;
+            }
+
+            updatePassengerForms();
+            updatePriceSummary();
+        }
+
+        // Update passenger forms
+        function updatePassengerForms() {
+            const formsContainer = document.getElementById('passengerForms');
+            formsContainer.innerHTML = '';
+
+            selectedSeats.forEach((seatNumber, index) => {
+                const form = document.createElement('div');
+                form.className = 'passenger-form show';
+                form.innerHTML = `
+                        <h5>Passenger ${index + 1} - Seat ${seatNumber}</h5>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">First Name</label>
+                                <input type="text" class="form-control passenger-input"
+                                       data-seat="${seatNumber}" data-field="firstName" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Last Name</label>
+                                <input type="text" class="form-control passenger-input"
+                                       data-seat="${seatNumber}" data-field="lastName" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-control passenger-input"
+                                       data-seat="${seatNumber}" data-field="email" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Phone</label>
+                                <input type="tel" class="form-control passenger-input"
+                                       data-seat="${seatNumber}" data-field="phone" required>
+                            </div>
+                        </div>
+                    `;
+                formsContainer.appendChild(form);
+            });
+
+            // Add event listeners to inputs
+            document.querySelectorAll('.passenger-input').forEach(input => {
+                input.addEventListener('input', validateForm);
+            });
+        }
+
+        // Update price summary
+        function updatePriceSummary() {
+            const summaryElement = document.getElementById('priceSummary');
+            const breakdownElement = document.getElementById('priceBreakdown');
+            const totalElement = document.getElementById('totalPrice');
+
+            if (selectedSeats.length === 0) {
+                summaryElement.style.display = 'none';
+                return;
+            }
+
+            summaryElement.style.display = 'block';
+
+            const subtotal = selectedSeats.length * seatPrice;
+            const tax = subtotal * 0.10; // 10% tax
+            const fee = 2.50; // Booking fee
+            const total = subtotal + tax + fee;
+
+            breakdownElement.innerHTML = `
+                    <div class="price-breakdown">
+                        <span>Tickets (${selectedSeats.length} × $${seatPrice.toFixed(2)})</span>
+                        <span>$${subtotal.toFixed(2)}</span>
+                    </div>
+                    <div class="price-breakdown">
+                        <span>Tax (10%)</span>
+                        <span>$${tax.toFixed(2)}</span>
+                    </div>
+                    <div class="price-breakdown">
+                        <span>Booking Fee</span>
+                        <span>$${fee.toFixed(2)}</span>
+                    </div>
+                `;
+
+            totalElement.textContent = total.toFixed(2);
+        }
+
+        // Validate form
+        function validateForm() {
+            const allInputs = document.querySelectorAll('.passenger-input');
+            const purchaseBtn = document.getElementById('purchaseBtn');
+
+            let allFilled = true;
+            allInputs.forEach(input => {
+                if (!input.value.trim()) {
+                    allFilled = false;
+                }
+            });
+
+            purchaseBtn.disabled = !allFilled || selectedSeats.length === 0;
+        }
+
+        document.getElementById('purchaseBtn').addEventListener('click', function() {
+            if (selectedSeats.length === 0) {
+                alert('Please select at least one seat.');
+                return;
+            }
+
+            const passengers = [];
+            selectedSeats.forEach(seatNumber => {
+                const passengerData = {
+                    seat: seatNumber,
+                    firstName: document.querySelector(`[data-seat="${seatNumber}"][data-field="firstName"]`).value,
+                    lastName: document.querySelector(`[data-seat="${seatNumber}"][data-field="lastName"]`).value,
+                    email: document.querySelector(`[data-seat="${seatNumber}"][data-field="email"]`).value,
+                    phone: document.querySelector(`[data-seat="${seatNumber}"][data-field="phone"]`).value
+                };
+                passengers.push(passengerData);
+            });
+
+            console.log('Booking data:', {
+                tripId: '[[${tripId}]]' || 'TRIP_ID',
+                routeSource: '[[${routeSource}]]',
+                routeDestination: '[[${routeDestination}]]',
+                tripDate: '[[${tripDate}]]',
+                passengers: passengers,
+                totalAmount: document.getElementById('totalPrice').textContent
+            });
+
+            alert('Booking successful! You will receive confirmation via email.');
+        });
+
+        // Initialize
+        generateSeats();
+    });
+</script>
+</body>
+</html>

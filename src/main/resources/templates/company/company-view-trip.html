@@ -90,26 +90,42 @@
             <div class="filter-heading mb-3">
                 <i class="bi bi-funnel me-1"></i> <span>Filter</span>
             </div>
-            <div class="mb-3 trip-filter-criteria w-100">
-                <label for="statusFilter" class="form-label">Status</label>
-                <select id="statusFilter" class="form-control">
-                    <option value="">All Statuses</option>
-                    <option value="NOT_STARTED">Not Started</option>
-                    <option value="IN_PROGRESS">In Progress</option>
-                    <option value="FINISHED">Finished</option>
-                </select>
+
+            <div class="container">
+                <div class="row">
+
+                    <div class="col-md-6 mb-3">
+                        <label for="statusFilter" class="form-label">Status</label>
+                        <select id="statusFilter" class="form-control">
+                            <option value="">All Statuses</option>
+                            <option value="NOT_STARTED">Not Started</option>
+                            <option value="IN_PROGRESS">In Progress</option>
+                            <option value="FINISHED">Finished</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="companyFilter" class="form-label">Company Name</label>
+                        <input type="text" id="companyFilter" class="form-control" placeholder="Company Name">
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="afterDate" class="form-label">After Date</label>
+                        <input type="date" id="afterDate" class="form-control" placeholder="After Date">
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="beforeDate" class="form-label">Before Date</label>
+                        <input type="date" id="beforeDate" class="form-control" placeholder="Before Date">
+                    </div>
+                </div>
+
+                <br>
+
+                <div class="mb-2 text-center">
+                    <button id="resetFiltersButton" class="btn-standard">Reset Filters</button>
+                </div>
             </div>
-            <div class="mb-3 trip-filter-criteria w-100">
-                <label for="afterDate" class="form-label">After Date</label>
-                <input type="date" id="afterDate" class="form-control" placeholder="After Date">
-            </div>
-            <div class="mb-3 trip-filter-criteria w-100">
-                <label for="beforeDate" class="form-label">Before Date</label>
-                <input type="date" id="beforeDate" class="form-control" placeholder="Before Date">
-            </div>
-        </div>
-        <div class="mb-2 text-center">
-            <button id="resetFiltersButton" class="btn-standard">Reset Filters</button>
         </div>
     </div>
 
