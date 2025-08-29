@@ -383,14 +383,13 @@
     document.addEventListener('DOMContentLoaded', function() {
         const maxSeats = 4;
         const seatPrice = seatPriceFromBackend;
-        // Update seat availability based on backend data
+
         let selectedSeats = [];
         let totalSeats = parseInt('[[${totalSeats}]]') || 40;
         let occupiedSeatsData = '[[${occupiedSeats}]]' || '';
         let occupiedSeats = occupiedSeatsData ? occupiedSeatsData.split(',').map(Number) : [5, 12, 18, 23, 31];
         let seatPriceFromBackend = parseFloat('[[${ticketPrice}]]'.replace(/[^\d.-]/g, '')) || 25.50;
 
-        // Generate seat grid
         function generateSeats() {
             const seatsGrid = document.getElementById('seatsGrid');
 
@@ -411,15 +410,12 @@
             }
         }
 
-        // Toggle seat selection
         function toggleSeat(seatNumber, seatElement) {
             if (seatElement.classList.contains('selected')) {
-                // Deselect seat
                 seatElement.classList.remove('selected');
                 seatElement.classList.add('available');
                 selectedSeats = selectedSeats.filter(s => s !== seatNumber);
             } else if (selectedSeats.length < maxSeats) {
-                // Select seat
                 seatElement.classList.remove('available');
                 seatElement.classList.add('selected');
                 selectedSeats.push(seatNumber);
@@ -525,14 +521,12 @@
             purchaseBtn.disabled = !allFilled || selectedSeats.length === 0;
         }
 
-        // Purchase button handler
         document.getElementById('purchaseBtn').addEventListener('click', function() {
             if (selectedSeats.length === 0) {
                 alert('Please select at least one seat.');
                 return;
             }
 
-            // Collect passenger data
             const passengers = [];
             selectedSeats.forEach(seatNumber => {
                 const passengerData = {
@@ -545,7 +539,6 @@
                 passengers.push(passengerData);
             });
 
-            // Here you would typically send the data to your backend
             console.log('Booking data:', {
                 tripId: '[[${tripId}]]' || 'TRIP_ID',
                 routeSource: '[[${routeSource}]]',
@@ -555,11 +548,7 @@
                 totalAmount: document.getElementById('totalPrice').textContent
             });
 
-            // Simulate successful booking
             alert('Booking successful! You will receive confirmation via email.');
-
-            // Redirect to confirmation page or home
-            // window.location.href = '/booking-confirmation';
         });
 
         // Initialize

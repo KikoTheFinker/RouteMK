@@ -33,8 +33,7 @@
 
     <div class="filter-container-wrapper center text-center">
         <div class="filter-heading">
-            <img src="/images/filter.png" alt="Filter Icon">
-            <span>Filter</span>
+            <i class="bi bi-funnel me-1"></i> <span>Filter</span>
         </div>
         <form th:method="GET" th:action="@{/search-routes}" class="w-100 align-items-center">
             <div class="row mb-3 g-3">
@@ -47,7 +46,7 @@
                 </div>
             </div>
             <button type="submit" class="btn btn-danger w-50" id="goodbutton">
-                <img src="/images/magnifying.png" alt="A magnifying glass" width="15" height="15">
+                <i class="bi bi-search me-1"></i>
                 Search
             </button>
         </form>
@@ -79,7 +78,7 @@
                         <a th:href="@{/trips/{routeId}(routeId=${route.routeId})}" class="btn-redoutline">View Trips</a>
                     </td>
 
-                <tr th:if="${noRoutesMessage}">
+                <tr th:if="${routes.isEmpty()}">
                     <td colspan="4" class="notification" th:text="${noRoutesMessage}"></td>
                 </tr>
                 </tr>

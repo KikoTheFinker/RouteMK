@@ -9,14 +9,10 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-
 public class LocationServiceImpl extends GenericServiceImpl<Location, Integer> implements LocationService {
 
-    private final LocationRepository locationRepository;
-
-    public LocationServiceImpl(GenericRepository<Location, Integer> genericRepository, LocationRepository locationRepository) {
-        super(genericRepository);
-        this.locationRepository = locationRepository;
+    public LocationServiceImpl(GenericRepository<Location, Integer> locationRepository) {
+        super(locationRepository);
     }
 
     public Integer findByLocationName(String name) {
@@ -24,7 +20,7 @@ public class LocationServiceImpl extends GenericServiceImpl<Location, Integer> i
             return null;
         }
 
-        List<Location> locations = locationRepository.findAll();
+        List<Location> locations = genericRepository.findAll();
         if (locations.isEmpty()) {
             return null;
         }

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Tickets</title>
+    <link rel="stylesheet" th:href="@{/css/ticket-display.css}"/>
+    <link rel="stylesheet" th:href="@{/css/trip-route-filter-table.css}"/>
+</head>
+<body>
+<div id="main">
+    <div class="title-container mt-5">
+        <h1 class="title"><i class="bi bi-ticket-perforated me-2"></i>My Tickets</h1>
+    </div>
+
+    <div class="tickets-filter-container">
+        <div class="filter-heading mb-3 w-100 d-flex justify-content-between">
+            <div>
+                <i class="bi bi-funnel me-1"></i> <span>Filter</span>
+            </div>
+            <div class="d-flex justify-content-center align-items-center" style="align-self: end;">
+                <button id="resetTicketFilters" class="btn-standard">Reset Filters</button>
+            </div>
+        </div>
+        <div class="d-flex flex-row gap-2">
+            <div class="filter-field">
+                <label for="dateFrom" class="filter-label">Date From</label>
+                <input type="date" id="dateFrom" class="form-control">
+            </div>
+            <div class="filter-field">
+                <label for="dateTo" class="filter-label">Date To</label>
+                <input type="date" id="dateTo" class="form-control">
+            </div>
+            <div class="filter-field">
+                <label for="pickupFilter" class="filter-label">Pickup Location</label>
+                <input type="text" id="pickupFilter" class="form-control" placeholder="ex. Struga">
+            </div>
+            <div class="filter-field">
+                <label for="dropFilter" class="filter-label">Drop Location</label>
+                <input type="text" id="dropFilter" class="form-control" placeholder="ex. Skopje">
+            </div>
+            <div class="filter-field">
+                <label for="minPrice" class="filter-label">Min Price</label>
+                <input type="number" id="minPrice" class="form-control" placeholder="€" min="0">
+            </div>
+            <div class="filter-field">
+                <label for="maxPrice" class="filter-label">Max Price</label>
+                <input type="number" id="maxPrice" class="form-control" placeholder="€" min="0">
+            </div>
+        </div>
+    </div>
+
+    <div class="tickets-list">
+        <div th:each="ticket : ${tickets}" class="ticket-container"
+             th:attr="data-date=${ticket.datePurchased}, data-price=${ticket.price}, data-pickup=${ticket.pickupLocation.name}, data-drop=${ticket.leavesAtLocation.name}">
+            <div class="ticket-header">
+                <div>
+                    <i class="bi bi-hash me-1 text-danger"></i>
+                    <span class="text-dark">Ticket ID: </span>
+                    <span th:text="${ticket.ticketId}" style="text-shadow: 0 0 3px rgba(0,0,0,0.51)"></span>
+                </div>
+                <div>
+                    <i class="bi bi-clock-history me-1 text-danger  "></i><span
+                        th:text="${ticket.datePurchased} + ' ' + ${ticket.timePurchased}">Date & Time</span>
+                </div>
+            </div>
+            <hr class="dotted-hr"/>
+            <div class="ticket-body">
+                <div class="ticket-info-block">
+                    <span class="ticket-label"><i
+                            class="bi bi-signpost-split text-danger me-1"></i>Route travelling</span><br>
+                    <span th:text="${ticket.trip.route.source.name} + ' → ' + ${ticket.trip.route.destination.name}"></span>
+                </div>
+                <div class="ticket-info-block">
+                    <span class="ticket-label">Seat:</span><br>
+                    <span th:text="${ticket.seat}"></span>
+                </div>
+                <div class="ticket-info-block">
+                    <span class="ticket-label"><i
+                            class="bi bi-arrow-90deg-up me-1 text-danger"></i>Pickup Location</span><br>
+                    <span th:text="${ticket.pickupLocation.name}"></span>
+                </div>
+                <div class="ticket-info-block">
+                    <span class="ticket-label"><i class="bi bi-arrow-90deg-down me-1 text-danger"></i>Drop-off Location</span><br>
+                    <span th:text="${ticket.leavesAtLocation.name}"></span>
+                </div>
+                <div class="ticket-info-block">
+                    <span class="ticket-label"><i class="bi bi-currency-exchange me-1 text-danger"></i>Price</span><br>
+                    <span th:text="${ticket.price} + ' €'"></span>
+                </div>
+                <div class="ticket-info-block">
+                    <span class="ticket-label"><i class="bi bi-credit-card me-1 text-danger"></i>Payment ID</span><br>
+                    <span th:text="'#' + ${ticket.paymentId.paymentId}"></span>
+                </div>
+            </div>
+            <!--            TODO: Add download and generation of a pdf possibly-->
+            <div class="d-flex justify-content-end">
+                <button class="ticket-download-btn mt-3"
+                        th:onclick="'window.location.href=\'/tickets/download/' + ${ticket.ticketId} + '\';'">
+                    <i class="bi bi-cloud-download me-1"></i>Download
+                    Ticket
+                </button>
+            </div>
+        </div>
+
+        <div th:if="${tickets.isEmpty()}" id="noTickets" class="hidden">
+            No tickets found.
+        </div>
+    </div>
+</div>
+<script src="/js/ticket-filtering.js"></script>
+</body>
+</html>

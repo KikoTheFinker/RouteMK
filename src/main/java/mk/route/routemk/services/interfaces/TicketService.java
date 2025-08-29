@@ -6,7 +6,7 @@ import java.util.Collection;
 
 public interface TicketService extends GenericService<Ticket, Integer>{
 
-    Collection<? extends Ticket> findTripsByAccountId(Integer accountId);
+    Collection<? extends Ticket> findTicketsByAccountId(Integer accountId);
     Ticket findCheapestTicketForTrip(Integer tripId);
     Collection<? extends Ticket> findAllTicketsForTrip(Integer tripId);
 
