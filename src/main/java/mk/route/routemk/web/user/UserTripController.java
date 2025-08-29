@@ -1,7 +1,6 @@
 package mk.route.routemk.web.user;
 
 import mk.route.routemk.models.Route;
-import mk.route.routemk.models.Ticket;
 import mk.route.routemk.models.Trip;
 import mk.route.routemk.models.enums.Status;
 import mk.route.routemk.services.auth.interfaces.AuthenticationService;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,45 +48,34 @@ public class UserTripController {
             model.addAttribute("emptyMessage", "No upcoming trips.");
         }
 
-        HashMap<Integer, Object> cheapestTicket = new HashMap<>();
-        for (Trip trip : trips) {
-            Ticket cheapest = ticketService.findCheapestTicketForTrip(trip.getTripId());
-
-            if (trip.getFreeSeats() == 0 || cheapest == null) {
-                cheapestTicket.put(trip.getTripId(), "No available tickets.");
-            } else {
-                cheapestTicket.put(trip.getTripId(), cheapest.getPrice());
-            }
-        }
-
-        // TODO add stop strings?
-
         model.addAttribute("trips", trips);
-        model.addAttribute("cheapestTicketPrice", cheapestTicket); // used to sort by cheapest ticket price
+        model.addAttribute("cheapestTicketPrice", tripService.getCheapestTicketTableForTrips(trips));
         model.addAttribute("routeSource", route.getSource().getName());
         model.addAttribute("routeDestination", route.getDestination().getName());
         model.addAttribute("display", "user/view-trips");
 
-        HashMap<Integer, String> stops = new HashMap<>();
         String sourceName = route.getSource().getName();
         String destinationName = route.getDestination().getName();
 
-        for (Trip trip : trips) {
-            String stopNames = trip.getStops().stream()
-                    .map(stop -> stop.getLocation().getName())
-                    .filter(stopName -> !stopName.equals(sourceName) && !stopName.equals(destinationName))
-                    .collect(Collectors.joining(", "));
-            stops.put(trip.getTripId(), stopNames);
-        }
-
-        model.addAttribute("stops", stops);
-
+        model.addAttribute("stops", tripService.getStopNameTableForTrips(trips, sourceName, destinationName));
+        model.addAttribute("display", "user/view-trips");
+        model.addAttribute("seatsLeftPerTrip", tripService.getFreeSeatTableForTrips(trips));
 
         return "master";
     }
 
     @GetMapping("/user")
     public String myTripsPage(Model model) {
+        Integer currentAccountId = authenticationService.getAuthenticatedUserId();
+
+        model.addAttribute("trips", tripService.findTripsBookedByAccount(currentAccountId));
+        model.addAttribute("display", "user/my-trips");
+
+        return "master";
+    }
+
+    @GetMapping("/buy/{id}")
+    public String buyTickets(Model model) {
         Integer currentAccountId = authenticationService.getAuthenticatedUserId();
 
         model.addAttribute("trips", tripService.findTripsBookedByAccount(currentAccountId));

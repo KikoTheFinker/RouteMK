@@ -91,26 +91,42 @@
                 <img src="/images/filter.png" alt="Filter Icon">
                 <span>Filter</span>
             </div>
-            <div class="mb-3 trip-filter-criteria w-100">
-                <label for="statusFilter" class="form-label">Status</label>
-                <select id="statusFilter" class="form-control">
-                    <option value="">All Statuses</option>
-                    <option value="NOT_STARTED">Not Started</option>
-                    <option value="IN_PROGRESS">In Progress</option>
-                    <option value="FINISHED">Finished</option>
-                </select>
+
+            <div class="container">
+                <div class="row">
+
+                    <div class="col-md-6 mb-3">
+                        <label for="statusFilter" class="form-label">Status</label>
+                        <select id="statusFilter" class="form-control">
+                            <option value="">All Statuses</option>
+                            <option value="NOT_STARTED">Not Started</option>
+                            <option value="IN_PROGRESS">In Progress</option>
+                            <option value="FINISHED">Finished</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="companyFilter" class="form-label">Company Name</label>
+                        <input type="text" id="companyFilter" class="form-control" placeholder="Company Name">
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="afterDate" class="form-label">After Date</label>
+                        <input type="date" id="afterDate" class="form-control" placeholder="After Date">
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="beforeDate" class="form-label">Before Date</label>
+                        <input type="date" id="beforeDate" class="form-control" placeholder="Before Date">
+                    </div>
+                </div>
+
+                <br>
+
+                <div class="mb-2 text-center">
+                    <button id="resetFiltersButton" class="btn-standard">Reset Filters</button>
+                </div>
             </div>
-            <div class="mb-3 trip-filter-criteria w-100">
-                <label for="afterDate" class="form-label">After Date</label>
-                <input type="date" id="afterDate" class="form-control" placeholder="After Date">
-            </div>
-            <div class="mb-3 trip-filter-criteria w-100">
-                <label for="beforeDate" class="form-label">Before Date</label>
-                <input type="date" id="beforeDate" class="form-control" placeholder="Before Date">
-            </div>
-        </div>
-        <div class="mb-2 text-center">
-            <button id="resetFiltersButton" class="btn-standard">Reset Filters</button>
         </div>
     </div>
 
@@ -135,7 +151,7 @@
                 <tbody>
                 <tr th:each="trip : ${trips}" th:if="${trip != null}" th:attr="data-status=${trip.getStatus()}">
                     <td th:text="${trip.getDate()}"></td>
-                    <td th:text="${trip.getFreeSeats()}"></td>
+                    <td th:text="${freeSeatMap.get(trip.getTripId())}"></td>
                     <td class="text-center">
                         <button class="btn-standard view-stops-btn" th:data-trip-id="${trip.getTripId()}">View Stops
                         </button>
@@ -155,9 +171,9 @@
                              th:if="${#authorization.expression('!hasRole(''DRIVER'')')}">
                             <button type="button"
                                     class="editTripButton btn-standard"
-                                    th:data-trip-id="${trip.tripId}"
-                                    th:data-trip-date="${trip.date}"
-                                    th:data-free-seats="${trip.freeSeats}">
+                                    th:data-trip-id="${trip.getTripId()}"
+                                    th:data-trip-date="${trip.getDate()}"
+                                    th:data-free-seats="${freeSeatMap.get(trip.getTripId())}">
                                 Edit
                             </button>
                             <form th:action="@{/routes/company/view-trips/{routeId}/delete-trip/{tripId}(routeId=${routeId}, tripId=${trip.getTripId()})}"

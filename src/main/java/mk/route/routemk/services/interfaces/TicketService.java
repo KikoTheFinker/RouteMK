@@ -8,5 +8,6 @@ public interface TicketService extends GenericService<Ticket, Integer>{
 
     Collection<? extends Ticket> findTripsByAccountId(Integer accountId);
     Ticket findCheapestTicketForTrip(Integer tripId);
+    Collection<? extends Ticket> findAllTicketsForTrip(Integer tripId);
 
 }
