@@ -29,6 +29,12 @@ public class Driver {
         this.tranOrg = tranOrg;
         this.yearsExperience = yearsExperience;
     }
+
+    @Override
+    public String toString() {
+        return String.format("Driver: %s %s, for %s", account.getName(), account.getSurname(), tranOrg.getCompanyName());
+    }
+
     public TransportOrganizer getTranOrg() {
         return tranOrg;
     }

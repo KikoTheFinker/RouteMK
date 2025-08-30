@@ -48,12 +48,7 @@ public class Trip {
     @Column(name = "status", nullable = false)
     private Status status = Status.NOT_STARTED;
 
-    public Trip(TransportOrganizer tranOrg,
-                Collection<TripStop> stops,
-                Route route,
-                int freeSeats,
-                LocalDate date,
-                Status status) {
+    public Trip(TransportOrganizer tranOrg, Collection<TripStop> stops, Route route, int freeSeats, LocalDate date, Status status) {
         this.tranOrg = tranOrg;
         this.route = route;
         this.freeSeats = freeSeats;
@@ -123,5 +118,11 @@ public class Trip {
 
     public Status getStatus() {
         return status;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Trip from %s -> %s\nStatus: %s,\nOrganized by: %s",
+                route.getSource(), route.getDestination(), status.name(), tranOrg.getCompanyName());
     }
 }
