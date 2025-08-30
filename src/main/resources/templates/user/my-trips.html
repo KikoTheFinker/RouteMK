@@ -118,10 +118,7 @@
                     <td th:text="${trip.getTranOrg().getCompanyName()}"></td>
                     <td class="text-center">
                         <div class="d-flex justify-content-center gap-2">
-                            <button class="btn-standard">
-                                <a th:href="@{'/trips/user/' + ${trip.getTripId()}}" class="btn-standard">Details</a>
-
-                            </button>
+                            <a th:href="@{'/trips/user/' + ${trip.getTripId()}}" class="btn-standard">Details</a>
                         </div>
                     </td>
                 </tr>

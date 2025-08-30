@@ -1,5 +1,6 @@
 <head>
     <link rel="stylesheet" href="/css/navbar.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
 </head>
 <nav class="navbar navbar-expand-lg" id="mainbar">
     <div class="container-fluid">
@@ -19,13 +20,18 @@
                 <li th:if="${#authorization.expression('hasRole(''USER'')')}"
                     class="nav-item"><a class="nav-link btn btn-small btn-transparent" href="/trips/user"><i
                         class="bi bi-backpack text-info me-2"></i>My Trips</a></li>
+                <!-- Favorites Button -->
+                <li th:if="${#authorization.expression('hasRole(''USER'')')}" class="nav-item">
+                    <a class="nav-link btn btn-small btn-transparent" href="/favorites">
+                        <i class="bi bi-heart text-warning me-2"></i>Favorites
+                    </a>
+                </li>
                 <li th:if="${#authorization.expression('hasRole(''TRANSPORT_ORGANIZER'')')}"
                     class="nav-item"><a class="nav-link btn btn-small btn-transparent" href="/routes/company"><i
                         class="bi bi-buildings text-primary me-2"></i>Manage Routes</a></li>
                 <li th:if="${#authorization.expression('hasRole(''ADMIN'')')}"
                     class="nav-item"><a class="nav-link btn btn-small btn-transparent" href="/admin"><i
                         class="bi bi-person-lock text-success me-2"></i>Admin Panel</a></li>
-
             </ul>
         </div>
 

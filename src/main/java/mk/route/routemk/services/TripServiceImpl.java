@@ -98,7 +98,6 @@ public class TripServiceImpl extends GenericServiceImpl<Trip, Integer> implement
 
     public List<Trip> findIndirectTrips(Integer startId, Integer endId) {
         Specification<Trip> trips = TripSpecification.findTripsWithStartAndEndLocations(startId, endId);
-        System.out.printf("Trips with start and end locations: %s\n", trips);
         return findAllByPredicate(trips);
     }
 

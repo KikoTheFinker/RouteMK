@@ -1,10 +1,135 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Favorite Routes</title>
+    <link rel="stylesheet" th:href="@{/css/trip-route-filter-table.css}"/>
+    <style>
+        #main {
+            flex: 1;
+            width: 80%;
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 1.5rem;
+        }
+        .title-container {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .title {
+            color: #d02b2b;
+            font-weight: bold;
+        }
+        .routes-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        .route-container {
+            background-color: white;
+            border: 1px solid #6b7280;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .route-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .route-header span {
+            color: #6b7280;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+        .route-body {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        .route-info-block {
+            display: flex;
+            flex-direction: column;
+        }
+        .route-label {
+            color: #d02b2b;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+        .route-info-block span:not(.route-label) {
+            color: #6b7280;
+        }
+        .route-actions {
+            display: flex;
+            justify-content: end;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .btn-view {
+            background-color: #d02b2b;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .btn-remove {
+            background-color: white;
+            color: #d02b2b;
+            border: 1px solid #d02b2b;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .no-routes {
+            text-align: center;
+            color: #6b7280;
+            font-style: italic;
+            margin: 2rem 0;
+        }
+    </style>
 </head>
 <body>
+<div id="main">
+    <div class="title-container mt-5">
+        <h1 class="title"><i class="bi bi-signpost-split me-2"></i>Favorite Routes</h1>
+    </div>
 
+    <div class="routes-list">
+        <div th:each="route : ${favorites}" class="route-container">
+            <div class="route-body">
+                <div class="route-info-block">
+                    <span class="route-label"><i class="bi bi-signpost-split me-1"></i>Departure</span>
+                    <span th:text="${route.getSource().getName()}"></span>
+                </div>
+                <div class="route-info-block">
+                    <span class="route-label"><i class="bi bi-signpost-split me-1"></i>Arrival</span>
+                    <span th:text="${route.getDestination().getName()}"></span>
+                </div>
+                <div class="route-info-block">
+                    <span class="route-label"><i class="bi bi-building me-1"></i>Company</span>
+                    <span th:text="${route.getTranOrg().getCompanyName()}"></span>
+                </div>
+            </div>
+            <div class="route-actions">
+                <a th:href="@{/trips/{routeId}(routeId=${route.routeId})}" class="btn-view">
+                    <i class="bi bi-eye me-1"></i>View Trips
+                </a>
+                <form th:method="POST"
+                      th:action="@{/favorites/change-favorites-status/{routeId}(routeId=${route.routeId})}">
+                    <input type="hidden" name="remove" value="true"/>
+                    <button type="submit">Remove from Favorites</button>
+                </form>
+
+            </div>
+        </div>
+
+        <div th:if="${favorites.isEmpty()}" class="no-routes">
+            No favorite routes found.
+        </div>
+    </div>
+</div>
 </body>
 </html>

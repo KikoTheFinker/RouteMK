@@ -61,6 +61,13 @@
             <i class="bi bi-signpost-split me-2"></i>
             <span th:text="${routeSource + ' to ' + routeDestination}"></span>
         </h1>
+
+        <a class="btn-favorite"
+           th:classappend="${isFavorite} ? ' active'"
+           th:text="${isFavorite} ? 'Remove from Favorites' : 'Add to Favorites'"
+           th:href="@{/favorites/change-favorites-status(routeId=${routeId})}">
+        </a>
+
     </div>
 
     <div th:if="${trips != null and !trips.isEmpty()}">

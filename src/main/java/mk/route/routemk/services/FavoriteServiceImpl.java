@@ -12,6 +12,8 @@ import mk.route.routemk.services.interfaces.FavoriteService;
 import mk.route.routemk.services.interfaces.LocationService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class FavoriteServiceImpl extends GenericServiceImpl<Favorite, Integer> implements FavoriteService {
 
@@ -53,4 +55,11 @@ public class FavoriteServiceImpl extends GenericServiceImpl<Favorite, Integer> i
             favoriteRepository.delete(exists);
         }
     }
+
+    @Override
+    public List<Favorite> findFavoritesByUserId(Integer userId) {
+        return favoriteRepository.getFavoritesByAccount_AccountId(userId);
+    }
+
+
 }
