@@ -1,9 +1,11 @@
 package mk.route.routemk.web.user;
 
+import mk.route.routemk.models.Review;
 import mk.route.routemk.models.Route;
 import mk.route.routemk.models.Trip;
 import mk.route.routemk.models.enums.Status;
 import mk.route.routemk.services.auth.interfaces.AuthenticationService;
+import mk.route.routemk.services.interfaces.ReviewService;
 import mk.route.routemk.services.interfaces.RouteService;
 import mk.route.routemk.services.interfaces.TicketService;
 import mk.route.routemk.services.interfaces.TripService;
@@ -23,15 +25,17 @@ public class UserTripController {
     private final TripService tripService;
     private final RouteService routeService;
     private final TicketService ticketService;
+    private final ReviewService reviewService;
 
     public UserTripController(AuthenticationService authenticationService,
                               TripService tripService,
                               RouteService routeService,
-                              TicketService ticketService) {
+                              TicketService ticketService, ReviewService reviewService) {
         this.authenticationService = authenticationService;
         this.tripService = tripService;
         this.routeService = routeService;
         this.ticketService = ticketService;
+        this.reviewService = reviewService;
     }
 
     @GetMapping("/{routeId}")
@@ -81,6 +85,17 @@ public class UserTripController {
         model.addAttribute("trips", tripService.findTripsBookedByAccount(currentAccountId));
         model.addAttribute("display", "user/my-trips");
 
+        return "master";
+    }
+
+
+    @GetMapping("user/{tripId}")
+    public String userTrips(Model model, @PathVariable Integer tripId) {
+        Trip trip = tripService.findById(tripId);
+        List<Review> reviews = reviewService.findReviewsForTrip(tripId);
+        model.addAttribute("trip", trip);
+        model.addAttribute("reviews", reviews);
+        model.addAttribute("display", "user/details-page");
         return "master";
     }
 }
