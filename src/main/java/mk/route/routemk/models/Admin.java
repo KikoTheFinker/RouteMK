@@ -21,6 +21,12 @@ public class Admin {
         return adminId;
     }
 
+
+    @Override
+    public String toString() {
+        return String.format("Administrator: %s %s", account.getName(), account.getSurname());
+    }
+
     public Admin() {
 
     }

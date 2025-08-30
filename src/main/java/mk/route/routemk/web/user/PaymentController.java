@@ -5,8 +5,10 @@ import mk.route.routemk.services.interfaces.TicketService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
+@RequestMapping("/payment")
 // TODO: implement payment processing
 public class PaymentController {
     private final PaymentService paymentService;

@@ -7,5 +7,6 @@ import java.util.List;
 public interface RouteService extends GenericService<Route, Integer> {
 
     List<Route> findRouteByFromAndToDest(String from, String to);
+    List<Route> findIndirectRoutes(Integer from, Integer to);
 
 }
