@@ -506,7 +506,7 @@
                         <div class="review-header">
                             <div class="review-author">
                                 <img src="https://randomuser.me/api/portraits/women/43.jpg" alt="User">
-                                <span th:text="${review.account.firstName + ' ' + review.account.lastName}">User Name</span>
+                                <span th:text="${review.account.name + ' ' + review.account.surname}">User Name</span>
                             </div>
                             <div class="review-rating" th:text="'★ ' + ${#numbers.formatDecimal(review.rating, 1, 1)}">★ 5.0</div>
                         </div>
