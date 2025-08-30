@@ -39,8 +39,6 @@ public class UserRouteController {
         }
 
         model.addAttribute("routes", filteredRoutes);
-        model.addAttribute("display", "user/search-routes");
-
         return "master";
     }
 

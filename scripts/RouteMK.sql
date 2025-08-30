@@ -86,6 +86,8 @@ CREATE TABLE review
     CONSTRAINT review_ticket_id_fkey FOREIGN KEY (ticket_id) REFERENCES ticket (ticket_id) ON DELETE CASCADE
 );
 
+ALTER TABLE ticket ADD CONSTRAINT unique_account_trip UNIQUE(account_id, trip_id);
+
 
 CREATE TABLE transport_organizer
 (
@@ -691,40 +693,3 @@ VALUES (100, 1001, 'Service was quick.', 4),
        (300, 1010, 'Very helpful staff.', 5),
        (200, 1025, 'Not satisfied.', 2),
        (300, 1032, 'Excellent service.', 5),
-       (100, 1040, 'Helpful support.', 4),
-       (300, 1120, 'Not great.', 2),
-       (200, 1140, 'Could do better.', 3),
-       (300, 1140, 'Very satisfied.', 5),
-       (100, 1160, 'Mediocre.', 3),
-       (200, 1160, 'Terrible support.', 1),
-       (300, 1010, 'Perfect.', 5),
-       (100, 1120, 'Helpful.', 4),
-       (200, 1200, 'Okay.', 3),
-       (300, 1210, 'Outstanding.', 5),
-       (100, 1220, 'Average experience.', 3),
-       (200, 1225, 'Not happy.', 2),
-       (300, 300, 'Quick and easy.', 4),
-       (100, 301, 'Satisfied.', 4),
-       (200, 302, 'Could improve.', 3),
-       (300, 303, 'Excellent!', 5),
-       (100, 304, 'Decent service.', 3),
-       (200, 305, 'Poor support.', 2),
-       (300, 306, 'Very good.', 5),
-       (100, 307, 'Okay.', 3),
-       (200, 308, 'Awesome.', 5),
-       (300, 309, 'Needs work.', 2),
-       (100, 310, 'Happy.', 4),
-       (200, 311, 'Not bad.', 3),
-       (300, 200, 'Satisfied.', 4),
-       (100, 200, 'Could improve.', 3),
-       (200, 200, 'Excellent!', 5),
-       (300, 1002, 'Decent.', 3),
-       (100, 1007, 'Very helpful.', 5),
-       (200, 1012, 'Okay.', 3),
-       (300, 1012, 'Good service.', 4),
-       (100, 1022, 'Mediocre.', 2),
-       (200, 1027, 'Excellent support.', 5),
-       (300, 1007, 'Average.', 3),
-       (100, 303, 'Happy.', 4),
-       (200, 303, 'Not satisfied.', 2),
-       (300, 304, 'Great.', 5);

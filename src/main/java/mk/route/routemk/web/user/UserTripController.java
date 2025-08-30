@@ -5,15 +5,10 @@ import mk.route.routemk.models.Route;
 import mk.route.routemk.models.Trip;
 import mk.route.routemk.models.enums.Status;
 import mk.route.routemk.services.auth.interfaces.AuthenticationService;
-import mk.route.routemk.services.interfaces.ReviewService;
-import mk.route.routemk.services.interfaces.RouteService;
-import mk.route.routemk.services.interfaces.TicketService;
-import mk.route.routemk.services.interfaces.TripService;
+import mk.route.routemk.services.interfaces.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,18 +19,19 @@ public class UserTripController {
     private final AuthenticationService authenticationService;
     private final TripService tripService;
     private final RouteService routeService;
-    private final TicketService ticketService;
     private final ReviewService reviewService;
+    private final FavoriteService favoriteService;
 
     public UserTripController(AuthenticationService authenticationService,
                               TripService tripService,
                               RouteService routeService,
-                              TicketService ticketService, ReviewService reviewService) {
+                              TicketService ticketService,
+                              ReviewService reviewService, FavoriteService favoriteService) {
         this.authenticationService = authenticationService;
         this.tripService = tripService;
         this.routeService = routeService;
-        this.ticketService = ticketService;
         this.reviewService = reviewService;
+        this.favoriteService = favoriteService;
     }
 
     @GetMapping("/{routeId}")
@@ -51,6 +47,11 @@ public class UserTripController {
         if (trips.isEmpty()) {
             model.addAttribute("emptyMessage", "No upcoming trips.");
         }
+
+        Integer currentAccountId = authenticationService.getAuthenticatedUserId();
+
+        boolean isFavorite = favoriteService.isFavorite(routeId, currentAccountId);
+        model.addAttribute("isFavorite", isFavorite);
 
         model.addAttribute("trips", trips);
         model.addAttribute("cheapestTicketPrice", tripService.getCheapestTicketTableForTrips(trips));
@@ -88,14 +89,24 @@ public class UserTripController {
         return "master";
     }
 
-
     @GetMapping("user/{tripId}")
     public String userTrips(Model model, @PathVariable Integer tripId) {
         Trip trip = tripService.findById(tripId);
         List<Review> reviews = reviewService.findReviewsForTrip(tripId);
+
         model.addAttribute("trip", trip);
         model.addAttribute("reviews", reviews);
         model.addAttribute("display", "user/details-page");
         return "master";
+    }
+
+    @PostMapping("/{tripId}/reviews")
+    public String addReview(@PathVariable Integer tripId,
+                            @RequestParam("description") String description,
+                            @RequestParam("rating") Integer rating) {
+        Integer currentAccountId = authenticationService.getAuthenticatedUserId();
+        reviewService.addReview(tripId, currentAccountId, description, rating);
+
+        return "redirect:/trips/user/" + tripId;
     }
 }

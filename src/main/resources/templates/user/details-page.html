@@ -100,7 +100,7 @@
         }
 
         .info-icon {
-            background: #d95e5e;
+            background: #d02b2b;
             color: white;
             width: 40px;
             height: 40px;
@@ -168,15 +168,15 @@
             width: 14px;
             height: 14px;
             border-radius: 50%;
-            background-color: #d95e5e;
+            background-color:#d02b2b;
             border: 3px solid white;
-            box-shadow: 0 0 0 2px #d95e5e;
+            box-shadow: 0 0 0 2px #d02b2b;
             z-index: 2;
         }
 
         .stop-time {
             font-weight: bold;
-            color: #d95e5e;
+            color: #d02b2b;
             min-width: 70px;
         }
 
@@ -197,7 +197,7 @@
         }
 
         .review-section h2 {
-            color: #d95e5e;
+            color: #d02b2b;
             margin-bottom: 25px;
             padding-bottom: 15px;
             border-bottom: 2px solid #f3f4f6;
@@ -243,8 +243,7 @@
 
         .form-group textarea:focus {
             outline: none;
-            border-color: #d95e5e;
-            box-shadow: 0 0 0 3px rgba(217, 94, 94, 0.2);
+            border-color: #d02b2b
         }
 
         .rating-group {
@@ -285,7 +284,7 @@
         }
 
         .submit-btn {
-            background: linear-gradient(135deg, #d95e5e 0%, #c14b4b 100%);
+            background: #d02b2b;
             color: white;
             border: none;
             padding: 16px 32px;
@@ -326,7 +325,7 @@
             border-radius: 12px;
             padding: 25px;
             margin-bottom: 25px;
-            border-left: 5px solid #d95e5e;
+            border-left: 5px solid #d02b2b;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.06);
             transition: transform 0.3s;
         }
@@ -359,7 +358,7 @@
         }
 
         .review-rating {
-            color: #d95e5e;
+            color: #d02b2b;
             font-weight: 700;
             font-size: 1.1rem;
         }
@@ -390,7 +389,7 @@
         }
 
         .destination {
-            color: #d9534f;
+            color: #d02b2b;
         }
     </style>
 </head>
@@ -464,8 +463,8 @@
                     <h3><i class="fas fa-map-marked-alt"></i> Route Stops</h3>
                     <div class="timeline">
                         <div class="stop-item" th:each="stop : ${trip.stops}">
-                            <div class="stop-time" th:text="${stop.stopTime}" ></div>
-                            <div class="stop-location" th:text="${stop.location.name}" ></div>
+                            <div class="stop-time" th:text="${stop.stopTime}"></div>
+                            <div class="stop-location" th:text="${stop.location.name}"></div>
                         </div>
                     </div>
                 </div>
@@ -475,11 +474,11 @@
         <div class="right-column">
             <div class="review-section">
                 <h2><i class="fas fa-star"></i> Leave a Review</h2>
-                <form class="review-form">
+                <form class="review-form" th:action="@{'/trips/' + ${trip.tripId} + '/reviews'}" method="post">
                     <div class="form-group">
                         <label for="description"><i class="fas fa-comment-dots"></i> Your Review</label>
                         <textarea id="description" name="description"
-                                  placeholder="Share your experience on this trip... What did you like? What could be improved?"></textarea>
+                                  placeholder="Share your experience..."></textarea>
                     </div>
 
                     <div class="rating-group">
@@ -501,14 +500,16 @@
                     <button type="submit" class="submit-btn"><i class="fas fa-paper-plane"></i> Submit Review</button>
                 </form>
 
+
                 <div th:if="${reviews != null}">
                     <div class="review-item" th:each="review : ${reviews}">
                         <div class="review-header">
                             <div class="review-author">
-                                <img src="https://randomuser.me/api/portraits/women/43.jpg" alt="User">
-                                <span th:text="${review.account.name + ' ' + review.account.surname}">User Name</span>
+                                    <span th:text="${review.account.name + ' ' + review.account.surname}">User Name</span>
                             </div>
-                            <div class="review-rating" th:text="'★ ' + ${#numbers.formatDecimal(review.rating, 1, 1)}">★ 5.0</div>
+                            <div class="review-rating" th:text="'★ ' + ${#numbers.formatDecimal(review.rating, 1, 1)}">★
+                                5.0
+                            </div>
                         </div>
                         <div class="review-content" th:text="${review.description}">
                             Review content goes here...
