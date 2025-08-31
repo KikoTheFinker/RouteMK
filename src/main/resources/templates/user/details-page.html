@@ -16,8 +16,9 @@
         </div>
 
         <div class="row g-4">
+            <!-- Left Column -->
             <div class="col-lg-5">
-                <div class="card shadow border-0">
+                <div class="card shadow make-good-box">
                     <div class="card-body">
                         <h2 class="h5 text-danger border-bottom pb-2 mb-3">
                             <i class="fas fa-info-circle"></i> Trip Information
@@ -87,7 +88,7 @@
 
             <!-- Right Column -->
             <div class="col-lg-7">
-                <div class="card shadow border-0">
+                <div class="card shadow make-good-box">
                     <div class="card-body">
                         <h2 class="h5 text-danger border-bottom pb-2 mb-3">
                             <i class="fas fa-star"></i> Leave a Review
@@ -103,7 +104,7 @@
                                           placeholder="Share your experience..."></textarea>
                             </div>
 
-                            <div class="mb-3 p-3 bg-light rounded">
+                            <div class="mb-3 p-3 bg-light rounded make-good-box">
                                 <label class="form-label fw-semibold"><i class="fas fa-star"></i> Rating</label>
                                 <div class="star-rating mt-2">
                                     <input type="radio" id="star5" name="rating" value="5"/><label for="star5"></label>
@@ -127,7 +128,7 @@
                         <div th:if="${reviews != null}">
                             <h3 class="h6 text-dark border-bottom pb-2 mb-3"><i class="fas fa-comments"></i> Reviews
                             </h3>
-                            <div class="mb-3 p-3 rounded shadow-sm border-start border-5 border-danger bg-white"
+                            <div class="mb-3 p-3 rounded shadow-sm make-good-box bg-white"
                                  th:each="review : ${reviews}">
                                 <div class="d-flex justify-content-between mb-2">
                                     <div class="fw-semibold text-dark">
