@@ -1,5 +1,6 @@
 package mk.route.routemk.services;
 
+import mk.route.routemk.exceptions.EntityNotFoundException;
 import mk.route.routemk.models.Account;
 import mk.route.routemk.models.Favorite;
 import mk.route.routemk.models.Location;
@@ -38,9 +39,9 @@ public class FavoriteServiceImpl extends GenericServiceImpl<Favorite, Integer> i
     public void addFavorite(Integer routeId, Integer userId) {
         Favorite favorite = new Favorite();
         Account account = accountRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Account not found: " + userId));
+                .orElseThrow(() -> new EntityNotFoundException("Account not found: ", userId));
         Route route = routeRepository.findById(routeId)
-                .orElseThrow(() -> new RuntimeException("Route not found: " + routeId));
+                .orElseThrow(() -> new EntityNotFoundException("Route not found: ", routeId));
 
 
         favorite.setRoute(route);

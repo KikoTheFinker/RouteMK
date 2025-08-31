@@ -9,6 +9,7 @@ import mk.route.routemk.services.interfaces.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,7 +26,6 @@ public class UserTripController {
     public UserTripController(AuthenticationService authenticationService,
                               TripService tripService,
                               RouteService routeService,
-                              TicketService ticketService,
                               ReviewService reviewService, FavoriteService favoriteService) {
         this.authenticationService = authenticationService;
         this.tripService = tripService;
@@ -56,6 +56,7 @@ public class UserTripController {
         model.addAttribute("trips", trips);
         model.addAttribute("cheapestTicketPrice", tripService.getCheapestTicketTableForTrips(trips));
         model.addAttribute("routeSource", route.getSource().getName());
+        model.addAttribute("routeId", routeId);
         model.addAttribute("routeDestination", route.getDestination().getName());
         model.addAttribute("display", "user/view-trips");
 
@@ -97,16 +98,35 @@ public class UserTripController {
         model.addAttribute("trip", trip);
         model.addAttribute("reviews", reviews);
         model.addAttribute("display", "user/details-page");
+        model.addAttribute("accountId", authenticationService.getAuthenticatedUserId());
         return "master";
     }
 
     @PostMapping("/{tripId}/reviews")
-    public String addReview(@PathVariable Integer tripId,
+    public String addReview(RedirectAttributes redirectAttributes,
+                            @PathVariable Integer tripId,
                             @RequestParam("description") String description,
-                            @RequestParam("rating") Integer rating) {
+                            @RequestParam(value = "rating") Integer rating) {
         Integer currentAccountId = authenticationService.getAuthenticatedUserId();
-        reviewService.addReview(tripId, currentAccountId, description, rating);
+
+        try {
+            reviewService.addReview(tripId, currentAccountId, description, rating);
+
+            if (rating == null) {
+                throw new IllegalArgumentException("Please provide a rating.");
+            }
+
+        } catch (Exception exc) {
+            redirectAttributes.addFlashAttribute("errorMessage", exc.getMessage());
+        }
 
         return "redirect:/trips/user/" + tripId;
     }
+
+    @PostMapping("{tripId}/removeReview/{reviewId}")
+    public String deleteReview(@PathVariable Integer reviewId, @PathVariable Integer tripId) {
+        reviewService.deleteById(reviewId);
+        return "redirect:/trips/user/" + tripId;
+    }
+
 }

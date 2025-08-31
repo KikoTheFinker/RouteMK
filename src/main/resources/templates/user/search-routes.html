@@ -1,124 +1,124 @@
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" th:href="@{/css/trip-route-filter-table.css}"/>
-    <style>
-        .notification {
-            margin: 20px;
-            font-style: italic;
-            color: #888;
-        }
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" th:href="@{/css/trip-route-filter-table.css}"/>
+        <style>
+            .notification {
+                margin: 20px;
+                font-style: italic;
+                color: #888;
+            }
 
-        input[type = "text"], label {
-            display: inline;
-        }
+            input[type = "text"], label {
+                display: inline;
+            }
 
-        #main {
-            flex: 1;
-            width: 50%;
-            max-width: 1000px;
-            margin: 2rem auto;
-            padding: 1.5rem;
-        }
-    </style>
-    <title>Routes</title>
-</head>
+            #main {
+                flex: 1;
+                width: 50%;
+                max-width: 1000px;
+                margin: 2rem auto;
+                padding: 1.5rem;
+            }
+        </style>
+        <title>Routes</title>
+    </head>
 
-<body>
-<main id="main">
-    <div class="title-container mt-5">
-        <h1 class="title"><i class="bi bi-signpost-split me-2"></i>Search Routes</h1>
-    </div>
-
-    <div class="filter-container-wrapper center text-center">
-        <div class="filter-heading">
-            <i class="bi bi-funnel me-1"></i> <span>Filter</span>
+    <body>
+    <main id="main">
+        <div class="title-container mt-5">
+            <h1 class="badgify"><i class="bi bi-signpost-split me-2"></i>Search Routes</h1>
         </div>
-        <form th:method="GET" th:action="@{/search-routes}" class="w-100 align-items-center">
-            <div class="row mb-3 g-3">
-                <div class="col-md-6"><label class="filter-label" for="departure">From/Departure:</label>
-                    <input id="departure" type="text" name="from" class="form-control">
-                </div>
-                <div class="col-md-6">
-                    <label class="filter-label" for="arrival">To/Arrival:</label>
-                    <input id="arrival" name="to" class="form-control">
-                </div>
+
+        <div class="filter-container-wrapper center text-center">
+            <div class="filter-heading">
+                <i class="bi bi-funnel me-1"></i> <span>Filter</span>
             </div>
-            <button type="submit" class="btn btn-danger w-50" id="goodbutton">
-                <i class="bi bi-search me-1"></i>
-                Search
-            </button>
-        </form>
-    </div>
-
-    <div class="routes-container">
-        <div class="title-container mt-5">
-            <h3 class="title fs-5"><i class="bi bi-signpost-split me-2"></i>Direct routes</h3>
-        </div>
-        <div class="routes-table-wrapper">
-            <table class="routes-table">
-                <thead>
-                <tr>
-                    <th>Departure</th>
-                    <th>Arrival</th>
-                    <th>Company</th>
-                    <th>
-                        <img src="/images/eye.png" alt="A gazing eye" width='24' height='24'/>
-                        Explore
-                    </th>
-                </tr>
-                </thead>
-                <tbody id="routes-list">
-                <tr th:each="route : ${routes}">
-                    <td th:text="${route.getSource().getName()}"></td>
-                    <td th:text="${route.getDestination().getName()}"></td>
-                    <td th:text="${route.getTranOrg().getCompanyName()}"></td>
-                    <td>
-                        <a th:href="@{/trips/{routeId}(routeId=${route.routeId})}" class="btn-redoutline">View Trips</a>
-                    </td>
-
-                <tr th:if="${routes.isEmpty()}">
-                    <td colspan="4" class="notification" th:text="${noRoutesMessage}"></td>
-                </tr>
-                </tr>
-                </tbody>
-            </table>
+            <form th:method="GET" th:action="@{/search-routes}" class="w-100 align-items-center">
+                <div class="row mb-3 g-3">
+                    <div class="col-md-6"><label class="filter-label" for="departure">From/Departure:</label>
+                        <input id="departure" type="text" name="from" class="form-control">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="filter-label" for="arrival">To/Arrival:</label>
+                        <input id="arrival" name="to" class="form-control">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-danger w-50" id="goodbutton">
+                    <i class="bi bi-search me-1"></i>
+                    Search
+                </button>
+            </form>
         </div>
 
-        <div class="title-container mt-5">
-            <h3 class="title fs-5"><i class="bi bi-signpost-split me-2"></i>Indirect routes</h3>
+        <div class="routes-container">
+            <div class="title-container mt-5">
+                <h3 class="badgify fs-5"><i class="bi bi-signpost-split me-2"></i>Direct routes</h3>
+            </div>
+            <div class="routes-table-wrapper">
+                <table class="routes-table">
+                    <thead>
+                    <tr>
+                        <th>Departure</th>
+                        <th>Arrival</th>
+                        <th>Company</th>
+                        <th>
+                            <img src="/images/eye.png" alt="A gazing eye" width='24' height='24'/>
+                            Explore
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody id="routes-list">
+                    <tr th:each="route : ${routes}">
+                        <td th:text="${route.getSource().getName()}"></td>
+                        <td th:text="${route.getDestination().getName()}"></td>
+                        <td th:text="${route.getTranOrg().getCompanyName()}"></td>
+                        <td>
+                            <a th:href="@{/trips/{routeId}(routeId=${route.routeId})}" class="btn-redoutline">View Trips</a>
+                        </td>
+
+                    <tr th:if="${routes.isEmpty()}">
+                        <td colspan="4" class="notification" th:text="${noRoutesMessage}"></td>
+                    </tr>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="title-container mt-5">
+                <h3 class="badgify fs-5"><i class="bi bi-signpost-split me-2"></i>Indirect routes</h3>
+            </div>
+
+            <div class="routes-table-wrapper">
+                <table class="routes-table">
+                    <thead>
+                    <tr>
+                        <th>Departure</th>
+                        <th>Arrival</th>
+                        <th>Company</th>
+                        <th>
+                            <img src="/images/eye.png" alt="A gazing eye" width='24' height='24'/>
+                            Explore
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody id="routes-list-indirect">
+                    <tr th:each="route : ${IndirectRoutes}">
+                        <td th:text="${route.getSource().getName()}"></td>
+                        <td th:text="${route.getDestination().getName()}"></td>
+                        <td th:text="${route.getTranOrg().getCompanyName()}"></td>
+                        <td>
+                            <a th:href="@{/trips/{routeId}(routeId=${route.routeId})}" class="btn-redoutline">View Trips</a>
+                        </td>
+
+                    <tr th:if="${noRoutesMessage}">
+                        <td colspan="4" class="notification" th:text="${noRoutesMessage}"></td>
+                    </tr>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
+    </main>
 
-        <div class="routes-table-wrapper">
-            <table class="routes-table">
-                <thead>
-                <tr>
-                    <th>Departure</th>
-                    <th>Arrival</th>
-                    <th>Company</th>
-                    <th>
-                        <img src="/images/eye.png" alt="A gazing eye" width='24' height='24'/>
-                        Explore
-                    </th>
-                </tr>
-                </thead>
-                <tbody id="routes-list-indirect">
-                <tr th:each="route : ${IndirectRoutes}">
-                    <td th:text="${route.getSource().getName()}"></td>
-                    <td th:text="${route.getDestination().getName()}"></td>
-                    <td th:text="${route.getTranOrg().getCompanyName()}"></td>
-                    <td>
-                        <a th:href="@{/trips/{routeId}(routeId=${route.routeId})}" class="btn-redoutline">View Trips</a>
-                    </td>
-
-                <tr th:if="${noRoutesMessage}">
-                    <td colspan="4" class="notification" th:text="${noRoutesMessage}"></td>
-                </tr>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</main>
-
-</body>
+    </body>

@@ -11,8 +11,8 @@
 <main id="main">
     <div class="content mt-5">
         <div class="title-container">
-            <h1 class="title">
-                <i class="bi bi-buildings me-1"></i>
+            <h1 class="badgify theme-torg">
+                <i class="bi bi-buildings"></i>
                 <span th:text="${companyName} + '\'s Routes'"></span>
             </h1>
         </div>
@@ -26,7 +26,7 @@
                 <div class="select-wrapper">
                     <label for="from-filter" class="filter-label">From/Departure:</label>
                     <select id="from-filter">
-                        <option value="" style="color:#dedede">Departure Location</option>
+                        <option value="" style="color:#dedede">No specific location</option>
                         <option th:each="location : ${#sets.toSet(companyRoutes.![getSource().getName()])}"
                                 th:value="${location}" th:text="${location}"></option>
                     </select>
@@ -35,7 +35,7 @@
                 <div class="select-wrapper">
                     <label for="to-filter" class="filter-label">To/Arrival:</label>
                     <select id="to-filter">
-                        <option value="" style="color:#dedede">Arrival Location</option>
+                        <option value="" style="color:#dedede">No specific location</option>
                         <option th:each="location : ${#sets.toSet(companyRoutes.![getDestination().getName()])}"
                                 th:value="${location}" th:text="${location}"></option>
                     </select>

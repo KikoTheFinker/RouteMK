@@ -15,7 +15,7 @@ public class Trip {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "trip_id")
-    private int tripId;
+    private Integer tripId;
 
     @ManyToOne
     @JoinColumn(name = "transport_organizer_id", referencedColumnName = "transport_organizer_id", insertable = false, updatable = false)

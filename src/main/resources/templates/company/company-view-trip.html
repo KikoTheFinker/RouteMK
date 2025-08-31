@@ -76,10 +76,13 @@
 <body>
 <div id="main">
     <div class="title-container mt-5">
-        <h1 class="title">
+        <h1 class="badgify theme-trips">
             <i class="bi bi-signpost me-1"></i>
             Trips for Route:
-            <span th:text="${routeSource.getName()} + ' → ' + ${routeDestination.getName()}"></span>
+            <span th:text="${routeSource.getName()}">
+             </span>
+            <i class="bi bi-arrow-right"></i>
+            <span th:text="${routeDestination.getName()}"></span>
         </h1>
     </div>
     <div th:if="${message}" class="alert alert-success" role="alert" th:text="${message}"></div>

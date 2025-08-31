@@ -1,0 +1,49 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+.glowable {
+    box-shadow: 0 0 0 red;
+    background: #e12d2d; !important;
+    color: white;
+    transition: box-shadow 0.3s ease;
+}
+
+.glowable:hover {
+    color: white;
+    background: #e12d2d;
+    box-shadow: 0 0 5px #da4141;
+}
+
+.badgify {
+    display: inline-block;
+    background: #ffe5e5;
+    border: 1px solid #e12d2d;
+    color: #e12d2d;
+    border-radius: 10px;
+    padding: 10px 15px;
+    font-family: "Space Mono", "Open Sans", sans-serif;
+}
+
+.theme-tickets {
+    color: rebeccapurple;
+    background: #f4e4ff;
+    border-color: rebeccapurple;
+}
+
+.theme-trips {
+    color: #00bebe;
+    background: #dfe9ec;
+    border-color: #00a6a6;
+}
+
+.theme-favorites {
+    color: #a89a00;
+    background: #fff3d6;
+    border-color: #8a6400;
+}
+
+.theme-torg {
+    color: #003cd9;
+    background: #e3e8ff;
+    border-color: #003cd9;
+}

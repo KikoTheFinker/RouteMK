@@ -11,4 +11,6 @@ public interface ReviewService {
     List<Review> findReviewsForRoute(Integer routeId);
 
     void addReview(Integer tripId, Integer accountId, String description, Integer rating);
+
+    void deleteById(Integer reviewId);
 }

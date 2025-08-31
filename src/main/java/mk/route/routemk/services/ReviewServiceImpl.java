@@ -1,9 +1,9 @@
 package mk.route.routemk.services;
 
+import mk.route.routemk.exceptions.ReviewRelatedException;
 import mk.route.routemk.models.Account;
 import mk.route.routemk.models.Review;
 import mk.route.routemk.models.Ticket;
-import mk.route.routemk.models.Trip;
 import mk.route.routemk.repostories.interfaces.*;
 import mk.route.routemk.services.interfaces.ReviewService;
 import org.springframework.stereotype.Service;
@@ -37,16 +37,24 @@ public class ReviewServiceImpl extends GenericServiceImpl<Review, Integer> imple
     }
 
     @Override
+    public void deleteById(Integer reviewId) {
+        this.reviewRepository.deleteById(reviewId);
+    }
+
+    @Override
     public void addReview(Integer tripId, Integer accountId, String description, Integer rating) {
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new RuntimeException("Account not found"));
 
         List<Ticket> tickets = ticketRepository.findTicketsByAccount_AccountIdAndTrip_TripId(accountId, tripId);
         if (tickets.isEmpty()) {
-            throw new RuntimeException("No ticket found for this account and trip");
+            throw new ReviewRelatedException("No ticket found for this account and trip, you have not been on this trip.");
         }
         Ticket ticket = tickets.get(0);
 
+        if (reviewRepository.existsByTicket_ticketId(ticket.getTicketId())) {
+           throw new ReviewRelatedException("You have already left a review for this trip.");
+        };
 
         Review review = new Review();
         review.setAccount(account);

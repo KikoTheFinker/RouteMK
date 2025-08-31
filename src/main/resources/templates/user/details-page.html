@@ -4,516 +4,151 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trip Details & Reviews</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body {
-            background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
-            color: #374151;
-            line-height: 1.6;
-            padding: 20px;
-            min-height: 100vh;
-        }
-
-        .container {
-            flex: 1;
-            width: 90%;
-            max-width: 1000px;
-            margin: 2rem auto;
-            padding: 1.5rem;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-            padding: 20px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-        }
-
-        .header h1 {
-            color: #d95e5e;
-            font-size: 2.8rem;
-            margin-bottom: 10px;
-            font-weight: 700;
-        }
-
-        .header p {
-            color: #6b7280;
-            font-size: 1.2rem;
-            max-width: 700px;
-            margin: 0 auto;
-        }
-
-        .content-wrapper {
-            display: grid;
-            grid-template-columns: 1fr 1.2fr;
-            gap: 30px;
-        }
-
-        @media (max-width: 900px) {
-            .content-wrapper {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .trip-card {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-            padding: 30px;
-            height: fit-content;
-        }
-
-        .trip-card h2 {
-            color: #d95e5e;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #f3f4f6;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .trip-card h2 i {
-            font-size: 1.8rem;
-        }
-
-        .trip-info {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
-        }
-
-        .info-item {
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            background: #f9fafb;
-            border-radius: 10px;
-            transition: transform 0.2s;
-        }
-
-        .info-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05);
-        }
-
-        .info-icon {
-            background: #d02b2b;
-            color: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 15px;
-            flex-shrink: 0;
-        }
-
-        .info-text strong {
-            display: block;
-                color: #6b7280;
-            font-size: 0.9rem;
-            margin-bottom: 5px;
-        }
-
-        .info-text span {
-            font-size: 1.1rem;
-            color: #374151;
-            font-weight: 500;
-        }
-
-        .stops-timeline {
-            margin: 30px 0;
-        }
-
-        .stops-timeline h3 {
-            color: #374151;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .timeline {
-            position: relative;
-            padding-left: 30px;
-        }
-
-        .timeline::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 8px;
-            height: calc(100% - 16px);
-            width: 3px;
-            background: linear-gradient(to bottom, #d95e5e, #6b7280);
-        }
-
-        .stop-item {
-            position: relative;
-            margin-bottom: 20px;
-            padding-left: 20px;
-            display: flex;
-            align-items: center;
-        }
-
-        .stop-item::before {
-            content: '';
-            position: absolute;
-            left: -31px;
-            top: 8px;
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            background-color:#d02b2b;
-            border: 3px solid white;
-            box-shadow: 0 0 0 2px #d02b2b;
-            z-index: 2;
-        }
-
-        .stop-time {
-            font-weight: bold;
-            color: #d02b2b;
-            min-width: 70px;
-        }
-
-        .stop-location {
-            color: #374151;
-            background: #f9fafb;
-            padding: 10px 15px;
-            border-radius: 8px;
-            flex-grow: 1;
-        }
-
-        /* Review Section */
-        .review-section {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-            padding: 30px;
-        }
-
-        .review-section h2 {
-            color: #d02b2b;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #f3f4f6;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .review-section h2 i {
-            font-size: 1.8rem;
-        }
-
-        .review-form {
-            display: grid;
-            gap: 20px;
-            margin-bottom: 40px;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #374151;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .form-group textarea {
-            width: 100%;
-            padding: 16px;
-            border: 1px solid #e5e7eb;
-            border-radius: 10px;
-            resize: vertical;
-            min-height: 140px;
-            font-size: 1rem;
-            transition: border-color 0.3s;
-        }
-
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #d02b2b
-        }
-
-        .rating-group {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            background: #f9fafb;
-            padding: 20px;
-            border-radius: 10px;
-        }
-
-        .star-rating {
-            display: flex;
-            flex-direction: row-reverse;
-            justify-content: flex-end;
-        }
-
-        .star-rating input {
-            display: none;
-        }
-
-        .star-rating label {
-            cursor: pointer;
-            width: 40px;
-            height: 40px;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23d1d5db' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolygon points='12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2'%3e%3c/polygon%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: center;
-            background-size: 30px;
-            transition: all 0.2s;
-        }
-
-        .star-rating input:checked ~ label,
-        .star-rating label:hover,
-        .star-rating label:hover ~ label {
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='%23d95e5e' stroke='%23d95e5e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolygon points='12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2'%3e%3c/polygon%3e%3c/svg%3e");
-            transform: scale(1.1);
-        }
-
-        .submit-btn {
-            background: #d02b2b;
-            color: white;
-            border: none;
-            padding: 16px 32px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 1.1rem;
-            font-weight: 600;
-            transition: all 0.3s;
-            justify-self: start;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 4px 6px rgba(217, 94, 94, 0.3);
-        }
-
-        .submit-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(217, 94, 94, 0.4);
-        }
-
-        /* Existing Reviews */
-        .reviews-container {
-            margin-top: 40px;
-        }
-
-        .reviews-container h3 {
-            color: #374151;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #f3f4f6;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .review-item {
-            background: linear-gradient(to right, #f9fafb 0%, #ffffff 100%);
-            border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 25px;
-            border-left: 5px solid #d02b2b;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.06);
-            transition: transform 0.3s;
-        }
-
-        .review-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .review-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 15px;
-            align-items: center;
-        }
-
-        .review-author {
-            font-weight: 600;
-            color: #374151;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .review-author img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        .review-rating {
-            color: #d02b2b;
-            font-weight: 700;
-            font-size: 1.1rem;
-        }
-
-        .review-content {
-            color: #6b7280;
-            line-height: 1.7;
-        }
-
-        .route-display {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 4px;
-        }
-
-        .route-arrow {
-            color: #666;
-            font-size: 14px;
-        }
-
-        .source, .destination {
-            font-weight: 500;
-        }
-
-        .source {
-            color: #2c5aa0;
-        }
-
-        .destination {
-            color: #d02b2b;
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/trip-details.css}"/>
 </head>
-<body>
-<div class="container">
-    <!-- Header -->
-    <div class="header">
-        <h1><i class="fas fa-route"></i> Trip Details</h1>
-    </div>
+<body class="bg-light">
+<div class="container d-flex justify-content-center mx-auto mt-3 pt-5">
+    <div class="w-75 mx-2 my-3">
+        <div class="title-container mt-3">
+            <h1 class="badgify theme-trips"><i class="bi bi-list-columns me-2"></i>Trip details</h1>
+        </div>
 
-    <!-- Main Content -->
-    <div class="content-wrapper">
-        <!-- Left Column - Trip Information -->
-        <div class="left-column">
-            <!-- Trip Details Card -->
-            <div class="trip-card">
-                <h2>Trip Information</h2>
-                <div class="trip-info">
-                    <div class="info-item">
-                        <div class="info-icon">
-                            <i class="fas fa-map-marker-alt"></i>
-                        </div>
-                        <div class="info-text">
-                            <strong>Route</strong>
-                            <div class="route-display">
-                                <span class="source" th:text="${trip.route.source.name}"></span>
-                                <i class="fas fa-arrow-right route-arrow"></i>
-                                <span class="destination" th:text="${trip.route.destination.name}"></span>
+        <div class="row g-4">
+            <div class="col-lg-5">
+                <div class="card shadow border-0">
+                    <div class="card-body">
+                        <h2 class="h5 text-danger border-bottom pb-2 mb-3">
+                            <i class="fas fa-info-circle"></i> Trip Information
+                        </h2>
+
+                        <div class="list-group list-group-flush">
+                            <div class="list-group-item d-flex align-items-center">
+                                <div class="me-3 text-danger"><i class="fas fa-map-marker-alt fa-lg"></i></div>
+                                <div>
+                                    <strong class="text-muted small d-block">Route</strong>
+                                    <span class="fw-semibold text-dark">
+                  <span class="text-primary" th:text="${trip.route.source.name}"></span>
+                  <i class="fas fa-arrow-right mx-2 text-secondary"></i>
+                  <span class="text-danger" th:text="${trip.route.destination.name}"></span>
+                </span>
+                                </div>
+                            </div>
+
+                            <div class="list-group-item d-flex align-items-center">
+                                <div class="me-3 text-danger"><i class="fas fa-calendar-day fa-lg"></i></div>
+                                <div>
+                                    <strong class="text-muted small d-block">Date</strong>
+                                    <span th:text="${trip.date}"></span>
+                                </div>
+                            </div>
+
+                            <div class="list-group-item d-flex align-items-center">
+                                <div class="me-3 text-danger"><i class="fas fa-bus fa-lg"></i></div>
+                                <div>
+                                    <strong class="text-muted small d-block">Organizer</strong>
+                                    <span th:text="${trip.tranOrg.companyName}"></span>
+                                </div>
+                            </div>
+
+                            <div class="list-group-item d-flex align-items-center">
+                                <div class="me-3 text-danger"><i class="fas fa-chair fa-lg"></i></div>
+                                <div>
+                                    <strong class="text-muted small d-block">Free Seats</strong>
+                                    <span th:text="${trip.freeSeats}"></span>
+                                </div>
+                            </div>
+
+                            <div class="list-group-item d-flex align-items-center">
+                                <div class="me-3 text-danger"><i class="fas fa-tasks fa-lg"></i></div>
+                                <div>
+                                    <strong class="text-muted small d-block">Status</strong>
+                                    <span th:text="${trip.status}"></span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-icon">
-                            <i class="fas fa-calendar-day"></i>
-                        </div>
-                        <div class="info-text">
-                            <strong>Date</strong>
-                            <span th:text="${trip.date}"></span>
-                        </div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-icon">
-                            <i class="fas fa-bus"></i>
-                        </div>
-                        <div class="info-text">
-                            <strong>Organizer</strong>
-                            <span th:text="${trip.tranOrg.companyName}"></span>
-                        </div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-icon">
-                            <i class="fas fa-chair"></i>
-                        </div>
-                        <div class="info-text">
-                            <strong>Free Seats</strong>
-                            <span th:text="${trip.freeSeats}"></span>
-                        </div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-icon">
-                            <i class="fas fa-tasks"></i>
-                        </div>
-                        <div class="info-text">
-                            <strong>Status</strong>
-                            <span th:text="${trip.status}"></span>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="stops-timeline">
-                    <h3><i class="fas fa-map-marked-alt"></i> Route Stops</h3>
-                    <div class="timeline">
-                        <div class="stop-item" th:each="stop : ${trip.stops}">
-                            <div class="stop-time" th:text="${stop.stopTime}"></div>
-                            <div class="stop-location" th:text="${stop.location.name}"></div>
+                        <!-- Stops Timeline -->
+                        <div class="mt-4">
+                            <h3 class="h6 text-dark mb-3"><i class="fas fa-map-marked-alt"></i> Route Stops</h3>
+                            <div class="timeline">
+                                <div class="stop-item" th:each="stop : ${trip.stops}">
+                                    <div class="fw-bold text-danger me-3 stop-time" th:text="${stop.stopTime}"></div>
+                                    <div class="bg-light rounded px-3 py-2 stop-location"
+                                         th:text="${stop.location.name}"></div>
+                                </div>
+                            </div>
                         </div>
+
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="right-column">
-            <div class="review-section">
-                <h2><i class="fas fa-star"></i> Leave a Review</h2>
-                <form class="review-form" th:action="@{'/trips/' + ${trip.tripId} + '/reviews'}" method="post">
-                    <div class="form-group">
-                        <label for="description"><i class="fas fa-comment-dots"></i> Your Review</label>
-                        <textarea id="description" name="description"
-                                  placeholder="Share your experience..."></textarea>
-                    </div>
+            <!-- Right Column -->
+            <div class="col-lg-7">
+                <div class="card shadow border-0">
+                    <div class="card-body">
+                        <h2 class="h5 text-danger border-bottom pb-2 mb-3">
+                            <i class="fas fa-star"></i> Leave a Review
+                        </h2>
 
-                    <div class="rating-group">
-                        <label><i class="fas fa-star"></i> Rating</label>
-                        <div class="star-rating">
-                            <input type="radio" id="star5" name="rating" value="5"/>
-                            <label for="star5" title="5 stars"></label>
-                            <input type="radio" id="star4" name="rating" value="4"/>
-                            <label for="star4" title="4 stars"></label>
-                            <input type="radio" id="star3" name="rating" value="3"/>
-                            <label for="star3" title="3 stars"></label>
-                            <input type="radio" id="star2" name="rating" value="2"/>
-                            <label for="star2" title="2 stars"></label>
-                            <input type="radio" id="star1" name="rating" value="1"/>
-                            <label for="star1" title="1 star"></label>
-                        </div>
-                    </div>
-
-                    <button type="submit" class="submit-btn"><i class="fas fa-paper-plane"></i> Submit Review</button>
-                </form>
-
-
-                <div th:if="${reviews != null}">
-                    <div class="review-item" th:each="review : ${reviews}">
-                        <div class="review-header">
-                            <div class="review-author">
-                                    <span th:text="${review.account.name + ' ' + review.account.surname}">User Name</span>
+                        <!-- Review Form -->
+                        <form class="mb-4" th:action="@{'/trips/' + ${trip.tripId} + '/reviews'}" method="post">
+                            <div class="mb-3">
+                                <label for="description" class="form-label fw-semibold">
+                                    <i class="fas fa-comment-dots"></i> Your Review
+                                </label>
+                                <textarea id="description" name="description" class="form-control" rows="4"
+                                          placeholder="Share your experience..."></textarea>
                             </div>
-                            <div class="review-rating" th:text="'★ ' + ${#numbers.formatDecimal(review.rating, 1, 1)}">★
-                                5.0
+
+                            <div class="mb-3 p-3 bg-light rounded">
+                                <label class="form-label fw-semibold"><i class="fas fa-star"></i> Rating</label>
+                                <div class="star-rating mt-2">
+                                    <input type="radio" id="star5" name="rating" value="5"/><label for="star5"></label>
+                                    <input type="radio" id="star4" name="rating" value="4"/><label for="star4"></label>
+                                    <input type="radio" id="star3" name="rating" value="3"/><label for="star3"></label>
+                                    <input type="radio" id="star2" name="rating" value="2"/><label for="star2"></label>
+                                    <input type="radio" id="star1" name="rating" value="1"/><label for="star1"></label>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-danger shadow">
+                                <i class="fas fa-paper-plane"></i> Submit Review
+                            </button>
+                        </form>
+
+                        <div th:if="${errorMessage}">
+                            <p class="text-danger" th:text="${errorMessage}"></p>
+                        </div>
+
+                        <!-- Existing Reviews -->
+                        <div th:if="${reviews != null}">
+                            <h3 class="h6 text-dark border-bottom pb-2 mb-3"><i class="fas fa-comments"></i> Reviews
+                            </h3>
+                            <div class="mb-3 p-3 rounded shadow-sm border-start border-5 border-danger bg-white"
+                                 th:each="review : ${reviews}">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <div class="fw-semibold text-dark">
+                                        <span th:text="${review.account.name + ' ' + review.account.surname}">User Name</span>
+                                    </div>
+                                    <div class="text-danger fw-bold"
+                                         th:text="'★ ' + ${#numbers.formatDecimal(review.rating, 1, 1)}">★ 5.0
+                                    </div>
+                                </div>
+                                <p class="text-muted mb-0" th:text="${review.description}">
+                                </p>
+                                <form th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')') or review.account.accountId == accountId}"
+                                      th:action="@{/trips/{tripId}/removeReview/{reviewId}(tripId=${trip.tripId}, reviewId=${review.reviewId})}"
+                                      th:method="post" class="d-inline">
+                                    <button type="submit" class="btn glowable mt-1">
+                                        <i class="bi bi-trash me-1"></i>Remove Review
+                                    </button>
+                                </form>
                             </div>
                         </div>
-                        <div class="review-content" th:text="${review.description}">
-                            Review content goes here...
-                        </div>
+
                     </div>
                 </div>
             </div>
@@ -521,41 +156,6 @@
     </div>
 </div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const stars = document.querySelectorAll('.star-rating input');
-        const ratingGroup = document.querySelector('.rating-group');
-
-        stars.forEach(star => {
-            star.addEventListener('change', function () {
-                const ratingValue = this.value;
-                ratingGroup.style.background = "linear-gradient(90deg, rgba(217,94,94,0.15) 0%, rgba(217,94,94,0.05) 100%)";
-                console.log('Selected rating:', ratingValue);
-            });
-        });
-
-        const observerOptions = {
-            root: null,
-            rootMargin: '0px',
-            threshold: 0.1
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = 1;
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('.info-item, .stop-item, .review-item').forEach(item => {
-            item.style.opacity = 0;
-            item.style.transform = 'translateY(20px)';
-            item.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-            observer.observe(item);
-        });
-    });
-</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

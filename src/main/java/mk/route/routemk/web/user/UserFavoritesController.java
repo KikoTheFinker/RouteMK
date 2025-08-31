@@ -36,12 +36,13 @@ public class UserFavoritesController {
         }
 
         model.addAttribute("favorites", routes);
+
         model.addAttribute("display", "user/favorites");
         return "master";
     }
 
     @PostMapping("/change-favorites-status/{routeId}")
-    public String changeFavoriteStatus(Model model, @PathVariable Integer routeId,
+    public String changeFavoriteStatus(@PathVariable Integer routeId,
                                        @RequestParam(value = "remove", required = false, defaultValue = "false") boolean remove) {
 
         Integer currentAccountId = authenticationService.getAuthenticatedUserId();

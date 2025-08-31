@@ -57,22 +57,56 @@ CREATE TABLE location
     name        VARCHAR(100)     NOT NULL
 );
 
+CREATE TABLE transport_organizer
+(
+    transport_organizer_id SERIAL PRIMARY KEY,
+    account_id             INT          NOT NULL,
+    company_name           VARCHAR(100) NOT NULL,
+    company_embg           VARCHAR(50)  NOT NULL,
+    CONSTRAINT transport_organizer_account_id_fkey FOREIGN KEY (account_id) REFERENCES account (account_id) ON DELETE CASCADE
+);
+
+CREATE TABLE route
+(
+    route_id               SERIAL PRIMARY KEY,
+    transport_organizer_id INT NOT NULL,
+    from_location_id       INT NOT NULL,
+    to_location_id         INT NOT NULL,
+    CONSTRAINT route_transport_organizer_id_fkey FOREIGN KEY (transport_organizer_id) REFERENCES transport_organizer (transport_organizer_id) ON DELETE CASCADE,
+    CONSTRAINT route_from_location_id_fkey FOREIGN KEY (from_location_id) REFERENCES location (location_id),
+    CONSTRAINT route_to_location_id_fkey FOREIGN KEY (to_location_id) REFERENCES location (location_id)
+);
+
+CREATE TABLE trip
+(
+    trip_id                SERIAL PRIMARY KEY,
+    base_price             DOUBLE PRECISION,
+    transport_organizer_id INT  NOT NULL,
+    route_id               INT  NOT NULL,
+    free_seats             INT CHECK (free_seats >= 0),
+    date                   DATE NOT NULL,
+    status                 VARCHAR(30),
+    CONSTRAINT trip_transport_organizer_id_fkey FOREIGN KEY (transport_organizer_id) REFERENCES transport_organizer (transport_organizer_id),
+    CONSTRAINT trip_route_id_fkey FOREIGN KEY (route_id) REFERENCES route (route_id) ON DELETE CASCADE
+);
+
 CREATE TABLE ticket
 (
     ticket_id            SERIAL PRIMARY KEY,
-    trip_id              INT  NOT NULL,
-    gets_on_location_id  INT  NOT NULL,
-    gets_off_location_id INT  NOT NULL,
-    account_id           INT  NOT NULL,
-    date_purchased       DATE NOT NULL,
+    trip_id              INT                    NOT NULL,
+    gets_on_location_id  INT                    NOT NULL,
+    gets_off_location_id INT                    NOT NULL,
+    account_id           INT                    NOT NULL,
+    date_purchased       DATE                   NOT NULL,
     time_purchased       TIME WITHOUT TIME ZONE NOT NULL,
     price                DOUBLE PRECISION CHECK (price >= 0),
     seat                 VARCHAR(10),
-    payment_id           INT  NOT NULL,
+    payment_id           INT                    NOT NULL,
     CONSTRAINT gets_on_location_fkey FOREIGN KEY (gets_on_location_id) REFERENCES location (location_id) ON DELETE CASCADE,
     CONSTRAINT gets_off_location_fkey FOREIGN KEY (gets_off_location_id) REFERENCES location (location_id) ON DELETE CASCADE,
     CONSTRAINT ticket_account_id_fkey FOREIGN KEY (account_id) REFERENCES account (account_id) ON DELETE CASCADE,
-    CONSTRAINT ticket_payment_id_fkey FOREIGN KEY (payment_id) REFERENCES payment (payment_id) ON DELETE CASCADE
+    CONSTRAINT ticket_payment_id_fkey FOREIGN KEY (payment_id) REFERENCES payment (payment_id) ON DELETE CASCADE,
+    CONSTRAINT trip_id_fkey FOREIGN KEY (trip_id) REFERENCES trip (trip_id) ON DELETE CASCADE
 );
 
 CREATE TABLE review
@@ -84,19 +118,6 @@ CREATE TABLE review
     rating      INT CHECK (rating >= 1 AND rating <= 5),
     CONSTRAINT review_account_id_fkey FOREIGN KEY (account_id) REFERENCES account (account_id) ON DELETE CASCADE,
     CONSTRAINT review_ticket_id_fkey FOREIGN KEY (ticket_id) REFERENCES ticket (ticket_id) ON DELETE CASCADE
-);
-
-ALTER TABLE ticket
-    ADD CONSTRAINT unique_account_trip UNIQUE (account_id, trip_id);
-
-
-CREATE TABLE transport_organizer
-(
-    transport_organizer_id SERIAL PRIMARY KEY,
-    account_id             INT          NOT NULL,
-    company_name           VARCHAR(100) NOT NULL,
-    company_embg           VARCHAR(50)  NOT NULL,
-    CONSTRAINT transport_organizer_account_id_fkey FOREIGN KEY (account_id) REFERENCES account (account_id) ON DELETE CASCADE
 );
 
 CREATE TABLE vehicle
@@ -137,30 +158,6 @@ CREATE TABLE train
     train_id   SERIAL PRIMARY KEY,
     vehicle_id INT NOT NULL UNIQUE,
     CONSTRAINT train_vehicle_id_fkey FOREIGN KEY (vehicle_id) REFERENCES vehicle (vehicle_id) ON DELETE CASCADE
-);
-
-CREATE TABLE route
-(
-    route_id               SERIAL PRIMARY KEY,
-    transport_organizer_id INT NOT NULL,
-    from_location_id       INT NOT NULL,
-    to_location_id         INT NOT NULL,
-    CONSTRAINT route_transport_organizer_id_fkey FOREIGN KEY (transport_organizer_id) REFERENCES transport_organizer (transport_organizer_id) ON DELETE CASCADE,
-    CONSTRAINT route_from_location_id_fkey FOREIGN KEY (from_location_id) REFERENCES location (location_id),
-    CONSTRAINT route_to_location_id_fkey FOREIGN KEY (to_location_id) REFERENCES location (location_id)
-);
-
-CREATE TABLE trip
-(
-    trip_id                SERIAL PRIMARY KEY,
-    base_price             DOUBLE PRECISION,
-    transport_organizer_id INT  NOT NULL,
-    route_id               INT  NOT NULL,
-    free_seats             INT CHECK (free_seats >= 0),
-    date                   DATE NOT NULL,
-    status                 VARCHAR(30),
-    CONSTRAINT trip_transport_organizer_id_fkey FOREIGN KEY (transport_organizer_id) REFERENCES transport_organizer (transport_organizer_id),
-    CONSTRAINT trip_route_id_fkey FOREIGN KEY (route_id) REFERENCES route (route_id) ON DELETE CASCADE
 );
 
 CREATE TABLE driver
@@ -211,8 +208,8 @@ CREATE TABLE trip_days_active
 CREATE TABLE trip_stops
 (
     trip_stop_id SERIAL PRIMARY KEY,
-    trip_id      INT NOT NULL,
-    location_id  INT NOT NULL,
+    trip_id      INT                    NOT NULL,
+    location_id  INT                    NOT NULL,
     stop_time    TIME WITHOUT TIME ZONE NOT NULL,
     CONSTRAINT trip_stops_trip_id_fkey FOREIGN KEY (trip_id) REFERENCES trip (trip_id) ON DELETE CASCADE,
     CONSTRAINT trip_stops_location_id_fkey FOREIGN KEY (location_id) REFERENCES location (location_id) ON DELETE CASCADE
@@ -693,8 +690,19 @@ VALUES (100, 1001, 'Service was quick.', 4),
        (200, 1005, 'Could improve response time.', 3),
        (300, 1010, 'Very helpful staff.', 5),
        (200, 1025, 'Not satisfied.', 2),
-       (300, 1032, 'Excellent service.', 5)
+       (300, 1032, 'Excellent service.', 5);
 
 
-INSERT INTO favorites (favorite_id, route_id, account_id)
-VALUES (1, 100, 300), (2, 200, 300), (3, 300, 300), (4, 400, 300), (10, 100, 100), (20, 200, 100), (30, 300, 100), (40, 400, 100), (100, 100, 200), (200, 200, 200), (300, 300, 200), (400, 400, 200),
+INSERT INTO favorite (favorite_id, route_id, account_id)
+VALUES (1, 100, 300),
+       (2, 200, 300),
+       (3, 300, 300),
+       (4, 400, 300),
+       (10, 100, 100),
+       (20, 200, 100),
+       (30, 300, 100),
+       (40, 400, 100),
+       (100, 100, 200),
+       (200, 200, 200),
+       (300, 300, 200),
+       (400, 400, 200);
