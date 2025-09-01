@@ -52,6 +52,11 @@ public class Account implements UserDetails {
     public Account() {
     }
 
+    @Override
+    public String toString() {
+        return String.format("%s - %s %s", this.email, this.name, this.surname);
+    }
+
     public Integer getAccountId() {
         return accountId;
     }

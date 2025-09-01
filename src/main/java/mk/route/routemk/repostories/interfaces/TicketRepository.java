@@ -12,4 +12,5 @@ public interface TicketRepository extends GenericRepository<Ticket, Integer> {
     Collection<? extends Ticket> findTicketsByAccount_AccountId(Integer accountId);
     List<Ticket> findAllByTrip_TripId(Integer tripId);
 
+    List<Ticket> findTicketsByAccount_AccountIdAndTrip_TripId(Integer accountId, Integer tripId);
 }

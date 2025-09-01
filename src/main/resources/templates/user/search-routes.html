@@ -3,7 +3,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" th:href="@{/css/trip-route-filter-table.css}"/>
     <style>
-
         .notification {
             margin: 20px;
             font-style: italic;
@@ -28,7 +27,7 @@
 <body>
 <main id="main">
     <div class="title-container mt-5">
-        <h1 class="title"><i class="bi bi-signpost-split me-2"></i>Search Routes</h1>
+        <h1 class="badgify"><i class="bi bi-signpost-split me-2"></i>Search Routes</h1>
     </div>
 
     <div class="filter-container-wrapper center text-center">
@@ -54,9 +53,9 @@
 
     <div class="routes-container">
         <div class="title-container mt-5">
-            <h3 class="title fs-5"><i class="bi bi-signpost-split me-2"></i>Direct routes</h3>
+            <h3 class="badgify fs-5"><i class="bi bi-signpost-split me-2"></i>Direct routes</h3>
         </div>
-        <div class="routes-table-wrapper">
+        <div class="routes-table-wrapper mt-1">
             <table class="routes-table">
                 <thead>
                 <tr>
@@ -75,7 +74,8 @@
                     <td th:text="${route.getDestination().getName()}"></td>
                     <td th:text="${route.getTranOrg().getCompanyName()}"></td>
                     <td>
-                        <a th:href="@{/trips/{routeId}(routeId=${route.routeId})}" class="btn-redoutline">View Trips</a>
+                        <a th:href="@{/trips/{routeId}(routeId=${route.routeId})}" class="btn-redoutline">
+                            <i class="bi bi-calendar3 me-2"></i>Timetable</a>
                     </td>
 
                 <tr th:if="${routes.isEmpty()}">
@@ -87,10 +87,10 @@
         </div>
 
         <div class="title-container mt-5">
-            <h3 class="title fs-5"><i class="bi bi-signpost-split me-2"></i>Indirect routes</h3>
+            <h3 class="badgify fs-5"><i class="bi bi-signpost-split me-2"></i>Indirect routes</h3>
         </div>
 
-        <div class="routes-table-wrapper">
+        <div class="routes-table-wrapper mt-1">
             <table class="routes-table">
                 <thead>
                 <tr>
@@ -109,7 +109,8 @@
                     <td th:text="${route.getDestination().getName()}"></td>
                     <td th:text="${route.getTranOrg().getCompanyName()}"></td>
                     <td>
-                        <a th:href="@{/trips/{routeId}(routeId=${route.routeId})}" class="btn-redoutline">View Trips</a>
+                        <a th:href="@{/trips/{routeId}(routeId=${route.routeId})}" class="btn-redoutline"><i
+                                class="bi bi-bi-calendar3 me-2"></i>Timetable</a>
                     </td>
 
                 <tr th:if="${noRoutesMessage}">
@@ -119,10 +120,6 @@
                 </tbody>
             </table>
         </div>
-
-
-
-
     </div>
 </main>
 

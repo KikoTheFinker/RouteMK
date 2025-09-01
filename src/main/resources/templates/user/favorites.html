@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Favorite Routes</title>
+    <link rel="stylesheet" th:href="@{/css/trip-route-filter-table.css}"/>
+    <style>
+        .notification {
+            margin: 20px;
+            font-style: italic;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+<div id="main">
+    <div class="title-container mt-5">
+        <h1 class="badgify theme-favorites"><i class="bi bi-heart me-2"></i>Favorite Routes</h1>
+    </div>
+
+    <div class="routes-table-wrapper mt-1">
+        <table class="routes-table">
+            <thead>
+            <tr>
+                <th>Departure</th>
+                <th>Arrival</th>
+                <th>Company</th>
+                <th>
+                    <img src="/images/eye.png" alt="A gazing eye" width="24" height="24"/>
+                    Explore
+                </th>
+                <th>
+                    <i class="bi bi-gear-wide-connected me-1"></i>
+                    Manage
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="route : ${favorites}">
+                <td th:text="${route.getSource().getName()}"></td>
+                <td th:text="${route.getDestination().getName()}"></td>
+                <td th:text="${route.getTranOrg().getCompanyName()}"></td>
+                <td>
+                    <a th:href="@{/trips/{routeId}(routeId=${route.routeId})}" class="btn-redoutline">
+                        <i class="bi bi-calendar3 me-2"></i>Timetable
+                    </a>
+                </td>
+                <td>
+                    <form th:method="POST"
+                          th:action="@{/favorites/change-favorites-status/{routeId}(routeId=${route.routeId})}">
+                        <input type="hidden" name="remove" value="true"/>
+                        <button type="submit" class="btn-redoutline">
+                            <i class="bi bi-heart-fill"></i> Remove
+                        </button>
+                    </form>
+                </td>
+            </tr>
+
+            <tr th:if="${favorites.isEmpty()}">
+                <td colspan="5" class="notification">No favorite routes found.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

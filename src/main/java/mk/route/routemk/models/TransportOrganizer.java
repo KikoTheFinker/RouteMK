@@ -23,7 +23,10 @@ public class TransportOrganizer {
     @JoinColumn(name="account_id", referencedColumnName = "account_id")
     private Account account;
 
-    // todo: maybe need a list of drivers
+    @Override
+    public String toString() {
+        return String.format("Transport Organizer: %s - EMBG: %s", companyName, companyEmbg);
+    }
 
     public TransportOrganizer(String companyName, String companyEmbg, Account account) {
         this.companyName = companyName;
