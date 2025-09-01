@@ -123,6 +123,7 @@
                     </tr>
                     </thead>
                     <tbody id="routes-list">
+                    <!--                    TODO: implement purchasing through ticket creation-->
                     <tr th:each="trip : ${trips}" class="route-row">
                         <td th:with="depTime=${#lists.isEmpty(trip.stops) ? null : trip.stops.iterator().next().stopTime}"
                             th:attr="data-date=${#temporals.format(trip.date,'yyyy-MM-dd')},
