@@ -126,7 +126,7 @@
                 <br>
 
                 <div class="mb-2 text-center">
-                    <button id="resetFiltersButton" class="btn-standard">Reset Filters</button>
+                    <button id="resetFiltersButton" class="btn-standard"><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Filters</button>
                 </div>
             </div>
         </div>
@@ -155,7 +155,7 @@
                     <td th:text="${trip.getDate()}"></td>
                     <td th:text="${freeSeatMap.get(trip.getTripId())}"></td>
                     <td class="text-center">
-                        <button class="btn-standard view-stops-btn" th:data-trip-id="${trip.getTripId()}">View Stops
+                        <button class="btn-standard view-stops-btn" th:data-trip-id="${trip.getTripId()}"><i class="bi bi-geo me-1"></i>View Stops
                         </button>
 
                         <div class="hidden-stops hidden" th:each="stop : ${trip.getStops()}">
@@ -176,11 +176,11 @@
                                     th:data-trip-id="${trip.getTripId()}"
                                     th:data-trip-date="${trip.getDate()}"
                                     th:data-free-seats="${freeSeatMap.get(trip.getTripId())}">
-                                Edit
+                                <i class="bi bi-pencil-square me-1"></i>Edit
                             </button>
                             <form th:action="@{/routes/company/view-trips/{routeId}/delete-trip/{tripId}(routeId=${routeId}, tripId=${trip.getTripId()})}"
                                   method="POST" style="display: inline;">
-                                <button type="submit" class="btn-redoutline">Delete</button>
+                                <button type="submit" class="btn-redoutline"><i class="bi bi-trash3 me-2"></i>Delete</button>
                             </form>
                         </div>
                     </td>

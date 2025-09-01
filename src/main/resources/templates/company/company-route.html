@@ -62,12 +62,12 @@
                         <td th:text="${route.getDestination().getName()}"></td>
                         <td class="action-column">
                             <a th:href="@{/routes/company/view-trips/{routeId}(routeId=${route.getRouteId()})}"
-                               class="btn-redoutline">View Trips</a>
+                               class="btn-redoutline"><i class="bi bi-luggage me-2"></i>Manage Trips</a>
 
                             <form th:action="@{/routes/company/delete-route/{routeId}(routeId=${route.getRouteId()})}"
                                   method="POST" style="display: inline;"
                                   th:if="${#authorization.expression('!hasRole(''DRIVER'')')}">
-                                <button type="submit" class="btn-redoutline">Delete</button>
+                                <button type="submit" class="btn-redoutline"><i class="bi bi-trash3 me-2"></i>Delete</button>
                             </form>
                         </td>
                     </tr>

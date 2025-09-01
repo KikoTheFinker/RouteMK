@@ -19,7 +19,7 @@
                         class="bi bi-ticket-perforated me-2" style="color:#a717cf"></i>My Tickets</a></li>
                 <li th:if="${#authorization.expression('hasRole(''USER'')')}"
                     class="nav-item"><a class="nav-link btn btn-small btn-transparent" href="/trips/user"><i
-                        class="bi bi-backpack text-info me-2"></i>My Trips</a></li>
+                        class="bi bi-luggage text-info me-2"></i>My Trips</a></li>
                 <!-- Favorites Button -->
                 <li th:if="${#authorization.expression('hasRole(''USER'')')}" class="nav-item">
                     <a class="nav-link btn btn-small btn-transparent" href="/favorites">

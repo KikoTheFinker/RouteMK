@@ -57,7 +57,7 @@
 <body>
 <div id="main">
     <div class="title-container mt-5">
-        <h1 class="badgify theme-trips mb-1">
+        <h1 class="badgify mb-1">
             <i class="bi bi-signpost-split me-2"></i>
             <span th:text="${routeSource}"></span>
             <i class="bi bi-arrow-right mx-2"></i>
@@ -83,7 +83,7 @@
         <div class="date-filter">
             <label for="datepicker">Filter by date:</label>
             <input type="text" id="datepicker" placeholder="Select date...">
-            <button id="clearDate" class="btn-redoutline">Clear filter</button>
+            <button id="clearDate" class="btn-standard"><i class="bi bi-arrow-counterclockwise me-2"></i>Reset filters</button>
         </div>
     </div>
 
@@ -110,7 +110,7 @@
                         <td th:text="${seatsLeftPerTrip[trip.getTripId()]}"></td>
                         <td th:text="${cheapestTicketPrice[trip.getTripId()]}"></td>
                         <td>
-                            <a th:if="${seatsLeftPerTrip[trip.getTripId()] != 0}" th:href="@{/}" class="btn-redoutline">Purchase</a>
+                            <a th:if="${seatsLeftPerTrip[trip.getTripId()] != 0}" th:href="@{/}" class="btn-redoutline"><i class="bi bi-credit-card me-2"></i>Purchase</a>
                         </td>
                     </tr>
                     </tbody>

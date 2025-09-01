@@ -43,18 +43,13 @@ public class UserFavoritesController {
 
     @PostMapping("/change-favorites-status/{routeId}")
     public String changeFavoriteStatus(@PathVariable Integer routeId,
-                                       @RequestParam(value = "remove", required = false, defaultValue = "false") boolean remove) {
+                                       @RequestParam(value = "remove") boolean remove) {
 
         Integer currentAccountId = authenticationService.getAuthenticatedUserId();
 
-        if (remove) {
+        if (favoriteService.isFavorite(routeId, currentAccountId) && remove) {
             favoriteService.removeFavorite(routeId, currentAccountId);
-            return "redirect:/favorites";
-        }
-
-        if (favoriteService.isFavorite(routeId, currentAccountId)) {
-            favoriteService.removeFavorite(routeId, currentAccountId);
-        } else {
+        } else if (!remove) {
             favoriteService.addFavorite(routeId, currentAccountId);
         }
 

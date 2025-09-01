@@ -12,7 +12,7 @@
 <div class="container d-flex justify-content-center mx-auto mt-3 pt-5">
     <div class="w-75 mx-2 my-3">
         <div class="title-container mt-3">
-            <h1 class="badgify theme-trips"><i class="bi bi-list-columns me-2"></i>Trip details</h1>
+            <h1 class="badgify theme-trips"><i class="bi bi-list"></i>Trip details</h1>
         </div>
 
         <div class="row g-4">
@@ -143,9 +143,11 @@
                                 <form th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')') or review.account.accountId == accountId}"
                                       th:action="@{/trips/{tripId}/removeReview/{reviewId}(tripId=${trip.tripId}, reviewId=${review.reviewId})}"
                                       th:method="post" class="d-inline">
-                                    <button type="submit" class="btn glowable mt-1">
-                                        <i class="bi bi-trash me-1"></i>Remove Review
-                                    </button>
+                                    <div class="d-flex justify-content-end">
+                                        <button type="submit" class="btn btn-danger mt-2">
+                                            <i class="bi bi-trash3 me-2"></i>Remove Review
+                                        </button>
+                                    </div>
                                 </form>
                             </div>
                         </div>

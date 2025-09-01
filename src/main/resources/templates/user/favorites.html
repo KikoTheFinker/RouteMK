@@ -19,7 +19,7 @@
         <h1 class="badgify theme-favorites"><i class="bi bi-heart me-2"></i>Favorite Routes</h1>
     </div>
 
-    <div class="routes-table-wrapper mt-4">
+    <div class="routes-table-wrapper mt-1">
         <table class="routes-table">
             <thead>
             <tr>
@@ -43,7 +43,7 @@
                 <td th:text="${route.getTranOrg().getCompanyName()}"></td>
                 <td>
                     <a th:href="@{/trips/{routeId}(routeId=${route.routeId})}" class="btn-redoutline">
-                        View Trips
+                        <i class="bi bi-calendar3 me-2"></i>Timetable
                     </a>
                 </td>
                 <td>

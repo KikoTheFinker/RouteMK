@@ -48,7 +48,7 @@
 <body>
 <div id="main">
     <div class="title-container mt-5">
-        <h1 class="badgify theme-trips"><i class="bi bi-backpack me-2"></i>My Trips</h1>
+        <h1 class="badgify theme-trips"><i class="bi bi-luggage me-2"></i>My Trips</h1>
     </div>
 
     <div class="filter-container-wrapper">
@@ -106,7 +106,7 @@
                     <td th:text="${trip.getFreeSeats()}"></td>
                     <td th:text="${trip.getRoute().getSource().getName()} + ' → ' + ${trip.getRoute().getDestination().getName()}"></td>
                     <td class="text-center">
-                        <button class="btn-standard view-stops-btn" data-trip-id="${trip.getTripId()}">View Stops
+                        <button class="btn-standard view-stops-btn" data-trip-id="${trip.getTripId()}"><i class="bi bi-geo me-1"></i>View Stops
                         </button>
                         <div class="hidden-stops hidden" th:each="stop : ${trip.getStops()}">
                             <span class="stop-location" th:text="${stop.getLocation().getName()}"></span>
@@ -118,7 +118,7 @@
                     <td th:text="${trip.getTranOrg().getCompanyName()}"></td>
                     <td class="text-center">
                         <div class="d-flex justify-content-center gap-2">
-                            <a th:href="@{'/trips/user/' + ${trip.getTripId()}}" class="btn-standard">Details</a>
+                            <a th:href="@{'/trips/user/' + ${trip.getTripId()}}" class="btn-standard"><i class="bi bi-list me-1"></i>Details</a>
                         </div>
                     </td>
                 </tr>
