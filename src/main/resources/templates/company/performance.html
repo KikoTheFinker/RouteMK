@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Statistics</title>
+    <link rel="stylesheet" th:href="@{/css/ticket-display.css}"/>
+    <link rel="stylesheet" th:href="@{/css/trip-route-filter-table.css}"/>
+</head>
+<body>
+<main id="main">
+    <div class="title-container mt-5">
+        <h1 class="badgify theme-torg">
+            <i class="bi bi-bar-chart-line me-2"></i>
+            <span th:text="${statistics.companyName} + '\'s Statistics'"></span>
+        </h1>
+    </div>
+
+    <div class="statistics-list mt-4">
+        <div th:each="stat : ${statistics}" class="ticket-container">
+            <div class="ticket-header">
+                <div>
+                    <i class="bi bi-graph-up-arrow me-2 text-danger"></i>
+                    <span class="text-dark">Statistics Report</span>
+                </div>
+            </div>
+            <hr class="dotted-hr"/>
+            <div class="ticket-body">
+
+                <div class="ticket-info-block">
+                    <span class="ticket-label"><i class="bi bi-signpost-2-fill me-1 text-danger"></i>Transport Organizer</span><br>
+                    <span th:text="${stat.companyName}"></span>
+                </div>
+
+                <div class="ticket-info-block">
+                    <span class="ticket-label"><i
+                            class="bi bi-signpost-2-fill me-1 text-danger"></i>Routes Operated</span><br>
+                    <span th:text="${stat.routesOperated}"></span>
+                </div>
+                <div class="ticket-info-block">
+                    <span class="ticket-label"><i
+                            class="bi bi-bus-front me-1 text-danger"></i>Trips Organized</span><br>
+                    <span th:text="${stat.tripsOrganized}"></span>
+                </div>
+                <div class="ticket-info-block">
+                    <span class="ticket-label"><i class="bi bi-ticket-detailed me-1 text-danger"></i>Total Tickets Sold</span><br>
+                    <span th:text="${stat.totalTicketsSold}"></span>
+                </div>
+            </div>
+
+
+            <div class="ticket-body">
+                <div class="ticket-info-block">
+                    <span class="ticket-label"><i
+                            class="bi bi-currency-exchange me-1 text-danger"></i>Total Revenue</span><br>
+                    <span th:text="${stat.totalRevenue} + ' €'"></span>
+                </div>
+                <div class="ticket-info-block">
+                    <span class="ticket-label"><i
+                            class="bi bi-signpost-2-fill me-1 text-danger"></i>Average Rating</span><br>
+                    <span th:text="${stat.avgRating}"></span>
+                </div>
+                <div class="ticket-info-block">
+                    <span class="ticket-label"><i
+                            class="bi bi-bus-front me-1 text-danger"></i>Unique Customers</span><br>
+                    <span th:text="${stat.uniqueCustomers}"></span>
+                </div>
+                <div class="ticket-info-block">
+                    <span class="ticket-label"><i class="bi bi-ticket-detailed me-1 text-danger"></i>Average Ticket Price</span><br>
+                    <span th:text="${stat.avgTicketPrice}"></span>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${statistics == null}" id="noStats" class="text-center mt-3">
+            <em>No statistics available.</em>
+        </div>
+    </div>
+</main>
+</body>
+</html>
