@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Company Statistics</title>
+
+
     <link rel="stylesheet" th:href="@{/css/ticket-display.css}"/>
     <link rel="stylesheet" th:href="@{/css/trip-route-filter-table.css}"/>
 </head>
@@ -68,6 +70,33 @@
                 <div class="ticket-info-block">
                     <span class="ticket-label"><i class="bi bi-ticket-detailed me-1 text-danger"></i>Average Ticket Price</span><br>
                     <span th:text="${stat.avgTicketPrice}"></span>
+                </div>
+            </div>
+        </div>
+
+        <div th:each="route : ${topSellingRoutesView}" class="ticket-container mt-3 p-3 border rounded shadow-sm">
+
+            <div class="ticket-header">
+                <div>
+                    <i class="bi bi-graph-up-arrow me-2 text-danger"></i>
+                    <span class="text-dark">
+                            <strong th:text="${route.fromLocationName} + ' → ' + ${route.toLocationName}"></strong>
+                        </span>
+                </div>
+            </div>
+            <hr class="dotted-hr"/>
+
+            <div class="ticket-body">
+                <div class="ticket-body">
+                    <div class="ticket-info-block">
+                    <span class="ticket-label"><i
+                            class="bi bi-bus-front me-1 text-danger"></i>Average Ticket Price</span><br>
+                        <span th:text="${route.avgTicketPrice}"></span>
+                    </div>
+                    <div class="ticket-info-block">
+                        <span class="ticket-label"><i class="bi bi-ticket-detailed me-1 text-danger"></i>Total Tickets Sold</span><br>
+                        <span th:text="${route.totalTicketsSold}"></span>
+                    </div>
                 </div>
             </div>
         </div>
