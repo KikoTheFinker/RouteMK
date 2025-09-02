@@ -11,7 +11,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -22,18 +21,17 @@ public class TripServiceImpl extends GenericServiceImpl<Trip, Integer> implement
     private final TicketService ticketService;
     private final TripRepository tripRepository;
 
-    public TripServiceImpl(GenericRepository<Trip, Integer> genericRepository, TicketService ticketService, TripRepository tripService) {
+    public TripServiceImpl(GenericRepository<Trip, Integer> genericRepository,
+                           TicketService ticketService,
+                           TripRepository tripRepository) {
         super(genericRepository);
         this.ticketService = ticketService;
-        this.tripRepository = tripService;
+        this.tripRepository = tripRepository;
     }
 
     @Override
     public List<Trip> findTripsBookedByAccount(Integer accountId) {
-        return ticketService.findTicketsByAccountId(accountId)
-                .stream()
-                .map(Ticket::getTrip)
-                .collect(Collectors.toList());
+        return ticketService.findTicketsByAccountId(accountId).stream().map(Ticket::getTrip).toList();
     }
 
     @Override
@@ -43,62 +41,43 @@ public class TripServiceImpl extends GenericServiceImpl<Trip, Integer> implement
 
     @Override
     public Map<Integer, String> getStopNameTableForTrips(Collection<? extends Trip> trips, String from, String to) {
-        Map<Integer, String> stops = new HashMap<>();
-
-        for (Trip trip : trips) {
-            String stopNames = trip.getStops().stream()
-                    .map(stop -> stop.getLocation().getName())
-                    .filter(stopName -> !stopName.equals(from) && !stopName.equals(to))
-                    .collect(Collectors.joining(", "));
-            stops.put(trip.getTripId(), stopNames);
-        }
-
-        return stops;
+        return trips.stream().collect(Collectors.toMap(
+                Trip::getTripId,
+                t -> t.getStops().stream()
+                        .map(s -> s.getLocation().getName())
+                        .filter(n -> !n.equals(from) && !n.equals(to))
+                        .collect(Collectors.joining(", "))
+        ));
     }
 
     @Override
     public Map<Integer, Object> getCheapestTicketTableForTrips(Collection<? extends Trip> trips) {
-        Map<Integer, Object> cheapestTicketPerTrip = new HashMap<>();
-
-        for (Trip trip : trips) {
-            Integer tripId = trip.getTripId();
-
-            Ticket cheapest = ticketService.findCheapestTicketForTrip(tripId);
-
-            if (numTicketsLeftForTrip(trip.getTripId()) == 0 || cheapest == null) {
-                cheapestTicketPerTrip.put(tripId, "No available tickets.");
-            } else {
-                cheapestTicketPerTrip.put(tripId, cheapest.getPrice());
-            }
-        }
-        return cheapestTicketPerTrip;
+        return trips.stream().collect(Collectors.toMap(
+                Trip::getTripId,
+                t -> {
+                    int seatsLeft = numTicketsLeftForTrip(t.getTripId());
+                    if (seatsLeft == 0) return "No available seats.";
+                    return t.getBasePrice() != null ? t.getBasePrice() : "Price unavailable";
+                }
+        ));
     }
 
     @Override
     public Map<Integer, Integer> getFreeSeatTableForTrips(Collection<? extends Trip> trips) {
-        Map<Integer, Integer> freeSeatTable = new HashMap<>();
-
-        for (Trip trip : trips) {
-            Integer tripId = trip.getTripId();
-            Integer seatsLeft = numTicketsLeftForTrip(trip.getTripId());
-
-            freeSeatTable.put(tripId, seatsLeft);
-        }
-
-        return freeSeatTable;
+        return trips.stream().collect(Collectors.toMap(
+                Trip::getTripId,
+                t -> numTicketsLeftForTrip(t.getTripId())
+        ));
     }
 
     @Override
     public Integer numTicketsLeftForTrip(Integer tripId) {
-        int tripSeatCapacity = tripRepository.findById(tripId).get().getSeatCapacity();
-        int ticketsPurchasedAlready = ticketService.findAllTicketsForTrip(tripId).size();
-
-        return tripSeatCapacity - ticketsPurchasedAlready;
+        return tripRepository.findById(tripId).map(Trip::getFreeSeats).orElse(0);
     }
 
+    @Override
     public List<Trip> findIndirectTrips(Integer startId, Integer endId) {
-        Specification<Trip> trips = TripSpecification.findTripsWithStartAndEndLocations(startId, endId);
-        return findAllByPredicate(trips);
+        Specification<Trip> spec = TripSpecification.findTripsWithStartAndEndLocations(startId, endId);
+        return findAllByPredicate(spec);
     }
-
 }
