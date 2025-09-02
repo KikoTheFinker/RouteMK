@@ -18,8 +18,8 @@
         </h1>
     </div>
 
-    <div class="statistics-list mt-4">
-        <div th:each="stat : ${statistics}" class="ticket-container">
+    <div class="mt-4">
+        <div th:each="stat : ${statistics}" class="ticket-container statistics-list">
             <div class="ticket-header">
                 <div>
                     <i class="bi bi-graph-up-arrow me-2 text-danger"></i>
@@ -55,12 +55,13 @@
                 <div class="ticket-info-block">
                     <span class="ticket-label"><i
                             class="bi bi-currency-exchange me-1 text-danger"></i>Total Revenue</span><br>
-                    <span th:text="${stat.totalRevenue} + ' €'"></span>
+                    <span th:text="${#numbers.formatDecimal(stat.totalRevenue, 1, 2)} + ' €'"></span>
                 </div>
                 <div class="ticket-info-block">
                     <span class="ticket-label"><i
                             class="bi bi-signpost-2-fill me-1 text-danger"></i>Average Rating</span><br>
-                    <span th:text="${stat.avgRating}"></span>
+                    <span th:text="${#numbers.formatDecimal(stat.avgRating, 1, 2)}"></span>
+
                 </div>
                 <div class="ticket-info-block">
                     <span class="ticket-label"><i
@@ -69,35 +70,42 @@
                 </div>
                 <div class="ticket-info-block">
                     <span class="ticket-label"><i class="bi bi-ticket-detailed me-1 text-danger"></i>Average Ticket Price</span><br>
-                    <span th:text="${stat.avgTicketPrice}"></span>
+                    <span th:text="${#numbers.formatDecimal(stat.avgTicketPrice, 1, 2)}"></span>
                 </div>
             </div>
         </div>
 
+        <hr class="dotted-hr"/>
+
+        <h4>Best-selling routes</h4>
+
         <div th:each="route : ${topSellingRoutesView}" class="ticket-container mt-3 p-3 border rounded shadow-sm">
 
-            <div class="ticket-header">
-                <div>
-                    <i class="bi bi-graph-up-arrow me-2 text-danger"></i>
-                    <span class="text-dark">
-                            <strong th:text="${route.fromLocationName} + ' → ' + ${route.toLocationName}"></strong>
-                        </span>
-                </div>
-            </div>
-            <hr class="dotted-hr"/>
 
-            <div class="ticket-body">
-                <div class="ticket-body">
-                    <div class="ticket-info-block">
+            <div class="ticket-body" style="text-align: center;">
+                <span class="ticket-info-block-duplicate">
+                    <span class="ticket-label"><i class="bi bi-bus-front me-1 text-danger"></i>
+                        <div >
+                            <strong th:text="${route.fromLocationName} + ' → ' + ${route.toLocationName}"></strong>
+                        </div>
+                    </span>
+                </span>
+                <span class="ticket-info-block-duplicate">
                     <span class="ticket-label"><i
                             class="bi bi-bus-front me-1 text-danger"></i>Average Ticket Price</span><br>
-                        <span th:text="${route.avgTicketPrice}"></span>
-                    </div>
-                    <div class="ticket-info-block">
+                    <span th:text="${#numbers.formatDecimal(route.avgTicketPrice, 1, 2)}"></span>
+
+                    </span>
+                <span class="ticket-info-block-duplicate">
                         <span class="ticket-label"><i class="bi bi-ticket-detailed me-1 text-danger"></i>Total Tickets Sold</span><br>
-                        <span th:text="${route.totalTicketsSold}"></span>
-                    </div>
-                </div>
+
+                    <span th:text="${route.totalTicketsSold}"></span>
+                 </span>
+                <span class="ticket-info-block-duplicate">
+                        <span class="ticket-label"><i
+                                class="bi bi-ticket-detailed me-1 text-danger"></i>Total revenue</span><br>
+                    <span th:text="${#numbers.formatDecimal(route.totalRevenue, 1, 2)}"></span>
+                    </span>
             </div>
         </div>
 

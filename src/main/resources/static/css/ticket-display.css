@@ -39,6 +39,14 @@
     border: 1px solid #ccc;
 }
 
+.ticket-info-block-duplicate{
+    flex: 1;
+    background: #f5f5f5;
+    border-radius: 8px;
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+
 .ticket-label {
     font-weight: 600;
     color: #444;
@@ -92,4 +100,8 @@
 .dotted-hr {
     border: none;
     border-top: 2px dotted #6c757d; /* You can use a Bootstrap color */
+}
+
+.statistics-list{
+    background: #cfcfcf;
 }
