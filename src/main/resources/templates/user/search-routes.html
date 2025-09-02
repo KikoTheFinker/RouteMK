@@ -1,7 +1,10 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
+    <title>Routes</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" th:href="@{/css/trip-route-filter-table.css}"/>
+    <link th:href="@{/css/trip-route-filter-table.css}" rel="stylesheet">
     <style>
         .notification {
             margin: 20px;
@@ -9,7 +12,7 @@
             color: #888;
         }
 
-        input[type = "text"], label {
+        input[type="text"], label {
             display: inline;
         }
 
@@ -20,10 +23,17 @@
             margin: 2rem auto;
             padding: 1.5rem;
         }
-    </style>
-    <title>Routes</title>
-</head>
 
+        .num {
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        .w-50 {
+            width: 50%;
+        }
+    </style>
+</head>
 <body>
 <main id="main">
     <div class="title-container mt-5">
@@ -31,22 +41,20 @@
     </div>
 
     <div class="filter-container-wrapper center text-center">
-        <div class="filter-heading">
-            <i class="bi bi-funnel me-1"></i> <span>Filter</span>
-        </div>
+        <div class="filter-heading"><i class="bi bi-funnel me-1"></i> <span>Filter</span></div>
         <form th:method="GET" th:action="@{/search-routes}" class="w-100 align-items-center">
             <div class="row mb-3 g-3">
-                <div class="col-md-6"><label class="filter-label" for="departure">From/Departure:</label>
-                    <input id="departure" type="text" name="from" class="form-control">
+                <div class="col-md-6">
+                    <label class="filter-label" for="departure">From/Departure:</label>
+                    <input id="departure" type="text" name="from" class="form-control" th:value="${param.from}">
                 </div>
                 <div class="col-md-6">
                     <label class="filter-label" for="arrival">To/Arrival:</label>
-                    <input id="arrival" name="to" class="form-control">
+                    <input id="arrival" name="to" class="form-control" th:value="${param.to}">
                 </div>
             </div>
             <button type="submit" class="btn btn-danger w-50" id="goodbutton">
-                <i class="bi bi-search me-1"></i>
-                Search
+                <i class="bi bi-search me-1"></i>Search
             </button>
         </form>
     </div>
@@ -62,25 +70,33 @@
                     <th>Departure</th>
                     <th>Arrival</th>
                     <th>Company</th>
+                    <th class="num">Best</th>
+                    <th class="num">Fastest</th>
                     <th>
-                        <img src="/images/eye.png" alt="A gazing eye" width='24' height='24'/>
+                        <img src="/images/eye.png" alt="A gazing eye" width="24" height="24">
                         Explore
                     </th>
                 </tr>
                 </thead>
                 <tbody id="routes-list">
-                <tr th:each="route : ${routes}">
-                    <td th:text="${route.getSource().getName()}"></td>
-                    <td th:text="${route.getDestination().getName()}"></td>
-                    <td th:text="${route.getTranOrg().getCompanyName()}"></td>
+                <tr th:each="route : ${routes}"
+                    th:with="
+                        c=${cheapestPricePerRoute[route.routeId]},
+                        f=${fastestPricePerRoute[route.routeId]}
+                    ">
+                    <td th:text="${route.source.name}"></td>
+                    <td th:text="${route.destination.name}"></td>
+                    <td th:text="${route.tranOrg.companyName}"></td>
+                    <td class="num" th:text="${c != null} ? '€' + ${#numbers.formatDecimal(c, 1, 0)}  : '—'"></td>
+                    <td class="num" th:text="${f != null} ? '€' + ${#numbers.formatDecimal(f, 1, 0)}  : '—'"></td>
                     <td>
                         <a th:href="@{/trips/{routeId}(routeId=${route.routeId})}" class="btn-redoutline">
-                            <i class="bi bi-calendar3 me-2"></i>Timetable</a>
+                            <i class="bi bi-calendar3 me-2"></i>Timetable
+                        </a>
                     </td>
-
-                <tr th:if="${routes.isEmpty()}">
-                    <td colspan="4" class="notification" th:text="${noRoutesMessage}"></td>
                 </tr>
+                <tr th:if="${routes.isEmpty()}">
+                    <td colspan="7" class="notification" th:text="${noRoutesMessage} ?: 'No direct routes found.'"></td>
                 </tr>
                 </tbody>
             </table>
@@ -89,7 +105,6 @@
         <div class="title-container mt-5">
             <h3 class="badgify fs-5"><i class="bi bi-signpost-split me-2"></i>Indirect routes</h3>
         </div>
-
         <div class="routes-table-wrapper mt-1">
             <table class="routes-table">
                 <thead>
@@ -97,30 +112,39 @@
                     <th>Departure</th>
                     <th>Arrival</th>
                     <th>Company</th>
+                    <th class="num">Best</th>
+                    <th class="num">Fastest</th>
                     <th>
-                        <img src="/images/eye.png" alt="A gazing eye" width='24' height='24'/>
+                        <img src="/images/eye.png" alt="A gazing eye" width="24" height="24">
                         Explore
                     </th>
                 </tr>
                 </thead>
                 <tbody id="routes-list-indirect">
-                <tr th:each="route : ${IndirectRoutes}">
-                    <td th:text="${route.getSource().getName()}"></td>
-                    <td th:text="${route.getDestination().getName()}"></td>
-                    <td th:text="${route.getTranOrg().getCompanyName()}"></td>
+                <tr th:each="route : ${IndirectRoutes}"
+                    th:with="
+                        c=${cheapestPricePerRoute[route.routeId]},
+                        f=${fastestPricePerRoute[route.routeId]}
+                    ">
+                    <td th:text="${route.source.name}"></td>
+                    <td th:text="${route.destination.name}"></td>
+                    <td th:text="${route.tranOrg.companyName}"></td>
+                    <td class="num" th:text="${c != null} ? '€' + ${#numbers.formatDecimal(c, 1, 0)}  : '—'"></td>
+                    <td class="num" th:text="${f != null} ? '€' + ${#numbers.formatDecimal(f, 1, 0)}  : '—'"></td>
                     <td>
-                        <a th:href="@{/trips/{routeId}(routeId=${route.routeId})}" class="btn-redoutline"><i
-                                class="bi bi-bi-calendar3 me-2"></i>Timetable</a>
+                        <a th:href="@{/trips/{routeId}(routeId=${route.routeId})}" class="btn-redoutline">
+                            <i class="bi bi-calendar3 me-2"></i>Timetable
+                        </a>
                     </td>
-
-                <tr th:if="${noRoutesMessage}">
-                    <td colspan="4" class="notification" th:text="${noRoutesMessage}"></td>
                 </tr>
+                <tr th:if="${IndirectRoutes.isEmpty()}">
+                    <td colspan="7" class="notification"
+                        th:text="${noRoutesMessage} ?: 'No indirect routes found.'"></td>
                 </tr>
                 </tbody>
             </table>
         </div>
     </div>
 </main>
-
 </body>
+</html>

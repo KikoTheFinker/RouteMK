@@ -5,12 +5,17 @@ import mk.route.routemk.models.Route;
 import mk.route.routemk.models.Trip;
 import mk.route.routemk.models.enums.Status;
 import mk.route.routemk.services.auth.interfaces.AuthenticationService;
-import mk.route.routemk.services.interfaces.*;
+import mk.route.routemk.services.interfaces.FavoriteService;
+import mk.route.routemk.services.interfaces.ReviewService;
+import mk.route.routemk.services.interfaces.RouteService;
+import mk.route.routemk.services.interfaces.TripService;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,13 +40,15 @@ public class UserTripController {
     }
 
     @GetMapping("/{routeId}")
-    public String viewTripsForRoute(@PathVariable Integer routeId, Model model) {
+    public String viewTripsForRoute(@PathVariable Integer routeId,
+                                    @RequestParam(value = "date", required = false)
+                                    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+                                    Model model) {
         Route route = routeService.findById(routeId);
 
-        List<Trip> trips = tripService.findTripsByRouteId(routeId);
-
-        trips = trips.stream()
+        List<Trip> trips = tripService.findTripsByRouteId(routeId).stream()
                 .filter(trip -> trip.getStatus() == Status.NOT_STARTED)
+                .filter(trip -> date == null || date.equals(trip.getDate()))
                 .collect(Collectors.toList());
 
         if (trips.isEmpty()) {
@@ -49,24 +56,27 @@ public class UserTripController {
         }
 
         Integer currentAccountId = authenticationService.getAuthenticatedUserId();
-
         boolean isFavorite = favoriteService.isFavorite(routeId, currentAccountId);
-        model.addAttribute("isFavorite", isFavorite);
 
+        model.addAttribute("isFavorite", isFavorite);
         model.addAttribute("trips", trips);
         model.addAttribute("cheapestTicketPrice", tripService.getCheapestTicketTableForTrips(trips));
+        model.addAttribute("seatsLeftPerTrip", tripService.getFreeSeatTableForTrips(trips));
+
+        Integer fastestTripId = tripService.findFastestTripForRoute(routeId, date).map(Trip::getTripId).orElse(null);
+        Integer cheapestTripId = tripService.findCheapestTripForRoute(routeId, date).map(Trip::getTripId).orElse(null);
+        model.addAttribute("fastestTripId", fastestTripId);
+        model.addAttribute("cheapestTripId", cheapestTripId);
+
         model.addAttribute("routeSource", route.getSource().getName());
         model.addAttribute("routeId", routeId);
         model.addAttribute("routeDestination", route.getDestination().getName());
-        model.addAttribute("display", "user/view-trips");
 
         String sourceName = route.getSource().getName();
         String destinationName = route.getDestination().getName();
-
         model.addAttribute("stops", tripService.getStopNameTableForTrips(trips, sourceName, destinationName));
-        model.addAttribute("display", "user/view-trips");
-        model.addAttribute("seatsLeftPerTrip", tripService.getFreeSeatTableForTrips(trips));
 
+        model.addAttribute("display", "user/view-trips");
         return "master";
     }
 
