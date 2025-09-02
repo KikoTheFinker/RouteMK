@@ -44,6 +44,7 @@ public class SecurityConfig {
                                                "/trips/{routeId:\\d+}")
                                        .permitAll()
                                        .requestMatchers("/routes/company/**").hasAnyRole("TRANSPORT_ORGANIZER", "DRIVER")
+                                       .requestMatchers("/company-performance/**").hasAnyRole("TRANSPORT_ORGANIZER")
                                        .requestMatchers("/admin/**").hasRole("ADMIN")
                                        .requestMatchers("/trips/user/**").hasRole("USER")
                                        .anyRequest().authenticated()
