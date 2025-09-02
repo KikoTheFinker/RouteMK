@@ -12,13 +12,13 @@
 <body>
 <main id="main">
     <div class="title-container mt-5">
-        <h1 class="badgify theme-torg">
-            <i class="bi bi-bar-chart-line me-2"></i>
+        <h1 class="badgify theme-stats">
+            <i class="bi bi-bar-chart me-2"></i>
             <span th:text="${statistics.companyName} + '\'s Statistics'"></span>
         </h1>
     </div>
 
-    <div class="mt-4">
+    <div class="mt-1">
         <div th:each="stat : ${statistics}" class="ticket-container statistics-list">
             <div class="ticket-header">
                 <div>
@@ -30,22 +30,22 @@
             <div class="ticket-body">
 
                 <div class="ticket-info-block">
-                    <span class="ticket-label"><i class="bi bi-signpost-2-fill me-1 text-danger"></i>Transport Organizer</span><br>
+                    <span class="ticket-label"><i class="bi bi-buildings me-1 text-danger"></i>Transport Organizer</span><br>
                     <span th:text="${stat.companyName}"></span>
                 </div>
 
                 <div class="ticket-info-block">
                     <span class="ticket-label"><i
-                            class="bi bi-signpost-2-fill me-1 text-danger"></i>Routes Operated</span><br>
+                            class="bi bi-signpost-split me-1 text-danger"></i>Routes Operated</span><br>
                     <span th:text="${stat.routesOperated}"></span>
                 </div>
                 <div class="ticket-info-block">
                     <span class="ticket-label"><i
-                            class="bi bi-bus-front me-1 text-danger"></i>Trips Organized</span><br>
+                            class="bi bi-luggage me-1 text-danger"></i>Trips Organized</span><br>
                     <span th:text="${stat.tripsOrganized}"></span>
                 </div>
                 <div class="ticket-info-block">
-                    <span class="ticket-label"><i class="bi bi-ticket-detailed me-1 text-danger"></i>Total Tickets Sold</span><br>
+                    <span class="ticket-label"><i class="bi bi-ticket-perforated me-1 text-danger"></i>Total Tickets Sold</span><br>
                     <span th:text="${stat.totalTicketsSold}"></span>
                 </div>
             </div>
@@ -55,22 +55,20 @@
                 <div class="ticket-info-block">
                     <span class="ticket-label"><i
                             class="bi bi-currency-exchange me-1 text-danger"></i>Total Revenue</span><br>
-                    <span th:text="${#numbers.formatDecimal(stat.totalRevenue, 1, 2)} + ' €'"></span>
+                    <span th:text="'€' + ${#numbers.formatDecimal(stat.totalRevenue, 1, 2)}"></span>
                 </div>
                 <div class="ticket-info-block">
-                    <span class="ticket-label"><i
-                            class="bi bi-signpost-2-fill me-1 text-danger"></i>Average Rating</span><br>
+                    <span class="ticket-label"><i class="bi bi-star-half text-danger me-1"></i>Average Rating</span><br>
                     <span th:text="${#numbers.formatDecimal(stat.avgRating, 1, 2)}"></span>
 
                 </div>
                 <div class="ticket-info-block">
-                    <span class="ticket-label"><i
-                            class="bi bi-bus-front me-1 text-danger"></i>Unique Customers</span><br>
+                    <span class="ticket-label"><i class="bi bi-person text-danger me-1"></i>Unique Customers</span><br>
                     <span th:text="${stat.uniqueCustomers}"></span>
                 </div>
                 <div class="ticket-info-block">
-                    <span class="ticket-label"><i class="bi bi-ticket-detailed me-1 text-danger"></i>Average Ticket Price</span><br>
-                    <span th:text="${#numbers.formatDecimal(stat.avgTicketPrice, 1, 2)}"></span>
+                    <span class="ticket-label"><i class="bi bi-currency-euro text-danger me-1"></i>Average Ticket Price</span><br>
+                    <span th:text="'€' + ${#numbers.formatDecimal(stat.avgTicketPrice, 1, 2)}"></span>
                 </div>
             </div>
         </div>
@@ -80,31 +78,29 @@
         <h4>Best-selling routes</h4>
 
         <div th:each="route : ${topSellingRoutesView}" class="ticket-container mt-3 p-3 border rounded shadow-sm">
-
-
             <div class="ticket-body" style="text-align: center;">
                 <span class="ticket-info-block-duplicate">
-                    <span class="ticket-label"><i class="bi bi-bus-front me-1 text-danger"></i>
-                        <div >
+                    <span class="ticket-label"><i class="bi bi-signpost-split me-1 text-danger"></i>
+                        <div>
                             <strong th:text="${route.fromLocationName} + ' → ' + ${route.toLocationName}"></strong>
                         </div>
                     </span>
                 </span>
                 <span class="ticket-info-block-duplicate">
                     <span class="ticket-label"><i
-                            class="bi bi-bus-front me-1 text-danger"></i>Average Ticket Price</span><br>
+                            class="bi bi-currency-euro me-1 text-danger"></i>Average Ticket Price</span><br>
                     <span th:text="${#numbers.formatDecimal(route.avgTicketPrice, 1, 2)}"></span>
 
                     </span>
                 <span class="ticket-info-block-duplicate">
-                        <span class="ticket-label"><i class="bi bi-ticket-detailed me-1 text-danger"></i>Total Tickets Sold</span><br>
+                        <span class="ticket-label"><i class="bi bi-ticket-perforated me-1 text-danger"></i>Total Tickets Sold</span><br>
 
                     <span th:text="${route.totalTicketsSold}"></span>
                  </span>
                 <span class="ticket-info-block-duplicate">
                         <span class="ticket-label"><i
-                                class="bi bi-ticket-detailed me-1 text-danger"></i>Total revenue</span><br>
-                    <span th:text="${#numbers.formatDecimal(route.totalRevenue, 1, 2)}"></span>
+                                class="bi bi-currency-exchange me-1 text-danger"></i>Total revenue</span><br>
+                    <span th:text="'€' + ${#numbers.formatDecimal(route.totalRevenue, 1, 2)}"></span>
                     </span>
             </div>
         </div>

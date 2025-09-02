@@ -40,8 +40,7 @@ public class CompanyPerformanceController {
 
         List<TopSellingRouteView> topSellingRoutesView = topSellingRoutesViewService.getTopSellingRoutesForCompany(companyName);
 
-        System.out.println(topSellingRoutesView);
-        if (topSellingRoutesView != null && !topSellingRoutesView.isEmpty()) {
+            if (topSellingRoutesView != null && !topSellingRoutesView.isEmpty()) {
 
             if (topSellingRoutesView.size() > 10) {
                 Integer maxPopularity = topSellingRoutesView.stream()
