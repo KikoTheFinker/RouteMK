@@ -43,7 +43,7 @@ public class CompanyPerformanceController {
             if (topSellingRoutesView != null && !topSellingRoutesView.isEmpty()) {
 
             if (topSellingRoutesView.size() > 10) {
-                Long maxPopularity = topSellingRoutesView.stream()
+                Integer maxPopularity = topSellingRoutesView.stream()
                         .max(Comparator.comparing(TopSellingRouteView::getTotalTicketsSold))
                         .get().getTotalTicketsSold();
 

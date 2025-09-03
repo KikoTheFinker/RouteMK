@@ -5,6 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Select Route</title>
     <link rel="stylesheet" th:href="@{/css/trip-route-filter-table.css}">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.2/css/bootstrap.min.css}">
+    <script th:src="@{/webjars/bootstrap/5.3.2/js/bootstrap.bundle.min.js}"></script>
+    <style>
+        .flash-wrap {
+            display: flex;
+            justify-content: center;
+            margin-top: 1rem
+        }
+
+        .flash {
+            display: inline-block;
+            padding: .5rem .75rem;
+            border-radius: 6px;
+            font-weight: 500;
+            text-align: center;
+            min-width: 260px
+        }
+
+        .flash-success {
+            background: #e6f4ea;
+            color: #155724;
+            border: 1px solid #c9e7d2
+        }
+
+        .flash-error {
+            background: #fdecea;
+            color: #842029;
+            border: 1px solid #f5c2c7
+        }
+
+        .th-manage {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: .5rem;
+        }
+
+        .th-manage .btn-redoutline {
+            white-space: nowrap
+        }
+    </style>
 </head>
 <body>
 
@@ -17,8 +58,20 @@
             </h1>
         </div>
 
-        <!-- Filter Section -->
-        <div class="filter-container-wrapper center text-center">
+        <div class="flash-wrap" th:if="${successMessage}">
+            <div class="flash flash-success">
+                <i class="bi bi-check-circle me-1"></i>
+                <span th:text="${successMessage}"></span>
+            </div>
+        </div>
+        <div class="flash-wrap" th:if="${errorMessage}">
+            <div class="flash flash-error">
+                <i class="bi bi-exclamation-triangle me-1"></i>
+                <span th:text="${errorMessage}"></span>
+            </div>
+        </div>
+
+        <div class="filter-container-wrapper center text-center mt-5">
             <div class="filter-heading">
                 <i class="bi bi-funnel me-2"></i> <span>Filter</span>
             </div>
@@ -43,7 +96,11 @@
             </div>
         </div>
 
-        <div class="routes-container">
+        <button type="button" class="btn-redoutline" data-bs-toggle="modal"
+                data-bs-target="#addRouteModal">
+            <i class="bi bi-plus-circle me-2"></i> Add New Route
+        </button>
+        <div class="routes-container mt-4">
             <div class="routes-table-wrapper">
                 <table class="routes-table">
                     <thead>
@@ -51,8 +108,9 @@
                         <th>Departure</th>
                         <th>Arrival</th>
                         <th>
-                            <i class="bi bi-gear-wide-connected me-1"></i>
-                            Manage
+                            <div class="th-manage">
+                                <span>Manage</span>
+                            </div>
                         </th>
                     </tr>
                     </thead>
@@ -67,7 +125,8 @@
                             <form th:action="@{/routes/company/delete-route/{routeId}(routeId=${route.getRouteId()})}"
                                   method="POST" style="display: inline;"
                                   th:if="${#authorization.expression('!hasRole(''DRIVER'')')}">
-                                <button type="submit" class="btn-redoutline"><i class="bi bi-trash3 me-2"></i>Delete</button>
+                                <button type="submit" class="btn-redoutline"><i class="bi bi-trash3 me-2"></i>Delete
+                                </button>
                             </form>
                         </td>
                     </tr>
@@ -78,13 +137,52 @@
     </div>
 </main>
 
-<!-- Scripts -->
-<script>
+<div class="modal fade" id="addRouteModal" tabindex="-1" aria-labelledby="addRouteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addRouteModalLabel">Add New Route</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form th:action="@{/routes/company/add-route}" method="post">
+                    <div class="mb-3">
+                        <label for="source" class="form-label">From:</label>
+                        <select name="sourceId" id="source" class="form-select" required>
+                            <option value="" disabled selected>Select source</option>
+                            <option th:each="loc : ${locations}"
+                                    th:value="${loc.id}"
+                                    th:text="${loc.name}">
+                            </option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="destination" class="form-label">To:</label>
+                        <select name="destinationId" id="destination" class="form-select" required>
+                            <option value="" disabled selected>Select destination</option>
+                            <option th:each="loc : ${locations}"
+                                    th:value="${loc.id}"
+                                    th:text="${loc.name}">
+                            </option>
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn-redoutline">
+                            <i class="bi bi-save me-2"></i>Create Route
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript">
     document.addEventListener("DOMContentLoaded", function () {
         const fromFilter = document.getElementById("from-filter");
         const toFilter = document.getElementById("to-filter");
-        const routesList = document.getElementById("routes-list");
-        const rows = Array.from(routesList.getElementsByTagName("tr"));
+        const rows = Array.from(document.getElementById("routes-list").getElementsByTagName("tr"));
 
         function filterRoutes() {
             const fromValue = fromFilter.value.toLowerCase();
@@ -95,13 +193,18 @@
                 const toText = row.cells[1].textContent.toLowerCase();
                 const matchesFrom = !fromValue || fromText.includes(fromValue);
                 const matchesTo = !toValue || toText.includes(toValue);
-
                 row.style.display = matchesFrom && matchesTo ? "" : "none";
             });
         }
 
         fromFilter.addEventListener("change", filterRoutes);
         toFilter.addEventListener("change", filterRoutes);
+
+        const shouldOpen = /*[[${openAddModal}]]*/ false;
+        if (shouldOpen && typeof bootstrap !== 'undefined') {
+            const el = document.getElementById('addRouteModal');
+            if (el) new bootstrap.Modal(el).show();
+        }
     });
 </script>
 

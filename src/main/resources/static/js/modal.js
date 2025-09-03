@@ -150,13 +150,24 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.querySelectorAll('.editTripButton').forEach(button => {
         button.addEventListener('click', function () {
-            const tripId = this.getAttribute('data-trip-id');
-            const tripDate = this.getAttribute('data-trip-date');
+            const tripId    = this.getAttribute('data-trip-id');
+            const tripDate  = this.getAttribute('data-trip-date');
             const freeSeats = this.getAttribute('data-free-seats');
 
-            document.getElementById('editTripDate').value = tripDate;
+            // NEW ↓ read base price from the button
+            const basePrice = this.getAttribute('data-base-price');
+
+            document.getElementById('editTripDate').value  = tripDate;
             document.getElementById('editFreeSeats').value = freeSeats;
-            document.getElementById("editTripId").value = tripId;
+            document.getElementById("editTripId").value    = tripId;
+
+            // NEW ↓ prefill the edit modal input
+            const bpInput = document.getElementById('editBasePrice');
+            if (basePrice === null || basePrice === '' || basePrice === 'null' || isNaN(+basePrice)) {
+                bpInput.value = '';
+            } else {
+                bpInput.value = (+basePrice).toFixed(2); // keep your own formatting if you prefer
+            }
 
             const form = document.getElementById('editTripForm');
             form.action = `/routes/company/view-trips/${routeId}/edit-trip/${tripId}`;
@@ -194,6 +205,7 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById('editTripModal').classList.remove('hidden');
         });
     });
+
 
     document.addEventListener('click', function (event) {
         if (event.target.classList.contains('remove-location')) {

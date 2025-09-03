@@ -34,4 +34,11 @@ public class RouteSpecification {
             return predicates.isEmpty() ? cb.conjunction() : cb.and(predicates.toArray(new Predicate[0]));
         };
     }
+    public static Specification<Route> byOrgAndEndpoints(Integer orgId, Integer sourceId, Integer destId) {
+        return (root, query, cb) -> cb.and(
+                cb.equal(root.get("tranOrg").get("tranOrgId"), orgId),
+                cb.equal(root.get("source").get("id"), sourceId),
+                cb.equal(root.get("destination").get("id"), destId)
+        );
+    }
 }

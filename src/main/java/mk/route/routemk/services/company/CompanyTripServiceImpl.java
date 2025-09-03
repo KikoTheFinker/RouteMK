@@ -44,8 +44,10 @@ public class CompanyTripServiceImpl implements CompanyTripService {
      * @param etas        ETAs (Estimated Times of Arrival) according to each location.
      */
     @Transactional
-    public void updateTrip(Route route, Integer tripId, LocalDate date, int freeSeats, List<Integer> locationIds, List<LocalTime> etas) throws IllegalArgumentException {
+    public void updateTrip(Route route, Integer tripId, LocalDate date, int freeSeats, double basePrice,
+                           List<Integer> locationIds, List<LocalTime> etas) throws IllegalArgumentException {
         validateAndAuthorizeTrip(route, freeSeats, locationIds, etas);
+        if (basePrice < 0) throw new IllegalArgumentException("Base price must be >= 0.");
 
         Trip trip = tripService.findById(tripId);
         if (trip == null) {
@@ -54,18 +56,23 @@ public class CompanyTripServiceImpl implements CompanyTripService {
 
         trip.setDate(date);
         trip.setFreeSeats(freeSeats);
+        trip.setBasePrice(basePrice);
         tripService.save(trip);
 
         tripStopService.deleteByTripId(tripId);
         saveTripStopsForTrip(tripId, locationIds, etas);
     }
 
-    public void createTrip(Route route, LocalDate date, int freeSeats, List<Integer> locationIds, List<LocalTime> etas) throws IllegalArgumentException {
+
+    public void createTrip(Route route, LocalDate date, int freeSeats, double basePrice,
+                           List<Integer> locationIds, List<LocalTime> etas) throws IllegalArgumentException {
         validateAndAuthorizeTrip(route, freeSeats, locationIds, etas);
+        if (basePrice < 0) throw new IllegalArgumentException("Base price must be >= 0.");
 
         Trip trip = new Trip();
         trip.setDate(date);
         trip.setFreeSeats(freeSeats);
+        trip.setBasePrice(basePrice);
         trip.setTranOrgId(authorizationService.getAuthenticatedTransportOrganizerId());
         trip.setRouteId(route.getRouteId());
         tripService.save(trip);

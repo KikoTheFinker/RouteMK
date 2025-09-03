@@ -71,7 +71,6 @@
             cursor: pointer;
         }
 
-        /* tiny badge style for drivers list; adapt to your CSS system if needed */
         .badge {
             display: inline-flex;
             align-items: center;
@@ -103,6 +102,34 @@
             padding: .25rem .5rem;
             font-size: .9rem;
         }
+
+        /* centered flash messages (keeps your vibe) */
+        .flash-wrapper {
+            display: flex;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+
+        .flash {
+            padding: .6rem .9rem;
+            border-radius: 6px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+        }
+
+        .flash-success {
+            background: #e9f6ef;
+            color: #155724;
+            border: 1px solid #cfe9d8;
+        }
+
+        .flash-error {
+            background: #fbe9ea;
+            color: #b02a37;
+            border: 1px solid #f1c2c6;
+        }
     </style>
 </head>
 <body>
@@ -117,8 +144,19 @@
         </h1>
     </div>
 
-    <div th:if="${message}" class="alert alert-success" role="alert" th:text="${message}"></div>
-    <div th:if="${error}" class="alert alert-danger" role="alert" th:text="${error}"></div>
+    <!-- centered flash messages -->
+    <div class="flash-wrapper" th:if="${message}">
+        <div class="flash flash-success">
+            <i class="bi bi-check-circle"></i>
+            <span th:text="${message}"></span>
+        </div>
+    </div>
+    <div class="flash-wrapper" th:if="${error}">
+        <div class="flash flash-error">
+            <i class="bi bi-exclamation-triangle"></i>
+            <span th:text="${error}"></span>
+        </div>
+    </div>
 
     <div class="filter-container-wrapper">
         <div class="filter-container d-flex flex-column align-items-left">
@@ -176,6 +214,7 @@
                 <tr>
                     <th>Date</th>
                     <th>Free Seats</th>
+                    <th>Base Price</th> <!-- NEW COLUMN -->
                     <th>Stops</th>
                     <th>Status</th>
                     <th>Company</th>
@@ -186,6 +225,11 @@
                 <tr th:each="trip : ${trips}" th:if="${trip != null}" th:attr="data-status=${trip.getStatus()}">
                     <td th:text="${trip.getDate()}"></td>
                     <td th:text="${freeSeatMap.get(trip.getTripId())}"></td>
+
+                    <!-- Show base price -->
+                    <td>
+                        <span th:text="${trip.getBasePrice() != null ? '€' + #numbers.formatDecimal(trip.getBasePrice(),1,2) : '—'}"></span>
+                    </td>
 
                     <td class="text-center">
                         <button class="btn-standard view-stops-btn" th:data-trip-id="${trip.getTripId()}">
@@ -242,11 +286,13 @@
 
                             <!-- EXISTING EDIT / DELETE -->
                             <div class="d-flex justify-content-center gap-2 mt-1">
-                                <button type="button"
+                                <button
+                                        type="button"
                                         class="editTripButton btn-standard"
                                         th:data-trip-id="${trip.getTripId()}"
                                         th:data-trip-date="${trip.getDate()}"
-                                        th:data-free-seats="${freeSeatMap.get(trip.getTripId())}">
+                                        th:data-free-seats="${freeSeatMap.get(trip.getTripId())}"
+                                        th:data-base-price="${trip.getBasePrice()}">
                                     <i class="bi bi-pencil-square me-1"></i>Edit
                                 </button>
 
@@ -295,6 +341,11 @@
                 <label for="freeSeats"><strong>Free Seats</strong></label>
                 <input type="number" id="freeSeats" name="freeSeats" class="form-control" required>
             </div>
+            <!-- NEW: Base Price -->
+            <div class="form-group">
+                <label for="basePrice"><strong>Base Price</strong></label>
+                <input type="number" id="basePrice" name="basePrice" class="form-control" step="0.01" required>
+            </div>
 
             <h3>Locations</h3>
             <div class="location-entry fixed">
@@ -339,6 +390,12 @@
             <div class="form-group">
                 <label for="editFreeSeats"><strong>Free Seats</strong></label>
                 <input type="number" id="editFreeSeats" name="freeSeats" class="form-control" required>
+            </div>
+            <!-- NEW: Base Price -->
+            <div class="form-group">
+                <label for="editBasePrice"><strong>Base Price</strong></label>
+                <input type="number" id="editBasePrice" name="basePrice" class="form-control" step="0.01" min="0"
+                       required>
             </div>
 
             <h3>Locations</h3>

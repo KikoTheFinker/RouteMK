@@ -89,20 +89,19 @@ public class CompanyTripController {
         return "redirect:/routes/company/view-trips/" + routeId;
     }
 
-
     @PostMapping("/add-trip")
     public String addNewTrip(@PathVariable Integer routeId,
                              @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
                              @RequestParam("freeSeats") int freeSeats,
+                             @RequestParam("basePrice") double basePrice,
                              @RequestParam("locations") List<Integer> locationIds,
                              @RequestParam("etas") @DateTimeFormat(pattern = "HH:mm") List<LocalTime> etas,
                              RedirectAttributes redirectAttributes) {
-
         try {
             Route route = routeService.findById(routeId);
-            companyTripService.createTrip(route, date, freeSeats, locationIds, etas);
+            companyTripService.createTrip(route, date, freeSeats, basePrice, locationIds, etas);
             redirectAttributes.addFlashAttribute("message", "Trip created successfully!");
-        } catch (IllegalArgumentException | SecurityException e) {
+        } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
         return "redirect:/routes/company/view-trips/" + routeId;
@@ -113,12 +112,13 @@ public class CompanyTripController {
                            @PathVariable Integer tripId,
                            @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
                            @RequestParam("freeSeats") int freeSeats,
+                           @RequestParam("basePrice") double basePrice,
                            @RequestParam("locations") List<Integer> locationIds,
                            @RequestParam("etas") @DateTimeFormat(pattern = "HH:mm") List<LocalTime> etas,
                            RedirectAttributes redirectAttributes) {
         try {
             Route route = routeService.findById(routeId);
-            companyTripService.updateTrip(route, tripId, date, freeSeats, locationIds, etas);
+            companyTripService.updateTrip(route, tripId, date, freeSeats, basePrice, locationIds, etas);
             redirectAttributes.addFlashAttribute("message", "Trip updated successfully!");
         } catch (IllegalArgumentException | SecurityException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());

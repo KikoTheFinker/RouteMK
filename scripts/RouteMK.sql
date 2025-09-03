@@ -706,3 +706,26 @@ VALUES (144, 100, 300),
        (2020, 200, 200),
        (3030, 300, 200),
        (4050, 400, 200);
+
+INSERT INTO account (account_id, email, name, surname, password)
+VALUES
+    (601, 'marko.driver@example.com', 'Marko', 'Markovski', '$2a$12$exampleHashForMarko'),
+    (602, 'stefan.driver@example.com', 'Stefan', 'Stefanovski', '$2a$12$exampleHashForStefan'),
+    (603, 'elena.driver@example.com', 'Elena', 'Elenova', '$2a$12$exampleHashForElena'),
+    (604, 'bojan.driver@example.com', 'Bojan', 'Bojanovski', '$2a$12$exampleHashForBojan');
+
+
+INSERT INTO driver (driver_id, account_id, years_experience, transport_organizer_id)
+VALUES
+    (2001, 601, 5, 100),
+    (2002, 602, 8, 200),
+    (2003, 603, 6, 300),
+    (2004, 604, 10, 100);
+
+
+INSERT INTO driver_drives_on_trip (driver_drives_on_trip_id, driver_id, trip_id)
+VALUES
+    (10, 2001, 400),
+    (11, 2002, 500),
+    (12, 2003, 600),
+    (13, 2004, 700);
