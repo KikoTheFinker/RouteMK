@@ -31,9 +31,9 @@
 }
 
 .theme-trips {
-    color: #00dede;
+    color: #00b8d0;
     background: #edf8fa;
-    border-color: #00dede;
+    border-color: #00b8d0;
 }
 
 .theme-favorites {
@@ -52,4 +52,10 @@
     color: #575757;
     background: #e5e5e5;
     border-color: #575757;
+}
+
+.theme-price {
+    color: #00a200;
+    background: #f0fff0;
+    border-color: #00a200;
 }

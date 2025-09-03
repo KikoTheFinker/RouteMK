@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>Trip Details & Reviews</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/trip-details.css}"/>
 </head>
 <body class="bg-light">
@@ -95,27 +95,27 @@
                         </h2>
 
                         <!-- Review Form -->
-                        <form class="mb-4" th:action="@{'/trips/' + ${trip.tripId} + '/reviews'}" method="post">
+                        <form class="mb-4" method="post" th:action="@{'/trips/' + ${trip.tripId} + '/reviews'}">
                             <div class="mb-3">
-                                <label for="description" class="form-label fw-semibold">
+                                <label class="form-label fw-semibold" for="description">
                                     <i class="fas fa-comment-dots"></i> Your Review
                                 </label>
-                                <textarea id="description" name="description" class="form-control" rows="4"
-                                          placeholder="Share your experience..."></textarea>
+                                <textarea class="form-control" id="description" name="description" placeholder="Share your experience..."
+                                          rows="4"></textarea>
                             </div>
 
                             <div class="mb-3 p-3 bg-light rounded make-good-box">
                                 <label class="form-label fw-semibold"><i class="fas fa-star"></i> Rating</label>
                                 <div class="star-rating mt-2">
-                                    <input type="radio" id="star5" name="rating" value="5"/><label for="star5"></label>
-                                    <input type="radio" id="star4" name="rating" value="4"/><label for="star4"></label>
-                                    <input type="radio" id="star3" name="rating" value="3"/><label for="star3"></label>
-                                    <input type="radio" id="star2" name="rating" value="2"/><label for="star2"></label>
-                                    <input type="radio" id="star1" name="rating" value="1"/><label for="star1"></label>
+                                    <input id="star5" name="rating" type="radio" value="5"/><label for="star5"></label>
+                                    <input id="star4" name="rating" type="radio" value="4"/><label for="star4"></label>
+                                    <input id="star3" name="rating" type="radio" value="3"/><label for="star3"></label>
+                                    <input id="star2" name="rating" type="radio" value="2"/><label for="star2"></label>
+                                    <input id="star1" name="rating" type="radio" value="1"/><label for="star1"></label>
                                 </div>
                             </div>
 
-                            <button type="submit" class="btn btn-danger shadow">
+                            <button class="btn btn-danger shadow" type="submit">
                                 <i class="fas fa-paper-plane"></i> Submit Review
                             </button>
                         </form>
@@ -140,11 +140,11 @@
                                 </div>
                                 <p class="text-muted mb-0" th:text="${review.description}">
                                 </p>
-                                <form th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')') or review.account.accountId == accountId}"
+                                <form class="d-inline"
                                       th:action="@{/trips/{tripId}/removeReview/{reviewId}(tripId=${trip.tripId}, reviewId=${review.reviewId})}"
-                                      th:method="post" class="d-inline">
+                                      th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')') or review.account.accountId == accountId}" th:method="post">
                                     <div class="d-flex justify-content-end">
-                                        <button type="submit" class="btn btn-danger mt-2">
+                                        <button class="btn btn-danger mt-2" type="submit">
                                             <i class="bi bi-trash3 me-2"></i>Remove Review
                                         </button>
                                     </div>
