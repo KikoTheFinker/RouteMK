@@ -31,9 +31,10 @@ public class UserReviewController {
 
         String email = currentAccount.getEmail();
         List<Review> reviews = reviewService.findByAccountEmail(email);
-        System.out.println(reviews);
+
         model.addAttribute("reviews", reviews);
         model.addAttribute("display", "user/my-reviews");
+
         return "master";
     }
 }

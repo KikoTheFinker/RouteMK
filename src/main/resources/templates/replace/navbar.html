@@ -27,7 +27,7 @@
                 </li>
                 <li th:if="${#authorization.expression('hasRole(''USER'')')}" class="nav-item">
                     <a class="nav-link btn btn-small btn-transparent" href="/my-reviews">
-                        <i class="bi bi-star-fill text-success me-2"></i>My Reviews
+                        <i class="bi bi-star text-success me-2"></i>My Reviews
                     </a>
                 </li>
                 <li th:if="${#authorization.expression('hasRole(''TRANSPORT_ORGANIZER'')')}"
