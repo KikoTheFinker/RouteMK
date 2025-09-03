@@ -13,4 +13,5 @@ public interface ReviewService {
     void addReview(Integer tripId, Integer accountId, String description, Integer rating);
 
     void deleteById(Integer reviewId);
+    List<Review> findByAccountEmail(String email);
 }
