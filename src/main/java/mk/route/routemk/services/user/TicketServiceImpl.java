@@ -22,15 +22,19 @@ public class TicketServiceImpl extends GenericServiceImpl<Ticket, Integer> imple
 
     @Override
     public Collection<? extends Ticket> findTicketsByAccountId(Integer accountId) {
-        return ticketRepository.findTicketsByAccount_AccountId(accountId);
+        return ticketRepository
+                .findTicketsByAccount_AccountId(accountId)
+                .stream()
+                .sorted(Comparator.comparing(Ticket::getDatePurchased).reversed())
+                .toList();
     }
 
     @Override
     public Ticket findCheapestTicketForTrip(Integer tripId) {
-       return ticketRepository.findAllByTrip_TripId(tripId)
-                   .stream()
-                   .min(Comparator.comparing(Ticket::getPrice))
-                   .orElse(null);
+        return ticketRepository.findAllByTrip_TripId(tripId)
+                .stream()
+                .min(Comparator.comparing(Ticket::getPrice))
+                .orElse(null);
     }
 
     @Override
