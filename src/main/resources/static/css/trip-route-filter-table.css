@@ -422,3 +422,43 @@ select:hover {
         grid-template-columns: 1fr;
     }
 }
+
+.review-description {
+    margin-top: 1rem;
+}
+
+.review-description p {
+    line-height: 1.6;
+    word-wrap: break-word;
+}
+
+.bi-star-fill.text-warning {
+    color: #ffc107 !important;
+}
+
+.bi-star.text-muted {
+    color: #6c757d !important;
+}
+
+.ticket-download-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+@media (max-width: 768px) {
+    .d-flex.flex-row.gap-2 {
+        flex-direction: column;
+    }
+
+    .filter-field {
+        width: 100%;
+    }
+
+    .d-flex.justify-content-end.gap-2 {
+        flex-direction: column;
+    }
+
+    .ticket-download-btn {
+        width: 100%;
+    }
+}

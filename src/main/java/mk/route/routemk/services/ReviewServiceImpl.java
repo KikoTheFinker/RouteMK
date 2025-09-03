@@ -42,6 +42,11 @@ public class ReviewServiceImpl extends GenericServiceImpl<Review, Integer> imple
     }
 
     @Override
+    public List<Review> findByAccountEmail(String email) {
+        return reviewRepository.findByAccountEmail(email);
+    }
+
+    @Override
     public void addReview(Integer tripId, Integer accountId, String description, Integer rating) {
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new RuntimeException("Account not found"));

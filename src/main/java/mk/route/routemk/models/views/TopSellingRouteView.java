@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 
 @Entity
 @Immutable
-@Table(name = "top_selling_routes_view") // matches your view name
+@Table(name = "top_selling_routes_view")
 public class TopSellingRouteView {
 
     @Id
