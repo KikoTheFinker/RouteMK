@@ -709,10 +709,10 @@ VALUES (144, 100, 300),
 
 INSERT INTO account (account_id, email, name, surname, password)
 VALUES
-    (601, 'marko.driver@example.com', 'Marko', 'Markovski', '$2a$12$exampleHashForMarko'),
-    (602, 'stefan.driver@example.com', 'Stefan', 'Stefanovski', '$2a$12$exampleHashForStefan'),
-    (603, 'elena.driver@example.com', 'Elena', 'Elenova', '$2a$12$exampleHashForElena'),
-    (604, 'bojan.driver@example.com', 'Bojan', 'Bojanovski', '$2a$12$exampleHashForBojan');
+    (601, 'marko.driver@example.com', 'Marko', 'Markovski', '$2a$12$pr3az9qix0CnAsX84C2clu9cG9JDlfqfK.sMqaFhPYR7D5fiz8BjO'), -- pw d
+    (602, 'stefan.driver@example.com', 'Stefan', 'Stefanovski', '$2a$12$pr3az9qix0CnAsX84C2clu9cG9JDlfqfK.sMqaFhPYR7D5fiz8BjO'),
+    (603, 'elena.driver@example.com', 'Elena', 'Elenova', '$2a$12$pr3az9qix0CnAsX84C2clu9cG9JDlfqfK.sMqaFhPYR7D5fiz8BjO'),
+    (604, 'bojan.driver@example.com', 'Bojan', 'Bojanovski', '$2a$12$pr3az9qix0CnAsX84C2clu9cG9JDlfqfK.sMqaFhPYR7D5fiz8BjO');
 
 
 INSERT INTO driver (driver_id, account_id, years_experience, transport_organizer_id)
