@@ -1,11 +1,13 @@
 package mk.route.routemk.services.company;
 
 import jakarta.transaction.Transactional;
+import mk.route.routemk.models.Driver;
 import mk.route.routemk.models.Route;
 import mk.route.routemk.models.Trip;
 import mk.route.routemk.models.TripStop;
 import mk.route.routemk.services.company.interfaces.CompanyAuthorizationService;
 import mk.route.routemk.services.company.interfaces.CompanyTripService;
+import mk.route.routemk.services.interfaces.DriverService;
 import mk.route.routemk.services.interfaces.TripService;
 import mk.route.routemk.services.interfaces.TripStopService;
 import mk.route.routemk.specifications.TripSpecification;
@@ -21,23 +23,25 @@ public class CompanyTripServiceImpl implements CompanyTripService {
     private final TripService tripService;
     private final TripStopService tripStopService;
     private final CompanyAuthorizationService authorizationService;
+    private final DriverService driverService;
     private final TripValidator tripValidator;
 
-    public CompanyTripServiceImpl(TripService tripService, TripStopService tripStopService, CompanyAuthorizationServiceImpl authorizationService, TripValidator tripValidator) {
+    public CompanyTripServiceImpl(TripService tripService, TripStopService tripStopService, CompanyAuthorizationServiceImpl authorizationService, DriverService driverService, TripValidator tripValidator) {
         this.tripService = tripService;
         this.tripStopService = tripStopService;
         this.authorizationService = authorizationService;
+        this.driverService = driverService;
         this.tripValidator = tripValidator;
     }
 
     /**
      * Creates a new trip after validating input and checking authorization.
      *
-     * @param route The route on which the trip being updated is undertaken.
-     * @param tripId The ID of the trip being updated.
-     * @param freeSeats Number of free initial/current seats on the trip.
+     * @param route       The route on which the trip being updated is undertaken.
+     * @param tripId      The ID of the trip being updated.
+     * @param freeSeats   Number of free initial/current seats on the trip.
      * @param locationIds Location ids (where the trip stops overall).
-     * @param etas ETAs (Estimated Times of Arrival) according to each location.
+     * @param etas        ETAs (Estimated Times of Arrival) according to each location.
      */
     @Transactional
     public void updateTrip(Route route, Integer tripId, LocalDate date, int freeSeats, List<Integer> locationIds, List<LocalTime> etas) throws IllegalArgumentException {
@@ -56,7 +60,7 @@ public class CompanyTripServiceImpl implements CompanyTripService {
         saveTripStopsForTrip(tripId, locationIds, etas);
     }
 
-    public void createTrip(Route route, LocalDate date, int freeSeats, List<Integer> locationIds, List<LocalTime> etas) throws IllegalArgumentException  {
+    public void createTrip(Route route, LocalDate date, int freeSeats, List<Integer> locationIds, List<LocalTime> etas) throws IllegalArgumentException {
         validateAndAuthorizeTrip(route, freeSeats, locationIds, etas);
 
         Trip trip = new Trip();
@@ -73,12 +77,12 @@ public class CompanyTripServiceImpl implements CompanyTripService {
      * Performs a check on the integrity of the trip being added/edited and as a safety measure checks if the current
      * user is a transport organizer.
      *
-     * @param route Route of the new/edited trip.
-     * @param freeSeats Number of free initial/current seats on the trip.
+     * @param route       Route of the new/edited trip.
+     * @param freeSeats   Number of free initial/current seats on the trip.
      * @param locationIds Location ids (where the trip stops overall).
-     * @param etas ETAs (Estimated Times of Arrival) according to each location.
+     * @param etas        ETAs (Estimated Times of Arrival) according to each location.
      */
-    private void validateAndAuthorizeTrip(Route route, int freeSeats, List<Integer> locationIds, List<LocalTime> etas) throws IllegalArgumentException  {
+    private void validateAndAuthorizeTrip(Route route, int freeSeats, List<Integer> locationIds, List<LocalTime> etas) throws IllegalArgumentException {
 
         tripValidator.validateTripData(route.getSource().getId(), route.getDestination().getId(), freeSeats, locationIds, etas);
         Integer transportOrganizerId = authorizationService.getAuthenticatedTransportOrganizerId();
@@ -138,4 +142,49 @@ public class CompanyTripServiceImpl implements CompanyTripService {
         return false;
     }
 
+    @Transactional
+    @Override
+    public void assignDriverIfAuthorized(Integer tripId, Integer driverId) {
+        Trip trip = tripService.findById(tripId);
+        if (trip == null) {
+            throw new IllegalArgumentException("Trip not found");
+        }
+
+        Integer authOrgId = authorizationService.getAuthenticatedTransportOrganizerId();
+        if (!trip.getTranOrg().getTranOrgId().equals(authOrgId)) {
+            throw new SecurityException("Unauthorized to assign driver to this trip.");
+        }
+
+        Driver driver = driverService.findById(driverId);
+        if (driver == null) {
+            throw new IllegalArgumentException("Driver not found");
+        }
+        if (!driver.getTranOrg().getTranOrgId().equals(authOrgId)) {
+            throw new SecurityException("Driver does not belong to your company.");
+        }
+
+        boolean alreadyAssigned = trip.getDrivers().stream()
+                .anyMatch(d -> d.getDriverId().equals(driverId));
+        if (!alreadyAssigned) {
+            trip.getDrivers().add(driver);
+            tripService.save(trip);
+        }
+    }
+
+    @Transactional
+    @Override
+    public void unassignDriverIfAuthorized(Integer tripId, Integer driverId) {
+        Trip trip = tripService.findById(tripId);
+        if (trip == null) {
+            throw new IllegalArgumentException("Trip not found");
+        }
+
+        Integer authOrgId = authorizationService.getAuthenticatedTransportOrganizerId();
+        if (!trip.getTranOrg().getTranOrgId().equals(authOrgId)) {
+            throw new SecurityException("Unauthorized to unassign driver from this trip.");
+        }
+
+        trip.getDrivers().removeIf(d -> d.getDriverId().equals(driverId));
+        tripService.save(trip);
+    }
 }

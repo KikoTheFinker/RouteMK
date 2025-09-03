@@ -59,8 +59,7 @@
             border-radius: 5px;
         }
 
-        .location-entry select,
-        .location-entry input[type="time"] {
+        .location-entry select, .location-entry input[type="time"] {
             flex: 1;
         }
 
@@ -71,6 +70,39 @@
             padding: 4px 8px;
             cursor: pointer;
         }
+
+        /* tiny badge style for drivers list; adapt to your CSS system if needed */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: .25rem .5rem;
+            border-radius: .5rem;
+            font-size: .85rem;
+        }
+
+        .badge .btn-redoutline {
+            margin-left: .35rem;
+            padding: 0 .35rem;
+            line-height: 1;
+        }
+
+        .fw-semibold {
+            font-weight: 600;
+        }
+
+        .text-muted {
+            color: #6c757d;
+        }
+
+        .form-select-sm {
+            padding: .25rem .5rem;
+            font-size: .9rem;
+        }
+
+        .btn-sm {
+            padding: .25rem .5rem;
+            font-size: .9rem;
+        }
     </style>
 </head>
 <body>
@@ -79,12 +111,12 @@
         <h1 class="badgify theme-trips">
             <i class="bi bi-signpost me-1"></i>
             Trips for Route:
-            <span th:text="${routeSource.getName()}">
-             </span>
+            <span th:text="${routeSource.getName()}"></span>
             <i class="bi bi-arrow-right"></i>
             <span th:text="${routeDestination.getName()}"></span>
         </h1>
     </div>
+
     <div th:if="${message}" class="alert alert-success" role="alert" th:text="${message}"></div>
     <div th:if="${error}" class="alert alert-danger" role="alert" th:text="${error}"></div>
 
@@ -96,14 +128,13 @@
 
             <div class="container">
                 <div class="row">
-
                     <div class="col-md-6 mb-3">
                         <label for="statusFilter" class="form-label">Status</label>
                         <select id="statusFilter" class="form-control">
                             <option value="">All Statuses</option>
                             <option value="NOT_STARTED">Not Started</option>
                             <option value="IN_PROGRESS">In Progress</option>
-                            <option value="FINISHED">Finished</option>
+                            <option value="COMPLETED">Finished</option>
                         </select>
                     </div>
 
@@ -126,12 +157,13 @@
                 <br>
 
                 <div class="mb-2 text-center">
-                    <button id="resetFiltersButton" class="btn-standard"><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Filters</button>
+                    <button id="resetFiltersButton" class="btn-standard">
+                        <i class="bi bi-arrow-counterclockwise me-2"></i>Reset Filters
+                    </button>
                 </div>
             </div>
         </div>
     </div>
-
 
     <div style="margin-bottom: 5px">
         <button id="newTripButton" class="btn-standard">+ New Trip</button>
@@ -154,8 +186,10 @@
                 <tr th:each="trip : ${trips}" th:if="${trip != null}" th:attr="data-status=${trip.getStatus()}">
                     <td th:text="${trip.getDate()}"></td>
                     <td th:text="${freeSeatMap.get(trip.getTripId())}"></td>
+
                     <td class="text-center">
-                        <button class="btn-standard view-stops-btn" th:data-trip-id="${trip.getTripId()}"><i class="bi bi-geo me-1"></i>View Stops
+                        <button class="btn-standard view-stops-btn" th:data-trip-id="${trip.getTripId()}">
+                            <i class="bi bi-geo me-1"></i>View Stops
                         </button>
 
                         <div class="hidden-stops hidden" th:each="stop : ${trip.getStops()}">
@@ -168,26 +202,67 @@
 
                     <td th:text="${trip.getStatus()}"></td>
                     <td th:text="${trip.getTranOrg().getCompanyName()}"></td>
+
+                    <!-- MANAGE -->
                     <td class="text-center">
-                        <div class="d-flex justify-content-center gap-2"
+                        <div class="d-flex flex-column align-items-center gap-2"
                              th:if="${#authorization.expression('!hasRole(''DRIVER'')')}">
-                            <button type="button"
-                                    class="editTripButton btn-standard"
-                                    th:data-trip-id="${trip.getTripId()}"
-                                    th:data-trip-date="${trip.getDate()}"
-                                    th:data-free-seats="${freeSeatMap.get(trip.getTripId())}">
-                                <i class="bi bi-pencil-square me-1"></i>Edit
-                            </button>
-                            <form th:action="@{/routes/company/view-trips/{routeId}/delete-trip/{tripId}(routeId=${routeId}, tripId=${trip.getTripId()})}"
-                                  method="POST" style="display: inline;">
-                                <button type="submit" class="btn-redoutline"><i class="bi bi-trash3 me-2"></i>Delete</button>
+
+                            <!-- ASSIGN DRIVER -->
+                            <form class="d-flex gap-2 align-items-center"
+                                  th:action="@{/routes/company/view-trips/{routeId}/assign-driver/{tripId}(routeId=${routeId}, tripId=${trip.getTripId()})}"
+                                  method="post">
+                                <select name="driverId" class="form-select form-select-sm" required
+                                        style="min-width:180px">
+                                    <option value="" disabled selected>Assign driver…</option>
+                                    <option th:each="d : ${drivers}"
+                                            th:value="${d.driverId}"
+                                            th:text="${d.account.name + ' ' + d.account.surname}">
+                                    </option>
+                                </select>
+                                <button type="submit" class="btn-standard btn-sm">Assign</button>
                             </form>
+
+                            <!-- CURRENT DRIVERS -->
+                            <div class="w-100 text-center">
+                                <span class="fw-semibold">Drivers:</span>
+                                <span th:if="${trip.drivers == null or trip.drivers.isEmpty()}"
+                                      class="text-muted">none</span>
+
+                                <span th:each="d : ${trip.drivers}" class="badge bg-light text-dark border me-1">
+                                    <span th:text="${d.account.name + ' ' + d.account.surname}"></span>
+                                    <form class="d-inline ms-1"
+                                          th:action="@{/routes/company/view-trips/{routeId}/unassign-driver/{tripId}(routeId=${routeId}, tripId=${trip.getTripId()})}"
+                                          method="post">
+                                        <input type="hidden" name="driverId" th:value="${d.driverId}"/>
+                                        <button type="submit" class="btn-redoutline btn-sm" title="Unassign">×</button>
+                                    </form>
+                                </span>
+                            </div>
+
+                            <!-- EXISTING EDIT / DELETE -->
+                            <div class="d-flex justify-content-center gap-2 mt-1">
+                                <button type="button"
+                                        class="editTripButton btn-standard"
+                                        th:data-trip-id="${trip.getTripId()}"
+                                        th:data-trip-date="${trip.getDate()}"
+                                        th:data-free-seats="${freeSeatMap.get(trip.getTripId())}">
+                                    <i class="bi bi-pencil-square me-1"></i>Edit
+                                </button>
+
+                                <form th:action="@{/routes/company/view-trips/{routeId}/delete-trip/{tripId}(routeId=${routeId}, tripId=${trip.getTripId()})}"
+                                      method="post" style="display: inline;">
+                                    <button type="submit" class="btn-redoutline">
+                                        <i class="bi bi-trash3 me-2"></i>Delete
+                                    </button>
+                                </form>
+                            </div>
                         </div>
                     </td>
                 </tr>
                 </tbody>
-
             </table>
+
             <div id="noTrips" class="notification hidden">
                 No trips available for the selected criteria.
             </div>
@@ -195,6 +270,7 @@
     </div>
 </div>
 
+<!-- Stops modal -->
 <div id="stopsModal" class="modal hidden">
     <div class="modal-content wide">
         <span class="close-modal" id="closeStopsModal">&times;</span>
@@ -203,13 +279,14 @@
     </div>
 </div>
 
+<!-- New trip modal -->
 <div id="newTripModal" class="modal hidden">
     <div class="modal-content wide">
         <span class="close-modal" id="closeModal">&times;</span>
         <h2 class="modal-title">Add New Trip</h2>
         <span id="locationErrorNew" class="error-message" style="display:none; color: red; font-weight: bold">Please select a valid location.</span>
         <form id="newTripForm" th:action="@{/routes/company/view-trips/{routeId}/add-trip (routeId=${routeId})}"
-              method="POST">
+              method="post">
             <div class="form-group">
                 <label for="tripDate"><strong>Date</strong></label>
                 <input type="date" id="tripDate" name="date" class="form-control" required>
@@ -245,6 +322,7 @@
     </div>
 </div>
 
+<!-- Edit trip modal -->
 <div id="editTripModal" class="modal hidden">
     <div class="modal-content wide">
         <span class="close-modal" id="closeEditModal">&times;</span>
@@ -252,7 +330,7 @@
         <span id="locationErrorEdit" class="error-message" style="display:none; color: red; font-weight: bold">Please select a valid location.</span>
         <form id="editTripForm"
               th:action="@{/routes/company/view-trips/{routeId}/edit-trip/{tripId}(routeId=${routeId}, tripId=0)}"
-              method="POST">
+              method="post">
             <input type="hidden" name="tripId" id="editTripId">
             <div class="form-group">
                 <label for="editTripDate"><strong>Date</strong></label>
@@ -286,10 +364,8 @@
             <br/><br/>
             <button type="submit" class="btn-standard">Submit Changes</button>
         </form>
-
     </div>
 </div>
-
 
 <script th:inline="javascript">
     /*<![CDATA[*/
@@ -299,10 +375,10 @@
         routeDestinationId: /*[[${routeDestination.getId()}]]*/ 0,
         routeId: /*[[${routeId}]]*/ 0
     };
+    /*]]>*/
 </script>
 <script src="/js/modal.js"></script>
 <script src="/js/trip-filtering.js"></script>
 <script src="/js/stops-modal.js"></script>
-
 </body>
 </html>

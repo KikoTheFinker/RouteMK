@@ -15,4 +15,8 @@ public interface CompanyTripService {
     List<Trip> getAuthorizedTripsByRoute(Integer routeId);
 
     boolean deleteTripIfAuthorized(Integer tripId);
+
+    void assignDriverIfAuthorized(Integer tripId, Integer driverId);
+
+    void unassignDriverIfAuthorized(Integer tripId, Integer driverId);
 }
