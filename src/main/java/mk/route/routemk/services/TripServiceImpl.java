@@ -7,17 +7,17 @@ import mk.route.routemk.repostories.interfaces.TripRepository;
 import mk.route.routemk.services.interfaces.TicketService;
 import mk.route.routemk.services.interfaces.TripService;
 import mk.route.routemk.specifications.TripSpecification;
-import org.springframework.data.jpa.domain.Specification;
+import mk.route.routemk.utils.TripComparators;
+import mk.route.routemk.utils.TripRankingUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDate;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class TripServiceImpl extends GenericServiceImpl<Trip, Integer> implements TripService {
-
     private final TicketService ticketService;
     private final TripRepository tripRepository;
 
@@ -31,7 +31,10 @@ public class TripServiceImpl extends GenericServiceImpl<Trip, Integer> implement
 
     @Override
     public List<Trip> findTripsBookedByAccount(Integer accountId) {
-        return ticketService.findTicketsByAccountId(accountId).stream().map(Ticket::getTrip).toList();
+        return ticketService.findTicketsByAccountId(accountId).stream()
+                .map(Ticket::getTrip)
+                .filter(Objects::nonNull)
+                .toList();
     }
 
     @Override
@@ -41,32 +44,38 @@ public class TripServiceImpl extends GenericServiceImpl<Trip, Integer> implement
 
     @Override
     public Map<Integer, String> getStopNameTableForTrips(Collection<? extends Trip> trips, String from, String to) {
+        String fromSafe = Objects.toString(from, "");
+        String toSafe = Objects.toString(to, "");
         return trips.stream().collect(Collectors.toMap(
                 Trip::getTripId,
-                t -> t.getStops().stream()
+                t -> Optional.ofNullable(t.getStops()).orElse(List.of()).stream()
                         .map(s -> s.getLocation().getName())
-                        .filter(n -> !n.equals(from) && !n.equals(to))
-                        .collect(Collectors.joining(", "))
+                        .filter(Objects::nonNull)
+                        .filter(n -> !n.equals(fromSafe) && !n.equals(toSafe))
+                        .collect(Collectors.joining(", ")),
+                (a, b) -> a,
+                LinkedHashMap::new
         ));
     }
 
     @Override
-    public Map<Integer, Object> getCheapestTicketTableForTrips(Collection<? extends Trip> trips) {
-        return trips.stream().collect(Collectors.toMap(
-                Trip::getTripId,
-                t -> {
-                    int seatsLeft = numTicketsLeftForTrip(t.getTripId());
-                    if (seatsLeft == 0) return "No available seats.";
-                    return t.getBasePrice() != null ? t.getBasePrice() : "Price unavailable";
-                }
-        ));
+    public Map<Integer, Double> getCheapestTicketTableForTrips(Collection<? extends Trip> trips) {
+        Map<Integer, Double> map = new LinkedHashMap<>();
+        for (Trip t : trips) {
+            int seatsLeft = numTicketsLeftForTrip(t.getTripId());
+            map.put(t.getTripId(), (seatsLeft <= 0) ? null : t.getBasePrice());
+        }
+        return map;
     }
+
 
     @Override
     public Map<Integer, Integer> getFreeSeatTableForTrips(Collection<? extends Trip> trips) {
         return trips.stream().collect(Collectors.toMap(
                 Trip::getTripId,
-                t -> numTicketsLeftForTrip(t.getTripId())
+                t -> numTicketsLeftForTrip(t.getTripId()),
+                (a, b) -> a,
+                LinkedHashMap::new
         ));
     }
 
@@ -76,8 +85,33 @@ public class TripServiceImpl extends GenericServiceImpl<Trip, Integer> implement
     }
 
     @Override
-    public List<Trip> findIndirectTrips(Integer startId, Integer endId) {
-        Specification<Trip> spec = TripSpecification.findTripsWithStartAndEndLocations(startId, endId);
-        return findAllByPredicate(spec);
+    public Optional<Trip> findCheapestTripForRoute(Integer routeId, LocalDate date) {
+        return tripsByRouteAndDate(routeId, date)
+                .filter(TripRankingUtils::hasSeats)
+                .filter(t -> t.getBasePrice() != null)
+                .min(TripComparators.CHEAPEST_FIRST);
+    }
+
+    @Override
+    public Optional<Trip> findFastestTripForRoute(Integer routeId, LocalDate date) {
+        return tripsByRouteAndDate(routeId, date)
+                .filter(TripRankingUtils::hasSeats)
+                .min(TripComparators.FASTEST_FIRST);
+    }
+
+    @Override
+    public Optional<Trip> findCheapestTripForRoute(Integer routeId) {
+        return findCheapestTripForRoute(routeId, null);
+    }
+
+    @Override
+    public Optional<Trip> findFastestTripForRoute(Integer routeId) {
+        return findFastestTripForRoute(routeId, null);
+    }
+
+
+    private Stream<Trip> tripsByRouteAndDate(Integer routeId, LocalDate date) {
+        Stream<Trip> base = findAllByPredicate(TripSpecification.tripsByRoute(routeId)).stream();
+        return (date == null) ? base : base.filter(t -> Objects.equals(t.getDate(), date));
     }
 }

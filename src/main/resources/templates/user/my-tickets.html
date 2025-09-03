@@ -85,7 +85,7 @@
                 </div>
                 <div class="ticket-info-block">
                     <span class="ticket-label"><i class="bi bi-currency-exchange me-1 text-danger"></i>Price</span><br>
-                    <span th:text="${ticket.price} + ' €'"></span>
+                    <span th:text="'€' + ${ticket.price}"></span>
                 </div>
                 <div class="ticket-info-block">
                     <span class="ticket-label"><i class="bi bi-credit-card me-1 text-danger"></i>Payment ID</span><br>

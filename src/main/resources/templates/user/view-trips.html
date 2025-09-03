@@ -6,77 +6,30 @@
     <link rel="stylesheet" th:href="@{/css/trip-route-filter-table.css}"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
-
     <style>
         .hidden { display: none !important; }
-
-        .notification {
-            margin: 20px;
-            font-style: italic;
-            color: #888;
-        }
-
+        .notification { margin: 20px; font-style: italic; color: #888; }
         .icon-arrow { color: white; }
         thead th { cursor: pointer; }
         input[type="text"], label { display: inline; }
-
-        #main {
-            flex: 1;
-            width: 50%;
-            max-width: 1000px;
-            margin: 2rem auto;
-            padding: 1.5rem;
-        }
-
-        .date-filter {
-            margin: 20px 0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
+        #main { flex: 1; width: 50%; max-width: 1000px; margin: 2rem auto; padding: 1.5rem; }
+        .date-filter { margin: 20px 0; display: flex; align-items: center; gap: 10px; }
         .date-filter label { font-weight: bold; }
-
-        #datepicker {
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        .modal {
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background-color: #fff;
-            padding: 20px;
-            width: 90%;
-            max-width: 500px;
-            border-radius: 5px;
-            position: relative;
-        }
-
+        #datepicker { padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+        .modal { position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, .5); display: flex; justify-content: center; align-items: center; }
+        .modal-content { background-color: #fff; padding: 20px; width: 90%; max-width: 500px; border-radius: 5px; position: relative; }
         .modal-content h2 { margin-top: 0; }
-
-        .close-modal {
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            cursor: pointer;
-            font-size: 20px;
-            line-height: 1;
-        }
+        .close-modal { position: absolute; top: 10px; right: 15px; cursor: pointer; font-size: 20px; line-height: 1; }
+        .num { text-align: right; white-space: nowrap; }
+        .badge { display: inline-block; padding: .15rem .45rem; border-radius: 999px; font-size: .75rem; margin-right: .35rem; border: 1px solid transparent; }
+        .badge-fastest { background: #28a745; border-color: #1e7e34; color: #fff; font-weight: 700; }
+        .badge-best { background: #007bff; border-color: #0056b3; color: #fff; font-weight: 700; }
+        .badge-combo { background: #ffc107; border-color: #e0a800; color: #212529; font-weight: 800; }
+        .row-fastest { background: linear-gradient(90deg, rgba(40, 167, 69, .18), transparent); }
+        .btn-standard { border: 1px solid #ccc; padding: .4rem .7rem; border-radius: 4px; background: #fff; }
+        .btn-redoutline { border: 1px solid #dc3545; color: #dc3545; padding: .35rem .7rem; border-radius: 4px; text-decoration: none; }
+        .btn-redoutline:hover { background: #dc3545; color: #fff; }
     </style>
-
     <title>Routes</title>
 </head>
 <body>
@@ -88,7 +41,6 @@
             <i class="bi bi-arrow-right mx-2"></i>
             <span th:text="${routeDestination}"></span>
         </h1>
-
         <div>
             <form th:action="@{/favorites/change-favorites-status/{routeId}(routeId=${routeId}, remove=${isFavorite})}"
                   method="post" class="d-inline">
@@ -101,13 +53,14 @@
         </div>
     </div>
 
-    <div th:if="${trips != null and !trips.isEmpty()}">
-        <div class="date-filter">
-            <label for="datepicker">Filter by date:</label>
-            <input type="text" id="datepicker" placeholder="Select date...">
-            <button id="clearDate" class="btn-standard"><i class="bi bi-arrow-counterclockwise me-2"></i>Reset filters</button>
-        </div>
-    </div>
+    <!-- Date filter is always visible -->
+    <form class="date-filter" th:action="@{/trips/{routeId}(routeId=${routeId})}" method="get" id="dateForm">
+        <label for="datepicker">Filter by date:</label>
+        <input type="text" id="datepicker" name="date" placeholder="Select date..." th:value="${param.date}">
+        <button type="button" id="clearDate" class="btn-standard">
+            <i class="bi bi-arrow-counterclockwise me-2"></i>Reset filters
+        </button>
+    </form>
 
     <div th:if="${trips != null && !trips.isEmpty()}">
         <div class="routes-container">
@@ -118,16 +71,16 @@
                         <th>Departure <span class="icon-arrow">&UpArrow;</span></th>
                         <th>Stops <span class="icon-arrow">&UpArrow;</span></th>
                         <th>Available tickets <span class="icon-arrow">&UpArrow;</span></th>
+                        <th>Highlights <span class="icon-arrow">&UpArrow;</span></th>
                         <th>Price <span class="icon-arrow">&UpArrow;</span></th>
                         <th>Purchase <span class="icon-arrow">&UpArrow;</span></th>
                     </tr>
                     </thead>
                     <tbody id="routes-list">
-                    <!--                    TODO: implement purchasing through ticket creation-->
-                    <tr th:each="trip : ${trips}" class="route-row">
-                        <td th:with="depTime=${#lists.isEmpty(trip.stops) ? null : trip.stops.iterator().next().stopTime}"
-                            th:attr="data-date=${#temporals.format(trip.date,'yyyy-MM-dd')},
-                                     data-time=${depTime != null ? #temporals.format(depTime,'HH:mm') : ''}">
+                    <tr th:each="trip : ${trips}"
+                        th:classappend="(${trip.tripId} == ${fastestTripId}) ? 'row-fastest' : ''" class="route-row"
+                        th:with="depTime=${#lists.isEmpty(trip.stops) ? null : trip.stops.iterator().next().stopTime}">
+                        <td th:attr="data-date=${#temporals.format(trip.date,'yyyy-MM-dd')}, data-time=${depTime != null ? #temporals.format(depTime,'HH:mm') : ''}">
                             <span th:text="${#temporals.format(trip.date,'yyyy-MM-dd')}"></span>
                             <span th:if="${depTime != null}"> · </span>
                             <span th:if="${depTime != null}" th:text="${#temporals.format(depTime,'HH:mm')}"></span>
@@ -141,17 +94,21 @@
                                 <span class="stop-time" th:text="${#temporals.format(stop.stopTime,'HH:mm')}"></span>
                             </div>
                         </td>
-
-                        <td th:text="${seatsLeftPerTrip[trip.getTripId()]}"></td>
+                        <td th:text="${seatsLeftPerTrip[trip.tripId]}"></td>
+                        <td>
+                            <span th:if="${trip.tripId == fastestTripId and trip.tripId == cheapestTripId}"
+                                  class="badge badge-combo">Fastest • Best price</span>
+                            <span th:if="${trip.tripId == fastestTripId and trip.tripId != cheapestTripId}"
+                                  class="badge badge-fastest">Fastest</span>
+                            <span th:if="${trip.tripId == cheapestTripId and trip.tripId != fastestTripId}"
+                                  class="badge badge-best">Best price</span>
+                        </td>
                         <td th:with="price=${cheapestTicketPrice[trip.tripId]}, seats=${seatsLeftPerTrip[trip.tripId]}">
-                            <span th:if="${price instanceof T(java.lang.Number) and seats > 0}">
-                                $<span th:text="${#numbers.formatDecimal(price,1,2)}"></span>
-                            </span>
-                            <span th:unless="${price instanceof T(java.lang.Number) and seats > 0}"
-                                  th:text="${price}"></span>
+                            <span th:if="${price != null and seats > 0}">€<span th:text="${#numbers.formatDecimal(price,1,2)}"></span></span>
+                            <span th:unless="${price != null and seats > 0}" th:text="${price}"></span>
                         </td>
                         <td>
-                            <a th:if="${seatsLeftPerTrip[trip.getTripId()] != 0}" th:href="@{/}" class="btn-redoutline">
+                            <a th:if="${seatsLeftPerTrip[trip.tripId] != 0}" th:href="@{/}" class="btn-redoutline">
                                 <i class="bi bi-credit-card me-2"></i>Purchase
                             </a>
                         </td>
@@ -162,6 +119,7 @@
         </div>
     </div>
 
+    <!-- Empty message -->
     <div th:if="${emptyMessage}">
         <p class="notification" th:text="${emptyMessage}"></p>
     </div>
@@ -178,31 +136,23 @@
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const datepicker = flatpickr("#datepicker", {
+        const form = document.getElementById('dateForm');
+        const input = document.getElementById('datepicker');
+        const clearBtn = document.getElementById('clearDate');
+
+        flatpickr("#datepicker", {
             dateFormat: "Y-m-d",
             allowInput: true,
-            onChange: function (selectedDates, dateStr) {
-                filterByDate(dateStr);
+            defaultDate: input.value || null,
+            onChange: function () {
+                form.submit();
             }
         });
 
-        const clearBtn = document.getElementById('clearDate');
-        if (clearBtn) {
-            clearBtn.addEventListener('click', function () {
-                datepicker.clear();
-                filterByDate('');
-            });
-        }
-
-        function filterByDate(dateStr) {
-            const rows = document.querySelectorAll('#routes-list tr.route-row');
-            rows.forEach(row => {
-                const dateCell = row.querySelector('td[data-date]');
-                if (!dateCell) return;
-                const rowDate = dateCell.getAttribute('data-date');
-                row.style.display = (dateStr === '' || rowDate === dateStr) ? '' : 'none';
-            });
-        }
+        clearBtn.addEventListener('click', function () {
+            input.value = "";
+            form.submit();
+        });
     });
 </script>
 <script src="/js/stops-modal.js"></script>
