@@ -3,7 +3,8 @@
 
 .glowable {
     box-shadow: 0 0 0 red;
-    background: #e12d2d; !important;
+    background: #e12d2d;
+!important;
     color: white;
     transition: box-shadow 0.3s ease;
 }
@@ -58,4 +59,14 @@
     color: #00a200;
     background: #f0fff0;
     border-color: #00a200;
+}
+
+.theme-vehicles {
+    color: #6b3e1e;
+    background: #f7efe9;
+    border-color: #6b3e1e;
+}
+
+.icon-vehicles {
+    color: #6b3e1e;
 }

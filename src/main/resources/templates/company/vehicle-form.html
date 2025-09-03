@@ -1,0 +1,109 @@
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${title}">Vehicle</title>
+    <link rel="stylesheet" th:href="@{/css/base.css}">
+    <link rel="stylesheet" th:href="@{/css/trip-route-filter-table.css}"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+</head>
+<body>
+<div class="container d-flex justify-content-center mx-auto mt-3 pt-5" th:fragment="content">
+    <div class="w-75 mx-2 my-3">
+
+        <div class="title-container mt-3">
+            <h1 class="badgify theme-vehicles">
+                <i class="bi bi-truck-flatbed me-2 icon-vehicles"></i>
+                <span th:text="${title}">Vehicle</span>
+            </h1>
+        </div>
+
+        <div class="card p-3 m-0 mb-2 shadow-sm">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h5 class="m-0"><i class="bi bi-info-circle me-2"></i>Vehicle Information</h5>
+                <span class="badge bg-light text-dark">
+                    <i class="bi bi-building me-1"></i>
+                    <span th:text="${companyName}">Company</span>
+                </span>
+            </div>
+
+            <div th:if="${infoMessage}" class="alert alert-info my-2 text-center">
+                <i class="bi bi-info-circle"></i>
+                <span th:text="${infoMessage}"></span>
+            </div>
+            <div th:if="${errorMessage}" class="alert alert-danger my-2 text-center">
+                <i class="bi bi-exclamation-triangle"></i>
+                <span th:text="${errorMessage}"></span>
+            </div>
+
+            <form th:if="${vehicle.vehicleId == null}"
+                  th:action="@{/vehicles}" method="post" class="d-flex flex-column gap-3">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="form-label"><i class="bi bi-caret-right-square"></i> Brand</label>
+                        <input class="form-control" name="brand" required type="text" placeholder="Mercedes, MAN, Volvo">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label"><i class="bi bi-caret-right-square-fill"></i> Model</label>
+                        <input class="form-control" name="modelName" required type="text" placeholder="Tourismo, Lion’s Coach">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-1">
+                        <label class="form-label"><i class="bi bi-123"></i> Capacity</label>
+                        <input class="form-control" name="capacity" required type="text" placeholder="55 seats">
+                    </div>
+                    <div class="col-md-6 mb-1">
+                        <label class="form-label"><i class="bi bi-calendar-event"></i> Year of manufacture</label>
+                        <input class="form-control" name="yearManufactured" type="text" placeholder="2018">
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end">
+                    <a class="btn btn-outline-secondary me-2" th:href="@{/vehicles}">
+                        <i class="bi bi-x-circle me-1"></i>Cancel
+                    </a>
+                    <button class="btn-redoutline" type="submit">
+                        <i class="bi bi-check2-circle me-1"></i>Save
+                    </button>
+                </div>
+            </form>
+
+            <form th:if="${vehicle.vehicleId != null}"
+                  th:action="@{/vehicles/{id}(id=${vehicle.vehicleId})}" method="post"
+                  class="d-flex flex-column gap-3">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="form-label"><i class="bi bi-caret-right-square"></i> Brand</label>
+                        <input class="form-control" name="brand" required type="text" th:value="${vehicle.brand}">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label"><i class="bi bi-caret-right-square-fill"></i> Model</label>
+                        <input class="form-control" name="modelName" required type="text" th:value="${vehicle.model}">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-1">
+                        <label class="form-label"><i class="bi bi-123"></i> Capacity</label>
+                        <input class="form-control" name="capacity" required type="text" th:value="${vehicle.capacity}">
+                    </div>
+                    <div class="col-md-6 mb-1">
+                        <label class="form-label"><i class="bi bi-calendar-event"></i> Year of manufacture</label>
+                        <input class="form-control" name="yearManufactured" type="text" th:value="${vehicle.yearManufactured}">
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end">
+                    <a class="btn btn-outline-secondary me-2" th:href="@{/vehicles}">
+                        <i class="bi bi-x-circle me-1"></i>Cancel
+                    </a>
+                    <button class="btn-redoutline" type="submit">
+                        <i class="bi bi-check2-circle me-1"></i>Update
+                    </button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+</body>
