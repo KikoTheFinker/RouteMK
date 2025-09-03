@@ -108,7 +108,7 @@
                             <span th:unless="${price != null and seats > 0}" th:text="${price}"></span>
                         </td>
                         <td>
-                            <a th:if="${seatsLeftPerTrip[trip.tripId] != 0}" th:href="@{/}" class="btn-redoutline">
+                            <a th:if="${seatsLeftPerTrip[trip.tripId] != 0}" th:href="@{/payment/{tripId} (tripId = ${trip.tripId})}" class="btn-redoutline">
                                 <i class="bi bi-credit-card me-2"></i>Purchase
                             </a>
                         </td>
@@ -119,7 +119,6 @@
         </div>
     </div>
 
-    <!-- Empty message -->
     <div th:if="${emptyMessage}">
         <p class="notification" th:text="${emptyMessage}"></p>
     </div>

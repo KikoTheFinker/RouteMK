@@ -28,9 +28,9 @@ public class Payment {
     @Column(name = "n_tickets")
     private Integer numTickets;
 
-    public Payment(Account account, LocalDate paymentDate, Double totalPrice, Integer numTickets) {
+    public Payment(Account account, Double totalPrice, Integer numTickets) {
         this.account = account;
-        this.paymentDate = paymentDate;
+        this.paymentDate = LocalDate.now();
         this.totalPrice = totalPrice;
         this.numTickets = numTickets;
     }

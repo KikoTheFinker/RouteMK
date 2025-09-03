@@ -48,7 +48,7 @@ public interface GenericService<T, ID> {
     List<T> findAll();
 
     /**
-     * Finds a single entity that matches a given specification.
+     * Finds a single entity that matches a given x`specification.
      * Throws an exception if no matching entity is found.
      *
      * @param filter The specification used for filtering

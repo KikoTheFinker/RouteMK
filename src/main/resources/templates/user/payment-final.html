@@ -1,0 +1,68 @@
+<head>
+    <meta charset="UTF-8">
+    <title>Payment Confirmation</title>
+    <link rel="stylesheet" th:href="@{/css/trip-route-filter-table.css}"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body>
+<div class="container d-flex justify-content-center mx-auto mt-3 pt-5">
+    <div class="w-75 mx-2 my-3">
+        <!-- Header -->
+        <div class="title-container mt-3">
+            <h1 class="badgify theme-tickets">
+                <i class="bi bi-credit-card me-2"></i>Confirm Your Purchase
+            </h1>
+        </div>
+
+        <!-- Trip summary -->
+        <div class="d-flex justify-content-between">
+            <h5 class="badgify theme-trips">
+                <i class="bi bi-luggage me-1"></i>
+                <span th:text="${trip.route.source.name + ' to ' + trip.route.destination.name}"></span>
+            </h5>
+            <h5 class="badgify theme-price d-flex justify-content-center align-items-center"
+                style="box-shadow: 0 1px 3px rgba(0,255,0,0.6);">
+                <i class="bi bi-receipt me-1"></i>
+                Subtotal: <span
+                    th:text="${numTickets} + ' × €' + ${trip.basePrice} + '(base) = €' + ${totalPrice}"></span>
+            </h5>
+        </div>
+
+        <div class="card p-3 m-0 mb-1 shadow-sm">
+            <h5 class="mb-3"><i class="bi bi-credit-card-2-front me-2"></i>Payment Details</h5>
+
+            <div class="mb-3">
+                <label class="form-label"><i class="bi bi-credit-card"></i> Card Number</label>
+                <input class="form-control" disabled placeholder="1234 5678 9012 3456" required type="text">
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label"><i class="bi bi-calendar-event"></i> Expiry Date</label>
+                    <input class="form-control" disabled placeholder="MM/YY" required type="text">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label"><i class="bi bi-lock"></i> CVV</label>
+                    <input class="form-control" disabled placeholder="123" required type="text">
+                </div>
+            </div>
+
+            <div>
+                <label class="form-label"><i class="bi bi-person"></i> Cardholder Name</label>
+                <input class="form-control" disabled placeholder="John Doe" required type="text">
+            </div>
+        </div>
+        <form class="d-flex flex-column" method="post"
+              th:action="@{/payment/{tripId}(tripId=${trip.tripId})}">
+            <input name="numTickets" th:value="${numTickets}" type="hidden"/>
+            <div class="alert alert-danger my-2 text-center" th:if="${errorMessage}">
+                <i class="bi bi-person-dash"></i>
+                <span th:text="${errorMessage}"></span>
+            </div>
+            <button class="btn-redoutline w-100" type="submit">
+                <i class="bi bi-lock-fill me-1"></i>Pay €<span th:text="${totalPrice}"></span>
+            </button>
+        </form>
+    </div>
+</div>
+</body>

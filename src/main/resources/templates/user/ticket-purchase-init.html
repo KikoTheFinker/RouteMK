@@ -1,0 +1,37 @@
+<head>
+    <meta charset="UTF-8">
+    <title>Purchase Tickets</title>
+    <link rel="stylesheet" th:href="@{/css/trip-route-filter-table.css}"/>
+</head>
+<body>
+<div class="container d-flex justify-content-center mx-auto mt-3 pt-5">
+    <div class="w-75 mx-2 my-3">
+        <div class="title-container mt-3">
+            <h1 class="badgify theme-tickets"><i class="bi bi-ticket-perforated me-1"></i>Ticket purchase</h1>
+        </div>
+        <div class="filter-container-wrapper mb-3 w-100 d-flex justify-content-between mt-2">
+            <div class="title-container mt-1">
+                <h3 class="badgify theme-trips">
+                    <i class="bi bi-luggage"></i>
+                    <span th:text="${trip.route.source.name} + ' to '+ ${trip.route.destination.name}"></span>
+                </h3>
+                <div>
+                    <span class="badgify theme-price"
+                          th:text="'€ ' + ${trip.getBasePrice()} + ' (1 ticket)'"><i
+                            class="bi bi-luggage me-1"></i></span>
+                </div>
+            </div>
+            <div class="d-flex filter-container-wrapper mb-0 flex-column justify-content-center align-items-center w-25">
+                <form class="d-flex flex-column w-100 gap-1" th:action="@{proceed/{tripId} (tripId = ${tripId})}"
+                      th:method="get">
+                    <label for="numTickets">Number of tickets to buy</label>
+                    <input class="form-control w-100" id="numTickets" name="numTickets" required type="number"/>
+                    <button class="btn-redoutline w-100" type="submit"><i class="bi bi-arrow-right-short me-1"></i>Proceed
+                        with payment
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
