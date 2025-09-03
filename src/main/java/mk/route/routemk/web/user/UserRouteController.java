@@ -1,6 +1,6 @@
 package mk.route.routemk.web.user;
 
-import mk.route.routemk.services.SearchRoutesService;
+import mk.route.routemk.services.interfaces.SearchRoutesService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

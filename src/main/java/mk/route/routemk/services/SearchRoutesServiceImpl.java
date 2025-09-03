@@ -4,6 +4,7 @@ import mk.route.routemk.models.Route;
 import mk.route.routemk.models.Trip;
 import mk.route.routemk.services.interfaces.LocationService;
 import mk.route.routemk.services.interfaces.RouteService;
+import mk.route.routemk.services.interfaces.SearchRoutesService;
 import mk.route.routemk.services.interfaces.TripService;
 import org.springframework.stereotype.Service;
 
@@ -11,20 +12,21 @@ import java.util.*;
 import java.util.function.Function;
 
 @Service
-public class SearchRoutesService {
+public class SearchRoutesServiceImpl implements SearchRoutesService {
 
     private final RouteService routeService;
     private final LocationService locationService;
     private final TripService tripService;
 
-    public SearchRoutesService(RouteService routeService,
-                               LocationService locationService,
-                               TripService tripService) {
+    public SearchRoutesServiceImpl(RouteService routeService,
+                                   LocationService locationService,
+                                   TripService tripService) {
         this.routeService = routeService;
         this.locationService = locationService;
         this.tripService = tripService;
     }
 
+    @Override
     public SearchRoutesResult search(String from, String to) {
         from = normalize(from);
         to = normalize(to);
@@ -66,7 +68,6 @@ public class SearchRoutesService {
     private Map<Integer, Double> buildPriceMap(
             List<Route> routes,
             Function<Integer, Optional<Trip>> tripFinder) {
-
         Map<Integer, Double> map = new LinkedHashMap<>();
         for (Route r : routes) {
             if (r != null && r.getRouteId() != null) {
@@ -77,13 +78,5 @@ public class SearchRoutesService {
             }
         }
         return map;
-    }
-
-    public record SearchRoutesResult(
-            List<Route> routes,
-            List<Route> indirectRoutes,
-            Map<Integer, Double> cheapestPricePerRoute,
-            Map<Integer, Double> fastestPricePerRoute
-    ) {
     }
 }
