@@ -20,10 +20,14 @@
                 <li th:if="${#authorization.expression('hasRole(''USER'')')}"
                     class="nav-item"><a class="nav-link btn btn-small btn-transparent" href="/trips/user"><i
                         class="bi bi-luggage text-info me-2"></i>My Trips</a></li>
-                <!-- Favorites Button -->
                 <li th:if="${#authorization.expression('hasRole(''USER'')')}" class="nav-item">
                     <a class="nav-link btn btn-small btn-transparent" href="/favorites">
                         <i class="bi bi-heart text-warning me-2"></i>Favorites
+                    </a>
+                </li>
+                <li th:if="${#authorization.expression('hasRole(''USER'')')}" class="nav-item">
+                    <a class="nav-link btn btn-small btn-transparent" href="/my-reviews">
+                        <i class="bi bi-star-fill text-success me-2"></i>My Reviews
                     </a>
                 </li>
                 <li th:if="${#authorization.expression('hasRole(''TRANSPORT_ORGANIZER'')')}"
