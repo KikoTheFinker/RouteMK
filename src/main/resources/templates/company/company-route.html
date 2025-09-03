@@ -34,17 +34,6 @@
             color: #842029;
             border: 1px solid #f5c2c7
         }
-
-        .th-manage {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: .5rem;
-        }
-
-        .th-manage .btn-redoutline {
-            white-space: nowrap
-        }
     </style>
 </head>
 <body>
@@ -71,7 +60,7 @@
             </div>
         </div>
 
-        <div class="filter-container-wrapper center text-center mt-5">
+        <div class="filter-container-wrapper center text-center">
             <div class="filter-heading">
                 <i class="bi bi-funnel me-2"></i> <span>Filter</span>
             </div>
@@ -100,7 +89,7 @@
                 data-bs-target="#addRouteModal">
             <i class="bi bi-plus-circle me-2"></i> Add New Route
         </button>
-        <div class="routes-container mt-4">
+        <div class="routes-container mt-1">
             <div class="routes-table-wrapper">
                 <table class="routes-table">
                     <thead>
@@ -108,9 +97,7 @@
                         <th>Departure</th>
                         <th>Arrival</th>
                         <th>
-                            <div class="th-manage">
-                                <span>Manage</span>
-                            </div>
+                            <i class="bi bi-gear-wide-connected me-1"></i>Manage
                         </th>
                     </tr>
                     </thead>
