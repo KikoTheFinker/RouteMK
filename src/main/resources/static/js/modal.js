@@ -154,19 +154,17 @@ document.addEventListener("DOMContentLoaded", function () {
             const tripDate  = this.getAttribute('data-trip-date');
             const freeSeats = this.getAttribute('data-free-seats');
 
-            // NEW ↓ read base price from the button
             const basePrice = this.getAttribute('data-base-price');
 
             document.getElementById('editTripDate').value  = tripDate;
             document.getElementById('editFreeSeats').value = freeSeats;
             document.getElementById("editTripId").value    = tripId;
 
-            // NEW ↓ prefill the edit modal input
             const bpInput = document.getElementById('editBasePrice');
             if (basePrice === null || basePrice === '' || basePrice === 'null' || isNaN(+basePrice)) {
                 bpInput.value = '';
             } else {
-                bpInput.value = (+basePrice).toFixed(2); // keep your own formatting if you prefer
+                bpInput.value = (+basePrice).toFixed(2);
             }
 
             const form = document.getElementById('editTripForm');
