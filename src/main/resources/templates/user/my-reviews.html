@@ -9,7 +9,7 @@
 <body>
 <div id="main">
     <div class="title-container mt-5">
-        <h1 class="badgify theme-tickets"><i class="bi bi-ticket-perforated me-2"></i>My Reviews</h1>
+        <h1 class="badgify theme-price"><i class="bi bi-star me-2"></i>My Reviews</h1>
     </div>
 
     <div class="tickets-filter-container">
@@ -22,14 +22,6 @@
             </div>
         </div>
         <div class="d-flex flex-row gap-2">
-            <div class="filter-field">
-                <label for="dateFrom" class="filter-label">Date From</label>
-                <input type="date" id="dateFrom" class="form-control">
-            </div>
-            <div class="filter-field">
-                <label for="dateTo" class="filter-label">Date To</label>
-                <input type="date" id="dateTo" class="form-control">
-            </div>
             <div class="filter-field">
                 <label for="pickupFilter" class="filter-label">Pickup Location</label>
                 <input type="text" id="pickupFilter" class="form-control" placeholder="ex. Struga">
@@ -57,16 +49,12 @@
              th:attr="data-date=${review.ticket.datePurchased}, data-rating=${review.rating}, data-pickup=${review.ticket.pickupLocation.name}, data-drop=${review.ticket.leavesAtLocation.name}">
             <div class="ticket-header">
                 <div>
-                    <i class="bi bi-hash me-1 text-danger"></i>
-                    <span class="text-dark">Review ID: </span>
-                    <span th:text="${review.reviewId}" style="text-shadow: 0 0 3px rgba(0,0,0,0.51)"></span>
-                </div>
-                <div>
-                    <i class="bi bi-clock-history me-1 text-danger"></i>
-                    <span th:text="${review.ticket.datePurchased} + ' ' + ${review.ticket.timePurchased}">Date & Time</span>
+                    <i class="bi bi-chat-quote me-1 text-danger"></i>
+                    <span class="text-dark">Review for trip #<a th:text="${review.ticket.trip.tripId}" th:href="@{trips/user/{trip} (trip = ${review.ticket.trip.tripId})}"></a></span>
+
                 </div>
             </div>
-            <hr class="dotted-hr"/>
+            <hr/>
             <div class="ticket-body">
                 <div class="ticket-info-block">
                     <span class="ticket-label"><i class="bi bi-signpost-split text-danger me-1"></i>Route travelled</span><br>
@@ -101,9 +89,9 @@
 
             <!-- Review Description Section -->
             <div th:if="${review.description != null and !review.description.isEmpty()}" class="mt-3">
-                <hr class="dotted-hr"/>
+                <hr>
                 <div class="review-description">
-                    <span class="ticket-label"><i class="bi bi-chat-quote me-1 text-danger"></i>My Review</span><br>
+                    <span class="ticket-label"><i class="bi bi-fonts me-1 text-danger"></i>Review Content</span><br>
                     <div class="mt-2 p-3" style="background-color: #f8f9fa; border-radius: 8px; border-left: 4px solid #dc3545;">
                         <p th:text="${review.description}" class="mb-0" style="font-style: italic; color: #495057;"></p>
                     </div>
@@ -123,8 +111,6 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const dateFromInput = document.getElementById('dateFrom');
-        const dateToInput = document.getElementById('dateTo');
         const pickupFilterInput = document.getElementById('pickupFilter');
         const dropFilterInput = document.getElementById('dropFilter');
         const ratingFilterSelect = document.getElementById('ratingFilter');
@@ -133,8 +119,6 @@
         const noReviewsDiv = document.getElementById('noReviews');
 
         function filterReviews() {
-            const dateFrom = dateFromInput.value;
-            const dateTo = dateToInput.value;
             const pickupFilter = pickupFilterInput.value.toLowerCase();
             const dropFilter = dropFilterInput.value.toLowerCase();
             const ratingFilter = ratingFilterSelect.value;
@@ -148,9 +132,6 @@
                 const dropLocation = container.getAttribute('data-drop').toLowerCase();
 
                 let isVisible = true;
-
-                if (dateFrom && reviewDate < dateFrom) isVisible = false;
-                if (dateTo && reviewDate > dateTo) isVisible = false;
 
                 if (pickupFilter && !pickupLocation.includes(pickupFilter)) isVisible = false;
                 if (dropFilter && !dropLocation.includes(dropFilter)) isVisible = false;
@@ -166,15 +147,11 @@
             }
         }
 
-        dateFromInput.addEventListener('change', filterReviews);
-        dateToInput.addEventListener('change', filterReviews);
         pickupFilterInput.addEventListener('input', filterReviews);
         dropFilterInput.addEventListener('input', filterReviews);
         ratingFilterSelect.addEventListener('change', filterReviews);
 
         resetButton.addEventListener('click', function() {
-            dateFromInput.value = '';
-            dateToInput.value = '';
             pickupFilterInput.value = '';
             dropFilterInput.value = '';
             ratingFilterSelect.value = '';
