@@ -6,4 +6,5 @@ import java.util.List;
 public interface CompanyRouteService {
     List<Route> getAuthorizedRoutes();
     boolean deleteRouteIfAuthorized(Integer routeId);
+    void createRouteForAuthenticatedOrganizer(Integer sourceLocationId, Integer destinationLocationId);
 }

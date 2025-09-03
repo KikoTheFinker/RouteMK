@@ -5,7 +5,10 @@ import lombok.Data;
 import mk.route.routemk.models.enums.Status;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -43,6 +46,14 @@ public class Trip {
     @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("stopTime ASC")
     private Collection<TripStop> stops;
+
+    @ManyToMany
+    @JoinTable(
+            name = "driver_drives_on_trip",
+            joinColumns = @JoinColumn(name = "trip_id"),
+            inverseJoinColumns = @JoinColumn(name = "driver_id")
+    )
+    private List<Driver> drivers = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
@@ -96,8 +107,16 @@ public class Trip {
         this.tranOrgId = tranOrgId;
     }
 
+    public void setDrivers(List<Driver> drivers) {
+        this.drivers = drivers;
+    }
+
     public LocalDate getDate() {
         return date;
+    }
+
+    public List<Driver> getDrivers() {
+        return drivers;
     }
 
     public Route getRoute() {
