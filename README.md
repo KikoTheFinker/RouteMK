@@ -11,17 +11,23 @@ RouteMK provides a centralized transport platform in Macedonia, allowing online 
 ## Run with Docker
 
 1. **Clone the repository**
+   ```bash
    git clone <repo-url>
    cd /path/to/routemk
+   ```
 
 2. **Run the full application**
+   ```bash
    docker-compose up --build
-
-3. **Run only the database** (daemonized; omit `-d` if you want logs in the foreground):
+   ```
+4. **Run only the database** (daemonized; omit `-d` if you want logs in the foreground):
+   ```bash
    docker-compose up -d db
 
-4. **Run only the application** (daemonized):
+5. **Run only the application** (daemonized):
+   ```bash
    docker-compose up -d app
+   ```
 
    Requires a local PostgreSQL server running on port 5432 with the schema already created, where you run the DDL queries manually.
 - Run the DDL queries found in `scripts/`:
@@ -49,11 +55,11 @@ If you don’t want to use Docker, you can run RouteMK locally:
    In `src/main/resources/application.properties` (you have to create it), update database credentials if needed, here is an example file if you followed the instructions above:
 
 ```bash
-spring.datasource.url=jdbc:postgresql://localhost:5432/RouteMK
-spring.datasource.username=<username>
-spring.datasource.password=<password>
-spring.jpa.hibernate.ddl-auto=validate
-spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+   spring.datasource.url=jdbc:postgresql://localhost:5432/RouteMK
+   spring.datasource.username=<username>
+   spring.datasource.password=<password>
+   spring.jpa.hibernate.ddl-auto=validate
+   spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
 ```
 Replace `<username>` and `<password>` with your credentials to PostgreSQL.
 
