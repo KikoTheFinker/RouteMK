@@ -1,5 +1,4 @@
 DROP TABLE IF EXISTS child_ticket CASCADE;
-DROP TABLE IF EXISTS ticket_relations CASCADE;
 DROP TABLE IF EXISTS ticket CASCADE;
 DROP TABLE IF EXISTS payment CASCADE;
 DROP TABLE IF EXISTS review CASCADE;
@@ -102,11 +101,13 @@ CREATE TABLE ticket
     price                DOUBLE PRECISION CHECK (price >= 0),
     seat                 VARCHAR(10),
     payment_id           INT                    NOT NULL,
+    ticket_related_with_id   INT,
     CONSTRAINT gets_on_location_fkey FOREIGN KEY (gets_on_location_id) REFERENCES location (location_id) ON DELETE CASCADE,
     CONSTRAINT gets_off_location_fkey FOREIGN KEY (gets_off_location_id) REFERENCES location (location_id) ON DELETE CASCADE,
     CONSTRAINT ticket_account_id_fkey FOREIGN KEY (account_id) REFERENCES account (account_id) ON DELETE CASCADE,
     CONSTRAINT ticket_payment_id_fkey FOREIGN KEY (payment_id) REFERENCES payment (payment_id) ON DELETE CASCADE,
-    CONSTRAINT trip_id_fkey FOREIGN KEY (trip_id) REFERENCES trip (trip_id) ON DELETE CASCADE
+    CONSTRAINT trip_id_fkey FOREIGN KEY (trip_id) REFERENCES trip (trip_id) ON DELETE CASCADE,
+    CONSTRAINT ticket_related_with_id_fk FOREIGN KEY (ticket_related_with_id) REFERENCES ticket(ticket_id) ON DELETE CASCADE
 );
 
 CREATE TABLE review
@@ -240,15 +241,6 @@ CREATE TABLE child_ticket
     embg            VARCHAR(13) NOT NULL,
     parent_embg     VARCHAR(13) NOT NULL,
     CONSTRAINT child_ticket_ticket_id_fkey FOREIGN KEY (ticket_id) REFERENCES ticket (ticket_id) ON DELETE CASCADE
-);
-
-CREATE TABLE ticket_relations
-(
-    ticket_relation_id SERIAL PRIMARY KEY,
-    parent_ticket_id   INT NOT NULL,
-    child_ticket_id    INT NOT NULL,
-    CONSTRAINT ticket_relations_parent_ticket_id_fkey FOREIGN KEY (parent_ticket_id) REFERENCES ticket (ticket_id) ON DELETE CASCADE,
-    CONSTRAINT ticket_relations_child_ticket_id_fkey FOREIGN KEY (child_ticket_id) REFERENCES ticket (ticket_id) ON DELETE CASCADE
 );
 INSERT INTO account
 values (100, 'duko@outlook.com', 'David', 'Davidov',
