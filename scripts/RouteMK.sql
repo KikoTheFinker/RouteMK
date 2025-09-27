@@ -233,6 +233,80 @@ CREATE TABLE student_ticket
     CONSTRAINT student_ticket_ticket_id_fkey FOREIGN KEY (ticket_id) REFERENCES ticket (ticket_id) ON DELETE CASCADE
 );
 
+-- TRIGGER TO UPDATE FREE SEATS
+CREATE OR REPLACE FUNCTION update_free_seats()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF TG_OP = 'INSERT' THEN
+UPDATE trip
+SET free_seats = free_seats - 1
+WHERE trip_id = NEW.trip_id;
+RETURN NEW;
+ELSIF TG_OP = 'DELETE' THEN
+UPDATE trip
+SET free_seats = free_seats + 1
+WHERE trip_id = OLD.trip_id;
+RETURN OLD;
+END IF;
+RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER ticket_insert_update_seats
+    AFTER INSERT ON ticket
+    FOR EACH ROW
+    EXECUTE FUNCTION update_free_seats();
+
+CREATE TRIGGER ticket_delete_update_seats
+    AFTER DELETE ON ticket
+    FOR EACH ROW
+    EXECUTE FUNCTION update_free_seats();
+
+
+-- TRIGGER TO CALCULATE TICKET PRICE WITH DISCOUNTS
+CREATE OR REPLACE FUNCTION apply_ticket_discount()
+RETURNS TRIGGER AS $$
+BEGIN
+UPDATE ticket
+SET price = tr.base_price - (tr.base_price * NEW.discount / 100)
+    FROM trip tr
+WHERE ticket.ticket_id = NEW.ticket_id AND ticket.trip_id = tr.trip_id;
+RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+CREATE TRIGGER apply_student_ticket_discount
+    BEFORE INSERT ON student_ticket
+    FOR EACH ROW EXECUTE FUNCTION apply_ticket_discount();
+
+CREATE TRIGGER apply_child_ticket_discount
+    BEFORE INSERT ON child_ticket F
+	OR EACH ROW EXECUTE FUNCTION apply_ticket_discount();
+
+-- UPDATE TOTAL PAYMENT TOTAL PRICE (TRIGGER AFTER CHILD/STUDENT DISCOUNT IS APPLIED)
+
+CREATE OR REPLACE FUNCTION update_payment_total()
+RETURNS TRIGGER AS $$
+BEGIN UPDATE payment
+      SET total_price = ( SELECT COALESCE(SUM(price), 0)
+                          FROM ticket
+                          WHERE payment_id = NEW.payment_id)
+      WHERE payment_id = NEW.payment_id;
+
+RETURN NEW; END; $$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_update_payment_total_insert
+    AFTER INSERT ON ticket
+    FOR EACH ROW EXECUTE FUNCTION update_payment_total();
+
+CREATE TRIGGER trg_update_payment_total_update
+    AFTER UPDATE OF price, payment_id ON ticket
+    FOR EACH ROW EXECUTE FUNCTION update_payment_total();
+
+CREATE TRIGGER trg_update_payment_total_delete
+    AFTER DELETE ON ticket
+    FOR EACH ROW EXECUTE FUNCTION update_payment_total();
+
 CREATE TABLE child_ticket
 (
     child_ticket_id SERIAL PRIMARY KEY,
@@ -712,7 +786,7 @@ VALUES
     (2001, 601, 5, 100),
     (2002, 602, 8, 200),
     (2003, 603, 6, 300),
-    (2004, 604, 10, 100);
+    (2  004, 604, 10, 100);
 
 
 INSERT INTO driver_drives_on_trip (driver_drives_on_trip_id, driver_id, trip_id)
@@ -721,3 +795,42 @@ VALUES
     (11, 2002, 500),
     (12, 2003, 600),
     (13, 2004, 700);
+
+
+INSERT INTO child_ticket (child_ticket_id, ticket_id, discount, embg, parent_embg)
+VALUES
+    (1, 302, 50, '1234567890123', '9876543210987'),
+    (2, 306, 40, '1112223334445', '5554443332221'),
+    (3, 311, 30, '2223334445556', '6665554443332'),
+    (4, 1003, 35, '3334445556667', '7776665554443'),
+    (5, 1022, 25, '4445556667778', '8887776665554');
+
+
+-- INDEXES
+
+-- Index on trip.route_id improves performance for joins and lookups between trips and routes.
+-- In a large database, this is critical because many queries filter or aggregate trips by route,
+-- such as ticket sales per route, route performance metrics, or finding trips for a specific route.
+CREATE INDEX idx_trip_route_id ON trip(route_id);
+
+
+-- These indexes speed up frequent lookups for routes by start or end location,
+-- which are heavily used in searches, subroute queries, and joins with trips and tickets.
+-- The current table is not filled with too much information and if we use EXPLAIN ANALYZE on a sample query,
+-- it will search the table sequentially still. Though in a realistic scenario where there are many routes to search,
+-- these indexes will be quite useful.
+CREATE INDEX idx_route_to_location_id ON route(to_location_id);
+CREATE INDEX idx_route_from_location_id ON route(from_location_id);
+
+
+-- Index on trip status speeds up queries filtering by trip state (e.g., 'COMPLETED', 'NOT_STARTED'),
+-- which is especially useful in large databases when aggregating ticket sales or checking active trips.
+-- The latter is a much more important scenario since it should be often that users are more interesed in upcoming
+-- ('NOT_STARTED') trips.
+CREATE INDEX idx_trip_status ON trip(status);
+
+
+-- Index on route.transport_organizer_id speeds up queries that filter or join routes by transport organizer.
+-- In a large database, this is useful for performance reporting, calculating company metrics,
+-- or retrieving all routes operated by a specific organizer without scanning the entire table.
+CREATE INDEX idx_route_transport_organizer_id ON route(transport_organizer_id);
