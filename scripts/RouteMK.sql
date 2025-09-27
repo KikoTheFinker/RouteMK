@@ -233,6 +233,16 @@ CREATE TABLE student_ticket
     CONSTRAINT student_ticket_ticket_id_fkey FOREIGN KEY (ticket_id) REFERENCES ticket (ticket_id) ON DELETE CASCADE
 );
 
+CREATE TABLE child_ticket
+(
+    child_ticket_id SERIAL PRIMARY KEY,
+    ticket_id       INT         NOT NULL,
+    discount        DOUBLE PRECISION,
+    embg            VARCHAR(13) NOT NULL,
+    parent_embg     VARCHAR(13) NOT NULL,
+    CONSTRAINT child_ticket_ticket_id_fkey FOREIGN KEY (ticket_id) REFERENCES ticket (ticket_id) ON DELETE CASCADE
+);
+
 -- TRIGGER TO UPDATE FREE SEATS
 CREATE OR REPLACE FUNCTION update_free_seats()
 RETURNS TRIGGER AS $$
@@ -279,8 +289,8 @@ CREATE TRIGGER apply_student_ticket_discount
     FOR EACH ROW EXECUTE FUNCTION apply_ticket_discount();
 
 CREATE TRIGGER apply_child_ticket_discount
-    BEFORE INSERT ON child_ticket F
-	OR EACH ROW EXECUTE FUNCTION apply_ticket_discount();
+    BEFORE INSERT ON child_ticket
+    FOR EACH ROW EXECUTE FUNCTION apply_ticket_discount();
 
 -- UPDATE TOTAL PAYMENT TOTAL PRICE (TRIGGER AFTER CHILD/STUDENT DISCOUNT IS APPLIED)
 
@@ -307,15 +317,7 @@ CREATE TRIGGER trg_update_payment_total_delete
     AFTER DELETE ON ticket
     FOR EACH ROW EXECUTE FUNCTION update_payment_total();
 
-CREATE TABLE child_ticket
-(
-    child_ticket_id SERIAL PRIMARY KEY,
-    ticket_id       INT         NOT NULL,
-    discount        DOUBLE PRECISION,
-    embg            VARCHAR(13) NOT NULL,
-    parent_embg     VARCHAR(13) NOT NULL,
-    CONSTRAINT child_ticket_ticket_id_fkey FOREIGN KEY (ticket_id) REFERENCES ticket (ticket_id) ON DELETE CASCADE
-);
+
 INSERT INTO account
 values (100, 'duko@outlook.com', 'David', 'Davidov',
         '$2a$12$pr3az9qix0CnAsX84C2clu9cG9JDlfqfK.sMqaFhPYR7D5fiz8BjO'); -- pw: d
@@ -336,10 +338,6 @@ INSERT INTO transport_organizer
 values (200, 200, 'Delfina', '1234512345124');
 INSERT INTO transport_organizer
 VALUES (300, 300, 'MakExpress', '1234512345125');
-
-INSERT INTO admin
-values (100, 300);
-
 
 INSERT INTO location (location_id, latitude, longitude, name)
 VALUES (100, 3.2, 1.3, 'Ohrid'),
@@ -786,7 +784,7 @@ VALUES
     (2001, 601, 5, 100),
     (2002, 602, 8, 200),
     (2003, 603, 6, 300),
-    (2  004, 604, 10, 100);
+    (2004, 604, 10, 100);
 
 
 INSERT INTO driver_drives_on_trip (driver_drives_on_trip_id, driver_id, trip_id)
