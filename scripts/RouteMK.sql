@@ -22,6 +22,9 @@ DROP TABLE IF EXISTS bus CASCADE;
 DROP TABLE IF EXISTS automobile CASCADE;
 DROP TABLE IF EXISTS vehicle CASCADE;
 
+
+-- TABLE CREATION
+
 CREATE TABLE account
 (
     account_id SERIAL PRIMARY KEY,
@@ -243,6 +246,12 @@ CREATE TABLE child_ticket
     CONSTRAINT child_ticket_ticket_id_fkey FOREIGN KEY (ticket_id) REFERENCES ticket (ticket_id) ON DELETE CASCADE
 );
 
+
+
+-- TRIGGERS
+
+
+
 -- TRIGGER TO UPDATE FREE SEATS
 CREATE OR REPLACE FUNCTION update_free_seats()
 RETURNS TRIGGER AS $$
@@ -292,8 +301,8 @@ CREATE TRIGGER apply_child_ticket_discount
     BEFORE INSERT ON child_ticket
     FOR EACH ROW EXECUTE FUNCTION apply_ticket_discount();
 
--- UPDATE TOTAL PAYMENT TOTAL PRICE (TRIGGER AFTER CHILD/STUDENT DISCOUNT IS APPLIED)
 
+-- UPDATE TOTAL PAYMENT TOTAL PRICE (TRIGGER AFTER CHILD/STUDENT DISCOUNT IS APPLIED)
 CREATE OR REPLACE FUNCTION update_payment_total()
 RETURNS TRIGGER AS $$
 BEGIN UPDATE payment
@@ -318,6 +327,63 @@ CREATE TRIGGER trg_update_payment_total_delete
     FOR EACH ROW EXECUTE FUNCTION update_payment_total();
 
 
+-- TRIGGER TO AUTOMATICALLY SET NOT_STARTED STATUS TO NEWLY CREATED TRIPS
+CREATE OR REPLACE FUNCTION set_default_trip_status()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.status IS NULL THEN
+        NEW.status = 'NOT_STARTED';
+END IF;
+RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_set_default_trip_status
+    BEFORE INSERT ON trip
+    FOR EACH ROW EXECUTE FUNCTION set_default_trip_status();
+
+
+
+-- TRIGGER TO UPDATE TRIP STATUS BASED ON TIME AND NUMBER OF SEATS
+CREATE OR REPLACE FUNCTION update_trip_status()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.free_seats = 0 THEN
+        NEW.status = 'FULL';
+    ELSIF NEW.free_seats > 0 AND OLD.status = 'FULL' THEN
+        NEW.status = 'NOT_STARTED';
+END IF;
+
+    IF NEW.date < CURRENT_DATE THEN
+        NEW.status = 'COMPLETED';
+END IF;
+
+RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+
+-- TRIGGER TO AUTOMATICALLY SET TIME AND DATE OF TICKET PURCHASE
+CREATE OR REPLACE FUNCTION set_purchase_timestamp()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.date_purchased IS NULL THEN
+        NEW.date_purchased = CURRENT_DATE;
+END IF;
+    IF NEW.time_purchased IS NULL THEN
+        NEW.time_purchased = CURRENT_TIME;
+END IF;
+RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_set_purchase_timestamp
+    BEFORE INSERT ON ticket
+    FOR EACH ROW EXECUTE FUNCTION set_purchase_timestamp();
+
+
+
+-- INSERTION STATEMENTS
 INSERT INTO account
 values (100, 'duko@outlook.com', 'David', 'Davidov',
         '$2a$12$pr3az9qix0CnAsX84C2clu9cG9JDlfqfK.sMqaFhPYR7D5fiz8BjO'); -- pw: d
@@ -331,6 +397,9 @@ INSERT INTO account
 values (400, 'verche@outlook.com', 'Verche', 'Verchoska',
         '$2a$12$XO94fugzv1B9T.IjEbFSWu4WyCDFTdMM9Vg4Xli7DWiDH1LGwgj7G'); -- pw: v
 
+
+INSERT INTO admin
+values (100, 300);
 
 INSERT INTO transport_organizer
 values (100, 100, 'Galeb', '1234512345123');
@@ -795,13 +864,13 @@ VALUES
     (13, 2004, 700);
 
 
-INSERT INTO child_ticket (child_ticket_id, ticket_id, discount, embg, parent_embg)
-VALUES
-    (1, 302, 50, '1234567890123', '9876543210987'),
-    (2, 306, 40, '1112223334445', '5554443332221'),
-    (3, 311, 30, '2223334445556', '6665554443332'),
-    (4, 1003, 35, '3334445556667', '7776665554443'),
-    (5, 1022, 25, '4445556667778', '8887776665554');
+-- INSERT INTO child_ticket (child_ticket_id, ticket_id, discount, embg, parent_embg)
+-- VALUES
+--     (1, 302, 50, '1234567890123', '9876543210987'),
+--     (2, 306, 40, '1112223334445', '5554443332221'),
+--     (3, 311, 30, '2223334445556', '6665554443332'),
+--     (4, 1003, 35, '3334445556667', '7776665554443'),
+--     (5, 1022, 25, '4445556667778', '8887776665554');
 
 
 -- INDEXES
