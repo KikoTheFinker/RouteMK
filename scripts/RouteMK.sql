@@ -253,33 +253,33 @@ CREATE TABLE child_ticket
 
 
 -- TRIGGER TO UPDATE FREE SEATS
-CREATE OR REPLACE FUNCTION update_free_seats()
-RETURNS TRIGGER AS $$
-BEGIN
-    IF TG_OP = 'INSERT' THEN
-UPDATE trip
-SET free_seats = free_seats - 1
-WHERE trip_id = NEW.trip_id;
-RETURN NEW;
-ELSIF TG_OP = 'DELETE' THEN
-UPDATE trip
-SET free_seats = free_seats + 1
-WHERE trip_id = OLD.trip_id;
-RETURN OLD;
-END IF;
-RETURN NULL;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER ticket_insert_update_seats
-    AFTER INSERT ON ticket
-    FOR EACH ROW
-    EXECUTE FUNCTION update_free_seats();
-
-CREATE TRIGGER ticket_delete_update_seats
-    AFTER DELETE ON ticket
-    FOR EACH ROW
-    EXECUTE FUNCTION update_free_seats();
+-- CREATE OR REPLACE FUNCTION update_free_seats()
+-- RETURNS TRIGGER AS $$
+-- BEGIN
+--     IF TG_OP = 'INSERT' THEN
+-- UPDATE trip
+-- SET free_seats = free_seats - 1
+-- WHERE trip_id = NEW.trip_id;
+-- RETURN NEW;
+-- ELSIF TG_OP = 'DELETE' THEN
+-- UPDATE trip
+-- SET free_seats = free_seats + 1
+-- WHERE trip_id = OLD.trip_id;
+-- RETURN OLD;
+-- END IF;
+-- RETURN NULL;
+-- END;
+-- $$ LANGUAGE plpgsql;
+--
+-- CREATE TRIGGER ticket_insert_update_seats
+--     AFTER INSERT ON ticket
+--     FOR EACH ROW
+--     EXECUTE FUNCTION update_free_seats();
+--
+-- CREATE TRIGGER ticket_delete_update_seats
+--     AFTER DELETE ON ticket
+--     FOR EACH ROW
+--     EXECUTE FUNCTION update_free_seats();
 
 
 -- TRIGGER TO CALCULATE TICKET PRICE WITH DISCOUNTS
