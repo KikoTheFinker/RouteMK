@@ -1,5 +1,5 @@
 # RouteMK  
-[![RouteMK Trac Docs](https://img.shields.io/badge/TRAC-RouteMK%20Docs-6DB33F?style=for-the-badge&logo=mapbox&logoColor=white)](https://develop.finki.ukim.mk/projects/routemk)
+[![RouteMK Trac Docs](https://img.shields.io/badge/TRAC-RouteMK%20Docs-6DB33F?style=for-the-badge&logo=mapbox&logoColor=white)](https://develop.finki.ukim.mk/projects_finished/routemk)
 
 ![banner](https://github.com/user-attachments/assets/b1ebc5ff-6488-4af7-9a19-fc66ddef579a)
 
